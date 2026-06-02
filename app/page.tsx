@@ -305,11 +305,11 @@ export default function Home() {
 
       <ScrollStack
         itemDistance={0}
-        itemStackDistance={64}
-        baseScale={0.82}
-        itemScale={0.025}
-        rotationAmount={0.35}
-        blurAmount={0.35}
+        itemStackDistance={92}
+        baseScale={0.76}
+        itemScale={0.035}
+        rotationAmount={0.55}
+        blurAmount={0.2}
       >
       <section className="services-section" id="servicos">
         <div className="section-copy centered-copy">

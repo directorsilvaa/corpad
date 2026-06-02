@@ -635,6 +635,7 @@ h1 em {
   overflow: visible;
   padding: 0;
   background: var(--bg);
+  perspective: 1400px;
 }
 
 .scroll-stack-inner {
@@ -655,15 +656,15 @@ h1 em {
   padding-bottom: clamp(52px, 7vh, 82px);
   padding-right: max(48px, calc((100vw - 1240px) / 2));
   padding-left: max(48px, calc((100vw - 1240px) / 2));
-  border: 1px solid rgba(105, 232, 255, 0.13);
-  border-radius: 18px;
+  border: 0;
+  border-radius: 0;
   background:
-    radial-gradient(circle at 84% 8%, rgba(105, 232, 255, 0.1), transparent 18rem),
+    radial-gradient(circle at 84% 8%, rgba(105, 232, 255, 0.14), transparent 18rem),
     var(--bg);
   box-shadow:
     0 -1px 0 rgba(105, 232, 255, 0.08),
-    0 38px 110px rgba(0, 0, 0, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+    0 46px 120px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
   transform-style: preserve-3d;
 }
 
@@ -694,6 +695,35 @@ h1 em {
 .scroll-stack .service-card {
   min-height: clamp(210px, 28vh, 265px);
   padding: 20px;
+  animation: stack-card-pop 760ms var(--ease) both;
+}
+
+.scroll-stack .service-card:nth-child(2),
+.scroll-stack .differential-item:nth-child(2),
+.scroll-stack .process-step:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.scroll-stack .service-card:nth-child(3),
+.scroll-stack .differential-item:nth-child(3),
+.scroll-stack .process-step:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+.scroll-stack .service-card:nth-child(4),
+.scroll-stack .differential-item:nth-child(4),
+.scroll-stack .process-step:nth-child(4) {
+  animation-delay: 170ms;
+}
+
+.scroll-stack .service-card:nth-child(5),
+.scroll-stack .differential-item:nth-child(5),
+.scroll-stack .process-step:nth-child(5) {
+  animation-delay: 220ms;
+}
+
+.scroll-stack .service-card:nth-child(6) {
+  animation-delay: 270ms;
 }
 
 .scroll-stack .service-icon {
@@ -717,9 +747,15 @@ h1 em {
   font-size: 11px;
 }
 
+.scroll-stack .differential-item,
+.scroll-stack .process-step,
+.scroll-stack .benefits-panel {
+  animation: stack-card-pop 760ms var(--ease) both;
+}
+
 .scroll-stack-end {
   width: 100%;
-  height: 16vh;
+  height: 1px;
   background: var(--bg);
 }
 
@@ -863,7 +899,7 @@ h1 em {
 .service-card:hover,
 .case-card:hover,
 .faq-item:hover {
-  transform: translateY(-5px);
+  transform: translateY(-7px) scale(1.015);
   border-color: rgba(141, 240, 255, 0.28);
   background:
     radial-gradient(circle at 82% 0%, rgba(105, 232, 255, 0.12), transparent 12rem),
@@ -875,7 +911,7 @@ h1 em {
 
 .differential-item:hover,
 .process-step:hover {
-  transform: translateY(-3px);
+  transform: translateY(-5px) scale(1.01);
 }
 
 .service-card:hover .service-icon {
@@ -889,6 +925,18 @@ h1 em {
     transform 420ms var(--ease),
     border-color 420ms var(--ease),
     box-shadow 420ms var(--ease);
+}
+
+@keyframes stack-card-pop {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.975);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .process-step:hover > span {
@@ -1256,6 +1304,10 @@ h1 em {
   margin-top: 44px;
 }
 
+.case-grid[hidden] {
+  display: none !important;
+}
+
 .case-card {
   padding: 26px;
 }
@@ -1503,6 +1555,184 @@ h1 em {
   font-size: 13px;
   line-height: 1.65;
   text-align: center;
+}
+
+.portfolio-showcase {
+  margin-top: 48px;
+}
+
+.portfolio-project-viewport {
+  overflow: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.portfolio-project-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.portfolio-project-track {
+  display: flex;
+  gap: 22px;
+}
+
+.portfolio-project-card {
+  flex: 0 0 calc((100% - 44px) / 3);
+  overflow: hidden;
+  border: 1px solid rgba(105, 232, 255, 0.16);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 75% 8%, rgba(105, 232, 255, 0.08), transparent 18rem),
+    rgba(255, 255, 255, 0.032);
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition:
+    transform 420ms var(--ease),
+    border-color 420ms var(--ease),
+    box-shadow 420ms var(--ease);
+}
+
+.portfolio-project-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(141, 240, 255, 0.34);
+  box-shadow:
+    0 34px 96px rgba(0, 0, 0, 0.3),
+    0 0 34px rgba(105, 232, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.portfolio-project-media {
+  position: relative;
+  display: block;
+  min-height: 260px;
+  overflow: hidden;
+  background: #061116;
+}
+
+.portfolio-project-media::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(7, 20, 26, 0.02), transparent 45%, rgba(7, 20, 26, 0.42)),
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.12), transparent 14rem);
+}
+
+.portfolio-project-image {
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 700ms var(--ease);
+}
+
+.portfolio-project-card:hover .portfolio-project-image {
+  transform: scale(1.04);
+}
+
+.portfolio-project-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 72% 20%, rgba(141, 240, 255, 0.2), transparent 14rem),
+    linear-gradient(135deg, rgba(8, 34, 42, 0.96), rgba(7, 20, 26, 0.54));
+}
+
+.portfolio-project-info {
+  padding: 24px 28px 28px;
+}
+
+.portfolio-project-info > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.portfolio-project-info span,
+.portfolio-project-info small {
+  color: rgba(141, 240, 255, 0.72);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.portfolio-project-info h3 {
+  margin: 16px 0 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(21px, 2.2vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.portfolio-project-info p {
+  margin: 10px 0 0;
+  color: rgba(238, 242, 244, 0.58);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.portfolio-project-info a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  margin-top: 20px;
+  padding: 12px 16px;
+  border: 1px solid rgba(141, 240, 255, 0.3);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(105, 232, 255, 0.065);
+  font-size: 12px;
+  font-weight: 800;
+  transition:
+    transform 260ms var(--ease),
+    background 260ms var(--ease),
+    border-color 260ms var(--ease);
+}
+
+.portfolio-project-info a:hover {
+  transform: translateY(-2px);
+  border-color: rgba(141, 240, 255, 0.58);
+  background: rgba(105, 232, 255, 0.12);
+}
+
+.portfolio-carousel-shell {
+  display: grid;
+  gap: 20px;
+}
+
+.portfolio-carousel-shell .portfolio-carousel-controls {
+  justify-content: center;
+  margin-top: 0;
+}
+
+.portfolio-carousel-shell .portfolio-carousel-controls button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(141, 240, 255, 0.28);
+  border-radius: 50%;
+  color: rgba(141, 240, 255, 0.9);
+  background: rgba(105, 232, 255, 0.06);
+  cursor: pointer;
+  transition:
+    transform 260ms var(--ease),
+    background 260ms var(--ease);
+}
+
+.portfolio-carousel-shell .portfolio-carousel-controls button:hover {
+  transform: translateY(-2px);
+  background: rgba(105, 232, 255, 0.14);
+}
+
+.portfolio-carousel-shell .portfolio-carousel-controls > span {
+  color: rgba(238, 242, 244, 0.52);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
 }
 
 .mid-cta-section {
@@ -2152,6 +2382,24 @@ h1 em {
     min-height: auto;
   }
 
+  .portfolio-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-showcase-copy {
+    position: relative;
+    top: auto;
+    max-width: 680px;
+  }
+
+  .portfolio-project-media {
+    min-height: 320px;
+  }
+
+  .portfolio-project-card {
+    flex-basis: calc((100% - 22px) / 2);
+  }
+
   .project-preview {
     min-height: 280px;
   }
@@ -2279,6 +2527,30 @@ h1 em {
 
   .portfolio-carousel {
     margin-top: 34px;
+  }
+
+  .portfolio-project-list {
+    gap: 16px;
+  }
+
+  .portfolio-project-track {
+    gap: 16px;
+  }
+
+  .portfolio-project-card {
+    flex-basis: 100%;
+  }
+
+  .portfolio-project-media {
+    min-height: 245px;
+  }
+
+  .portfolio-project-info {
+    padding: 20px;
+  }
+
+  .portfolio-showcase-copy h2 {
+    font-size: clamp(34px, 10vw, 48px);
   }
 
   .portfolio-slide {

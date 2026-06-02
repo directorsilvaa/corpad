@@ -111,7 +111,7 @@ export default function ScrollStack({
           : 0;
         const blur = blurAmount ? scaleProgress * blurAmount : 0;
         const translateY = -scaleProgress * itemStackDistance * (index + 1);
-        const opacity = 1 - scaleProgress * 0.16;
+        const opacity = 1 - scaleProgress * 0.1;
 
         const newTransform = {
           translateY: Math.round(translateY * 100) / 100,
@@ -130,7 +130,7 @@ export default function ScrollStack({
           Math.abs(lastTransform.opacity - newTransform.opacity) > 0.001;
 
         if (hasChanged) {
-          card.style.transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
+          card.style.transform = `translate3d(0, ${newTransform.translateY}px, ${-scaleProgress * 120}px) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
           card.style.filter =
             newTransform.blur > 0 ? `blur(${newTransform.blur}px)` : "";
           card.style.opacity = String(newTransform.opacity);
