@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -21,6 +21,8 @@ type PortfolioCarouselProps = {
 export default function PortfolioCarousel({ projects }: PortfolioCarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [previewProject, setPreviewProject] =
+    useState<PortfolioProject | null>(null);
   const [visibleCount, setVisibleCount] = useState(3);
   const maxIndex = useMemo(
     () => Math.max(0, projects.length - visibleCount),
@@ -50,6 +52,13 @@ export default function PortfolioCarousel({ projects }: PortfolioCarouselProps) 
       return next;
     });
   };
+
+  const openPreview = (project: PortfolioProject) => {
+    if (!project.image) return;
+    setPreviewProject(project);
+  };
+
+  const closePreview = () => setPreviewProject(null);
 
   useEffect(() => {
     const updateVisibleCount = () => {
@@ -86,6 +95,24 @@ export default function PortfolioCarousel({ projects }: PortfolioCarouselProps) 
     return () => window.clearInterval(interval);
   }, [maxIndex, projects.length, visibleCount]);
 
+  useEffect(() => {
+    if (!previewProject) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closePreview();
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [previewProject]);
+
   return (
     <div className="portfolio-showcase">
       <div className="portfolio-carousel-shell">
@@ -97,12 +124,11 @@ export default function PortfolioCarousel({ projects }: PortfolioCarouselProps) 
           <div className="portfolio-project-track">
             {projects.map((project, index) => (
               <article className="portfolio-project-card" key={project.client}>
-                <a
+                <button
+                  type="button"
                   className="portfolio-project-media"
-                  href={project.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Abrir projeto ${project.client}`}
+                  onClick={() => openPreview(project)}
+                  aria-label={`Visualizar imagem do projeto ${project.client}`}
                 >
                   {project.image ? (
                     <Image
@@ -115,7 +141,7 @@ export default function PortfolioCarousel({ projects }: PortfolioCarouselProps) 
                   ) : (
                     <span className="portfolio-project-fallback" />
                   )}
-                </a>
+                </button>
 
                 <div className="portfolio-project-info">
                   <div>
@@ -124,9 +150,9 @@ export default function PortfolioCarousel({ projects }: PortfolioCarouselProps) 
                   </div>
                   <h3>{project.client}</h3>
                   <p>{project.result}</p>
-                  <a href={project.url} target="_blank" rel="noreferrer">
-                    Ver projeto <ExternalLink size={15} />
-                  </a>
+                  <button type="button" onClick={() => openPreview(project)}>
+                    Ver projeto <Expand size={15} />
+                  </button>
                 </div>
               </article>
             ))}
@@ -154,6 +180,44 @@ export default function PortfolioCarousel({ projects }: PortfolioCarouselProps) 
           </button>
         </div>
       </div>
+
+      {previewProject?.image ? (
+        <div
+          className="portfolio-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Imagem do projeto ${previewProject.client}`}
+          onClick={closePreview}
+        >
+          <button
+            type="button"
+            className="portfolio-lightbox-close"
+            aria-label="Fechar imagem do projeto"
+            onClick={closePreview}
+          >
+            <X size={22} />
+          </button>
+          <div
+            className="portfolio-lightbox-frame"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="portfolio-lightbox-image-wrap">
+              <Image
+                src={previewProject.image}
+                alt={`Preview do projeto ${previewProject.client}`}
+                fill
+                sizes="100vw"
+                className="portfolio-lightbox-image"
+                priority
+              />
+            </div>
+            <div className="portfolio-lightbox-caption">
+              <span>{previewProject.service}</span>
+              <strong>{previewProject.client}</strong>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
