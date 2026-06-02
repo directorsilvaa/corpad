@@ -17,17 +17,20 @@ const STYLES = `
 .cinematic-footer-wrapper {
   font-family: 'Plus Jakarta Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
-  --pill-bg-1: color-mix(in oklch, var(--foreground) 3%, transparent);
-  --pill-bg-2: color-mix(in oklch, var(--foreground) 1%, transparent);
-  --pill-shadow: color-mix(in oklch, var(--background) 50%, transparent);
-  --pill-highlight: color-mix(in oklch, var(--foreground) 10%, transparent);
-  --pill-inset-shadow: color-mix(in oklch, var(--background) 80%, transparent);
-  --pill-border: color-mix(in oklch, var(--foreground) 8%, transparent);
-  --pill-bg-1-hover: color-mix(in oklch, var(--foreground) 8%, transparent);
-  --pill-bg-2-hover: color-mix(in oklch, var(--foreground) 2%, transparent);
-  --pill-border-hover: color-mix(in oklch, var(--foreground) 20%, transparent);
-  --pill-shadow-hover: color-mix(in oklch, var(--background) 70%, transparent);
-  --pill-highlight-hover: color-mix(in oklch, var(--foreground) 20%, transparent);
+  --footer-cyan: #69e8ff;
+  --footer-blue: #3c73ff;
+  --footer-white: #f7feff;
+  --pill-bg-1: rgba(105, 232, 255, 0.22);
+  --pill-bg-2: rgba(255, 255, 255, 0.08);
+  --pill-shadow: rgba(105, 232, 255, 0.3);
+  --pill-highlight: rgba(255, 255, 255, 0.34);
+  --pill-inset-shadow: rgba(0, 0, 0, 0.45);
+  --pill-border: rgba(105, 232, 255, 0.58);
+  --pill-bg-1-hover: rgba(105, 232, 255, 0.34);
+  --pill-bg-2-hover: rgba(60, 115, 255, 0.18);
+  --pill-border-hover: rgba(141, 240, 255, 0.95);
+  --pill-shadow-hover: rgba(105, 232, 255, 0.5);
+  --pill-highlight-hover: rgba(255, 255, 255, 0.56);
 }
 
 @keyframes footer-breathe {
@@ -41,8 +44,8 @@ const STYLES = `
 }
 
 @keyframes footer-heartbeat {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px color-mix(in oklch, var(--destructive) 50%, transparent)); }
-  15%, 45% { transform: scale(1.2); filter: drop-shadow(0 0 10px color-mix(in oklch, var(--destructive) 80%, transparent)); }
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255, 82, 119, 0.55)); }
+  15%, 45% { transform: scale(1.2); filter: drop-shadow(0 0 10px rgba(255, 82, 119, 0.9)); }
   30% { transform: scale(1); }
 }
 
@@ -53,8 +56,8 @@ const STYLES = `
 .footer-bg-grid {
   background-size: 60px 60px;
   background-image:
-    linear-gradient(to right, color-mix(in oklch, var(--foreground) 3%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 3%, transparent) 1px, transparent 1px);
+    linear-gradient(to right, rgba(105, 232, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(105, 232, 255, 0.11) 1px, transparent 1px);
   mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
   -webkit-mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
 }
@@ -62,8 +65,8 @@ const STYLES = `
 .footer-aurora {
   background: radial-gradient(
     circle at 50% 50%,
-    color-mix(in oklch, var(--primary) 16%, transparent) 0%,
-    color-mix(in oklch, var(--secondary) 14%, transparent) 40%,
+    rgba(105, 232, 255, 0.36) 0%,
+    rgba(60, 115, 255, 0.24) 40%,
     transparent 70%
   );
 }
@@ -95,18 +98,18 @@ const STYLES = `
   font-weight: 900;
   letter-spacing: -0.05em;
   color: transparent;
-  -webkit-text-stroke: 1px color-mix(in oklch, var(--foreground) 5%, transparent);
-  background: linear-gradient(180deg, color-mix(in oklch, var(--foreground) 10%, transparent) 0%, transparent 60%);
+  -webkit-text-stroke: 1px rgba(105, 232, 255, 0.4);
+  background: linear-gradient(180deg, rgba(105, 232, 255, 0.28) 0%, rgba(60, 115, 255, 0.08) 45%, transparent 72%);
   -webkit-background-clip: text;
   background-clip: text;
 }
 
 .footer-text-glow {
-  background: linear-gradient(180deg, var(--foreground) 0%, color-mix(in oklch, var(--foreground) 40%, transparent) 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #9af4ff 44%, rgba(255, 255, 255, 0.72) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0px 0px 20px color-mix(in oklch, var(--foreground) 15%, transparent));
+  filter: drop-shadow(0px 0px 30px rgba(105, 232, 255, 0.48));
 }
 `;
 
@@ -259,8 +262,9 @@ export function CinematicFooter() {
         className="relative h-screen w-full"
         style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
       >
-        <footer className="cinematic-footer-wrapper fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-background text-foreground">
-          <div className="footer-aurora pointer-events-none absolute left-1/2 top-1/2 z-0 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[80px]" />
+        <footer className="cinematic-footer-wrapper fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-[#07141a] text-white">
+          <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(105,232,255,0.12),transparent_34rem),linear-gradient(180deg,rgba(12,34,44,0.95),#07141a_58%,#061116)]" />
+          <div className="footer-aurora pointer-events-none absolute left-1/2 top-1/2 z-0 h-[68vh] w-[90vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[70px]" />
           <div className="footer-bg-grid pointer-events-none absolute inset-0 z-0" />
 
           <div
@@ -270,8 +274,8 @@ export function CinematicFooter() {
             CORPAD
           </div>
 
-          <div className="absolute left-0 top-12 z-10 w-full scale-110 -rotate-2 overflow-hidden border-y border-border/50 bg-background/60 py-4 shadow-2xl backdrop-blur-md">
-            <div className="flex w-max animate-footer-scroll-marquee text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground md:text-sm">
+          <div className="absolute left-0 top-12 z-10 w-full scale-110 -rotate-2 overflow-hidden border-y border-[#69e8ff]/55 bg-[#69e8ff]/14 py-4 shadow-[0_0_70px_rgba(105,232,255,0.22)] backdrop-blur-md">
+            <div className="flex w-max animate-footer-scroll-marquee text-xs font-black uppercase tracking-[0.3em] text-white md:text-sm">
               <MarqueeItem />
               <MarqueeItem />
             </div>
@@ -290,18 +294,18 @@ export function CinematicFooter() {
                 <MagneticButton
                   as="a"
                   href="mailto:contato@corpad.com.br"
-                  className="footer-glass-pill group flex items-center gap-3 rounded-full px-10 py-5 text-sm font-bold text-foreground md:text-base"
+                  className="footer-glass-pill group flex items-center gap-3 rounded-full bg-[#69e8ff]/20 px-10 py-5 text-sm font-black text-white shadow-[0_0_35px_rgba(105,232,255,0.22)] md:text-base"
                 >
-                  <MessageCircle className="h-6 w-6 text-muted-foreground transition-colors group-hover:text-foreground" />
+                  <MessageCircle className="h-6 w-6 text-primary transition-colors group-hover:text-white" />
                   Falar com especialista
                 </MagneticButton>
 
                 <MagneticButton
                   as="a"
                   href="#servicos"
-                  className="footer-glass-pill group flex items-center gap-3 rounded-full px-10 py-5 text-sm font-bold text-foreground md:text-base"
+                  className="footer-glass-pill group flex items-center gap-3 rounded-full bg-[#69e8ff]/20 px-10 py-5 text-sm font-black text-white shadow-[0_0_35px_rgba(105,232,255,0.22)] md:text-base"
                 >
-                  <Briefcase className="h-6 w-6 text-muted-foreground transition-colors group-hover:text-foreground" />
+                  <Briefcase className="h-6 w-6 text-primary transition-colors group-hover:text-white" />
                   Ver soluções
                 </MagneticButton>
               </div>
@@ -310,21 +314,21 @@ export function CinematicFooter() {
                 <MagneticButton
                   as="a"
                   href="#solucoes"
-                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-medium text-muted-foreground hover:text-foreground md:text-sm"
+                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-bold text-white/86 hover:text-white md:text-sm"
                 >
                   Soluções
                 </MagneticButton>
                 <MagneticButton
                   as="a"
                   href="#projetos"
-                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-medium text-muted-foreground hover:text-foreground md:text-sm"
+                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-bold text-white/86 hover:text-white md:text-sm"
                 >
                   Projetos
                 </MagneticButton>
                 <MagneticButton
                   as="a"
                   href="#sobre"
-                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-medium text-muted-foreground hover:text-foreground md:text-sm"
+                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-bold text-white/86 hover:text-white md:text-sm"
                 >
                   Sobre
                 </MagneticButton>
@@ -333,21 +337,21 @@ export function CinematicFooter() {
           </div>
 
           <div className="relative z-20 flex w-full flex-col items-center justify-between gap-6 px-6 pb-8 md:flex-row md:px-12">
-            <div className="order-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground md:order-1 md:text-xs">
+            <div className="order-2 text-[10px] font-bold uppercase tracking-widest text-white/78 md:order-1 md:text-xs">
               © 2026 Corpad Digital. Todos os direitos reservados.
             </div>
 
-            <div className="footer-glass-pill order-1 flex cursor-default items-center gap-2 rounded-full border-border/50 px-6 py-3 md:order-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground md:text-xs">
+            <div className="footer-glass-pill order-1 flex cursor-default items-center gap-2 rounded-full border-[#69e8ff]/60 bg-[#69e8ff]/12 px-6 py-3 md:order-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/78 md:text-xs">
                 Criado com
               </span>
               <span className="animate-footer-heartbeat text-sm text-destructive md:text-base">
                 ❤
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground md:text-xs">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/78 md:text-xs">
                 pela
               </span>
-              <span className="ml-1 text-xs font-black tracking-normal text-foreground md:text-sm">
+              <span className="ml-1 text-xs font-black tracking-normal text-white md:text-sm">
                 Corpad
               </span>
             </div>
@@ -355,7 +359,7 @@ export function CinematicFooter() {
             <MagneticButton
               as="button"
               onClick={scrollToTop}
-              className="footer-glass-pill group order-3 flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground hover:text-foreground"
+              className="footer-glass-pill group order-3 flex h-12 w-12 items-center justify-center rounded-full text-primary hover:text-white"
               aria-label="Voltar ao topo"
             >
               <ArrowUp className="h-5 w-5 transform transition-transform duration-300 group-hover:-translate-y-1.5" />

@@ -7,10 +7,10 @@
 :root {
   color-scheme: dark;
   --background: 198 64% 6%;
-  --foreground: 84 22% 95%;
+  --foreground: 190 100% 96%;
   --border-token: 190 64% 42%;
-  --primary: 188 100% 71%;
-  --secondary: 226 100% 62%;
+  --primary: 186 100% 68%;
+  --secondary: 218 100% 64%;
   --destructive: 350 88% 62%;
   --muted-foreground: 204 12% 64%;
   --bg: #07141a;
