@@ -259,8 +259,11 @@ export function CinematicFooter() {
 
       <div
         ref={wrapperRef}
-        className="relative h-screen w-full"
-        style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
+        className="relative h-screen w-screen"
+        style={{
+          clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)",
+          marginLeft: "calc(50% - 50vw)",
+        }}
       >
         <footer className="cinematic-footer-wrapper fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-[#07141a] text-white">
           <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(105,232,255,0.12),transparent_34rem),linear-gradient(180deg,rgba(12,34,44,0.95),#07141a_58%,#061116)]" />

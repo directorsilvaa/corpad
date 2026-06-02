@@ -11,7 +11,9 @@ import {
 } from "lucide-react";
 import { CinematicFooter } from "@/components/ui/motion-footer";
 import LightRays from "./LightRays";
+import PortfolioCarousel from "./PortfolioCarousel";
 import ScrollReveal from "./ScrollReveal";
+import ScrollStack from "./ScrollStack";
 
 const navItems = [
   { label: "Soluções", href: "#solucoes", active: true },
@@ -97,34 +99,52 @@ const processSteps = [
 
 const caseCards = [
   {
-    client: "Empresa de serviços",
-    service: "Criação de site institucional",
+    client: "JS Grupo",
+    service: "Site institucional",
+    url: "https://jsgrupo.com/",
+    image: "/projetos/js.png",
     challenge:
-      "A empresa precisava melhorar sua presença digital e apresentar seus serviços com mais profissionalismo.",
+      "O grupo precisava de uma presença digital organizada para apresentar sua estrutura e áreas de atuação.",
     solution:
-      "Desenvolvemos uma estrutura digital personalizada, focada em clareza, performance e conversão.",
+      "Criamos uma experiência institucional com navegação clara, comunicação objetiva e foco em credibilidade.",
     result:
-      "Uma presença online mais forte, organizada e preparada para gerar novas oportunidades.",
+      "Um site mais profissional para apoiar relacionamento, apresentação comercial e descoberta da marca.",
   },
   {
-    client: "Operação comercial",
-    service: "E-commerce e otimização",
+    client: "Instituto Mont Care",
+    service: "Site para saúde",
+    url: "https://institutomontcare.com.br/",
+    image: "/projetos/insti.png",
     challenge:
-      "O time precisava organizar produtos, preços e descrições para vender online com mais segurança.",
+      "A instituição precisava apresentar serviços, especialidades e informações de atendimento com mais clareza.",
     solution:
-      "Criamos uma loja virtual prática, com jornada clara e base preparada para buscadores.",
+      "Desenvolvemos uma estrutura visual acolhedora, direta e preparada para orientar o visitante.",
     result:
-      "Um canal de vendas mais profissional, escalável e pronto para receber campanhas.",
+      "Uma presença digital mais confiável para pacientes, familiares e parceiros.",
   },
   {
-    client: "Negócio em crescimento",
-    service: "Tráfego pago e automação",
+    client: "Clínica Vitacore",
+    service: "Site clínico",
+    url: "https://www.clinicavitacore.com.br/",
+    image: "/projetos/clinicavitacore.png",
     challenge:
-      "A empresa queria atrair clientes com mais velocidade e reduzir processos manuais repetitivos.",
+      "A clínica precisava destacar seus serviços e facilitar o entendimento da jornada de atendimento.",
     solution:
-      "Estruturamos campanhas mensuráveis e automações para melhorar atendimento e operação.",
+      "Organizamos conteúdo, chamadas e áreas institucionais em uma interface leve e responsiva.",
     result:
-      "Mais visibilidade, processos mais ágeis e uma rotina digital mais inteligente.",
+      "Um canal digital mais claro, acessível e alinhado à experiência do paciente.",
+  },
+  {
+    client: "Principia Medicina",
+    service: "Site médico",
+    url: "https://principiamedicina.com.br/",
+    image: "/projetos/principiamedicina.png",
+    challenge:
+      "O projeto precisava comunicar autoridade, cuidado e informação médica de forma simples.",
+    solution:
+      "Criamos uma apresentação digital com hierarquia visual, conteúdo organizado e navegação objetiva.",
+    result:
+      "Uma vitrine digital preparada para apresentar especialidades e aproximar pacientes da clínica.",
   },
 ];
 
@@ -274,9 +294,23 @@ export default function Home() {
             estruturas digitais que ajudam sua empresa a atrair, converter,
             vender e operar com mais eficiência.
           </p>
+          <div className="signal-panel" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+            <i />
+          </div>
         </div>
       </section>
 
+      <ScrollStack
+        itemDistance={0}
+        itemStackDistance={64}
+        baseScale={0.82}
+        itemScale={0.025}
+        rotationAmount={0.35}
+        blurAmount={0.35}
+      >
       <section className="services-section" id="servicos">
         <div className="section-copy centered-copy">
           <span className="section-kicker">Serviços</span>
@@ -324,6 +358,13 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          <div className="benefit-sparkline" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
         </div>
       </section>
 
@@ -348,6 +389,11 @@ export default function Home() {
         <div className="section-copy">
           <span className="section-kicker">Processo</span>
           <h2>Como transformamos sua presença digital</h2>
+          <div className="process-visual" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
         </div>
 
         <div className="process-list">
@@ -362,6 +408,7 @@ export default function Home() {
           ))}
         </div>
       </section>
+      </ScrollStack>
 
       <section className="portfolio-section" id="projetos">
         <div className="section-copy centered-copy">
@@ -374,7 +421,9 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="case-grid">
+        <PortfolioCarousel projects={caseCards} />
+
+        <div className="case-grid" hidden>
           {caseCards.map((card) => (
             <article className="case-card" key={card.client}>
               <span>{card.service}</span>
