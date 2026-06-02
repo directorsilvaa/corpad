@@ -1,9 +1,14 @@
 import Image from "next/image";
 import {
+  Activity,
   ArrowUpRight,
   CheckCircle2,
+  ClipboardList,
   Phone,
   Rocket,
+  Search,
+  TrendingUp,
+  Wrench,
 } from "lucide-react";
 import { CinematicFooter } from "@/components/ui/motion-footer";
 import ConsultingSolutionsSection from "../ConsultingSolutionsSection";
@@ -24,6 +29,8 @@ const methodology = [
   ["Monitoramento", "Acompanhamos indicadores e realizamos ajustes contínuos."],
   ["Crescimento", "Estruturamos sua empresa para crescer de forma organizada e sustentável."],
 ];
+
+const methodologyIcons = [Search, ClipboardList, Wrench, Activity, TrendingUp];
 
 const testimonials = [
   "A CORPAD nos ajudou a organizar processos internos e melhorar significativamente nossos resultados.",
@@ -182,7 +189,9 @@ export default function CorpadConsultoria() {
       <section className="consulting-section consulting-method consulting-method-ui" id="metodologia">
         <div className="consulting-section-heading consulting-ui-heading">
           <span className="consulting-kicker">Nossa metodologia</span>
-          <h2>Como ajudamos sua empresa a crescer</h2>
+          <h2>
+            Tudo que sua empresa precisa para <em>crescer melhor</em>
+          </h2>
           <p>
             Um processo simples de acompanhar, com diagnostico, execucao e
             melhoria continua em cada etapa.
@@ -193,6 +202,15 @@ export default function CorpadConsultoria() {
             <article key={title}>
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
+                {(() => {
+                  const Icon = methodologyIcons[index];
+
+                  return (
+                    <i aria-hidden="true">
+                      <Icon size={22} />
+                    </i>
+                  );
+                })()}
                 <h3>{title}</h3>
                 <p>{description}</p>
               </div>
@@ -233,16 +251,18 @@ export default function CorpadConsultoria() {
             move o negocio.
           </p>
         </div>
-        <div className="consulting-testimonials">
-          {testimonials.map((testimonial, index) => (
-            <blockquote key={testimonial}>
-              <p>{testimonial}</p>
-              <footer>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                Cliente CORPAD
-              </footer>
-            </blockquote>
-          ))}
+        <div className="consulting-testimonials-carousel">
+          <div className="consulting-testimonials">
+            {[...testimonials, ...testimonials].map((testimonial, index) => (
+              <blockquote key={`${testimonial}-${index}`}>
+                <p>{testimonial}</p>
+                <footer>
+                  <span>{String((index % testimonials.length) + 1).padStart(2, "0")}</span>
+                  Cliente CORPAD
+                </footer>
+              </blockquote>
+            ))}
+          </div>
         </div>
       </section>
 
