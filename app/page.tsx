@@ -9,6 +9,7 @@ import {
   ShoppingCart,
   Workflow,
 } from "lucide-react";
+import { CinematicFooter } from "@/components/ui/motion-footer";
 import LightRays from "./LightRays";
 import ScrollReveal from "./ScrollReveal";
 
@@ -445,6 +446,7 @@ export default function Home() {
           Fale com um especialista agora <ArrowUpRight size={17} />
         </a>
       </section>
+      <CinematicFooter />
     </main>
   );
 }
