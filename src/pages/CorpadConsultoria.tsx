@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/vite-image";
 import {
   Activity,
   ArrowUpRight,
@@ -11,7 +11,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { CinematicFooter } from "@/components/ui/motion-footer";
-import ConsultingSolutionsSection from "../ConsultingSolutionsSection";
+import ConsultingSolutionsSection from "../components/ConsultingSolutionsSection";
 
 const differentials = [
   ["Foco em Resultados", "Cada solução é desenvolvida para gerar impacto real nos indicadores do negócio."],

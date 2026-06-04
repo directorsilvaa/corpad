@@ -1,7 +1,6 @@
 "use client";
 
 import { useLayoutEffect } from "react";
-import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -17,18 +16,10 @@ const heroSelectors = [
 const revealSelectors = [
   ".problem-section",
   ".solution-section",
-  ".services-section",
-  ".benefits-section",
-  ".differentials-section",
-  ".process-section",
   ".portfolio-section",
   ".mid-cta-section",
   ".faq-section",
   ".final-cta-section",
-  ".service-card",
-  ".benefits-panel",
-  ".differential-item",
-  ".process-step",
   ".faq-item",
   ".portfolio-project-card",
   ".consulting-section",
@@ -53,7 +44,7 @@ const interactiveSelectors = [
 ].join(", ");
 
 export default function GsapAnimations() {
-  const pathname = usePathname();
+  const pathname = window.location.pathname;
 
   useLayoutEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

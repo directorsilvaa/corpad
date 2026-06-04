@@ -1,19 +1,25 @@
-import Image from "next/image";
+import Image from "@/components/ui/vite-image";
 import {
   ArrowUpRight,
   Check,
+  Code2,
   Layers3,
+  Map,
   Megaphone,
   MousePointer2,
+  Rocket,
+  Search,
   ServerCog,
   ShoppingCart,
+  TrendingUp,
   Workflow,
 } from "lucide-react";
 import { CinematicFooter } from "@/components/ui/motion-footer";
-import LightRays from "./LightRays";
-import PortfolioCarousel from "./PortfolioCarousel";
-import ScrollReveal from "./ScrollReveal";
-import ScrollStack from "./ScrollStack";
+import FastDevelopmentSection from "../components/FastDevelopmentSection";
+import HypedAnimationsSection from "../components/HypedAnimationsSection";
+import LightRays from "../components/LightRays";
+import PortfolioCarousel from "../components/PortfolioCarousel";
+import ScrollReveal from "../components/ScrollReveal";
 
 const navItems = [
   { label: "Soluções", href: "#solucoes", active: true },
@@ -97,6 +103,44 @@ const processSteps = [
   ["Otimizamos continuamente", "Monitoramos dados, identificamos melhorias e ajustamos a estratégia para aumentar a performance ao longo do tempo."],
 ];
 
+const processJourney = [
+  {
+    title: "Diagnostico",
+    description:
+      "Mapeamos objetivos, canais e gargalos para entender onde agir primeiro.",
+    outcome: "Mapa",
+    icon: Search,
+  },
+  {
+    title: "Estrategia",
+    description:
+      "Definimos prioridades, ferramentas e proximos passos com foco em resultado.",
+    outcome: "Plano",
+    icon: Map,
+  },
+  {
+    title: "Construcao",
+    description:
+      "Criamos a estrutura digital com performance, usabilidade e conversao.",
+    outcome: "Base",
+    icon: Code2,
+  },
+  {
+    title: "Ativacao",
+    description:
+      "Testamos, publicamos e acompanhamos a entrada da solucao em operacao.",
+    outcome: "Go live",
+    icon: Rocket,
+  },
+  {
+    title: "Evolucao",
+    description:
+      "Monitoramos dados e ajustamos a estrategia para melhorar continuamente.",
+    outcome: "Dados",
+    icon: TrendingUp,
+  },
+];
+
 const caseCards = [
   {
     client: "JS Grupo",
@@ -155,6 +199,51 @@ const faqs = [
   ["A Corpad oferece suporte após a entrega?", "Sim. Dependendo do serviço contratado, a Corpad oferece suporte, acompanhamento técnico e melhorias contínuas."],
   ["Vocês desenvolvem lojas virtuais?", "Sim. Criamos e-commerces com estrutura para venda, organização de produtos, gestão de estoque e otimização para buscadores."],
   ["A automação serve para qualquer empresa?", "A automação pode ser aplicada em diferentes tipos de negócio, principalmente quando existem tarefas repetitivas, integração entre sistemas ou processos manuais que consomem muito tempo."],
+];
+
+const faqItems = [
+  {
+    question: "A Corpad Digital cria sites personalizados?",
+    answer:
+      "Sim. Cada site e desenvolvido de acordo com a identidade, os objetivos e as necessidades da empresa.",
+    points: ["Layout sob medida", "Estrutura responsiva", "Foco em conversao"],
+    command: "iniciar projeto personalizado",
+  },
+  {
+    question: "Voces tambem fazem campanhas de trafego pago?",
+    answer:
+      "Sim. Criamos, gerenciamos e otimizamos campanhas em Google Ads, Instagram, Facebook, TikTok e LinkedIn.",
+    points: ["Configuracao das campanhas", "Segmentacao do publico", "Otimizacao constante"],
+    command: "ativar campanhas digitais",
+  },
+  {
+    question: "Posso contratar apenas um servico?",
+    answer:
+      "Sim. Voce pode contratar uma solucao especifica ou combinar diferentes servicos conforme a necessidade da empresa.",
+    points: ["Contratacao flexivel", "Escopo claro", "Evolucao por etapas"],
+    command: "selecionar servico ideal",
+  },
+  {
+    question: "A Corpad oferece suporte apos a entrega?",
+    answer:
+      "Sim. Dependendo do servico contratado, oferecemos suporte, acompanhamento tecnico e melhorias continuas.",
+    points: ["Acompanhamento tecnico", "Ajustes e melhorias", "Orientacao especializada"],
+    command: "solicitar suporte continuo",
+  },
+  {
+    question: "Voces desenvolvem lojas virtuais?",
+    answer:
+      "Sim. Criamos e-commerces com estrutura para venda, organizacao de produtos, estoque e otimizacao para buscadores.",
+    points: ["Cadastro de produtos", "Estrutura de venda", "Experiencia de compra"],
+    command: "criar loja virtual",
+  },
+  {
+    question: "A automacao serve para qualquer empresa?",
+    answer:
+      "A automacao pode ser aplicada quando existem tarefas repetitivas, integracao entre sistemas ou processos manuais que consomem tempo.",
+    points: ["Reducao de tarefas manuais", "Integracao de sistemas", "Mais velocidade operacional"],
+    command: "mapear automacoes",
+  },
 ];
 
 export default function CorpadPage() {
@@ -294,23 +383,13 @@ export default function CorpadPage() {
             estruturas digitais que ajudam sua empresa a atrair, converter,
             vender e operar com mais eficiência.
           </p>
-          <div className="signal-panel" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <i />
-          </div>
         </div>
       </section>
 
-      <ScrollStack
-        itemDistance={0}
-        itemStackDistance={92}
-        baseScale={0.76}
-        itemScale={0.035}
-        rotationAmount={0.55}
-        blurAmount={0.2}
-      >
+      <FastDevelopmentSection />
+
+      <HypedAnimationsSection />
+
       <section className="services-section" id="servicos">
         <div className="section-copy centered-copy">
           <span className="section-kicker">Serviços</span>
@@ -328,7 +407,6 @@ export default function CorpadPage() {
                 </span>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
-                <strong>{service.fit}</strong>
               </article>
             );
           })}
@@ -349,7 +427,6 @@ export default function CorpadPage() {
         </div>
 
         <div className="benefits-panel">
-          <span>Benefícios principais</span>
           <ul>
             {benefitsList.map((benefit) => (
               <li key={benefit}>
@@ -358,13 +435,6 @@ export default function CorpadPage() {
               </li>
             ))}
           </ul>
-          <div className="benefit-sparkline" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-          </div>
         </div>
       </section>
 
@@ -376,7 +446,11 @@ export default function CorpadPage() {
 
         <div className="differential-grid">
           {differentials.map(([title, description], index) => (
-            <article className="differential-item" key={title}>
+            <article
+              className="differential-item"
+              data-index={String(index + 1).padStart(2, "0")}
+              key={title}
+            >
               <span>{String(index + 1).padStart(2, "0")}</span>
               <h3>{title}</h3>
               <p>{description}</p>
@@ -397,19 +471,31 @@ export default function CorpadPage() {
         </div>
 
         <div className="process-list">
-          {processSteps.map(([title, description], index) => (
-            <article className="process-step" key={title}>
-              <span>{index + 1}</span>
+          {processJourney.map((step, index) => {
+            const Icon = step.icon;
+
+            return (
+            <article
+              className="process-step"
+              data-index={String(index + 1).padStart(2, "0")}
+              key={step.title}
+            >
+              <span className="process-step-index">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <i className="process-step-icon" aria-hidden="true">
+                <Icon size={22} />
+              </i>
               <div>
-                <h3>{title}</h3>
-                <p>{description}</p>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+                <strong>{step.outcome}</strong>
               </div>
             </article>
-          ))}
+            );
+          })}
         </div>
       </section>
-      </ScrollStack>
-
       <section className="portfolio-section" id="projetos">
         <div className="section-copy centered-copy">
           <span className="section-kicker">Portfólio</span>
@@ -471,10 +557,32 @@ export default function CorpadPage() {
         </div>
 
         <div className="faq-list">
-          {faqs.map(([question, answer]) => (
-            <article className="faq-item" key={question}>
-              <h3>{question}</h3>
-              <p>{answer}</p>
+          {faqItems.map((item, index) => (
+            <article className="faq-item" key={item.question}>
+              <div className="faq-copy">
+                <span>{index + 1}. {item.question}</span>
+                <p>{item.answer}</p>
+                <ul>
+                  {item.points.map((point) => (
+                    <li key={point}>
+                      <Check size={15} strokeWidth={3} />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+                <a href="#contato">
+                  Ver detalhes <ArrowUpRight size={14} />
+                </a>
+              </div>
+              <div className="faq-terminal" aria-hidden="true">
+                <span>Resposta rapida</span>
+                <div>
+                  <i>site</i>
+                  <i>trafego</i>
+                  <i>automacao</i>
+                  <code>corpad digital --acao "{item.command}"</code>
+                </div>
+              </div>
             </article>
           ))}
         </div>
