@@ -38,7 +38,7 @@ const testimonials = [
 ];
 
 const whatsappUrl =
-  "https://wa.me/5516996094649?text=Ol%C3%A1%2C%20quero%20falar%20com%20um%20especialista%20da%20CORPAD%20Consultoria.";
+  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, vim por causa da consultoria.")}`;
 
 export default function CorpadConsultoria() {
   return (

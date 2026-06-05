@@ -37,7 +37,7 @@ const supportPhrases = [
 ];
 
 const whatsappUrl =
-  "https://wa.me/5516996094649?text=Ol%C3%A1%2C%20quero%20falar%20com%20um%20especialista%20da%20CORPAD%20Digital.";
+  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, vim pelo site da CORPAD Digital.")}`;
 
 const services = [
   {
@@ -255,7 +255,7 @@ export default function CorpadPage() {
               ))}
             </div>
           </div>
-          <a href="#projetos">Portfólio</a>
+          <a href="/portfolio">Portfólio</a>
           <a href="/clientes">Clientes</a>
           <a href="#sobre">Sobre</a>
         </nav>
@@ -369,7 +369,19 @@ export default function CorpadPage() {
           <div className="clients-carousel-track">
             {[...clientLogos, ...clientLogos].map((client, index) => (
               <article className="client-logo-card" key={`${client.name}-${index}`}>
-                <div className="client-logo-mark">{client.initials}</div>
+                <div className="client-logo-mark">
+                  {client.logo ? (
+                    <Image
+                      src={client.logo}
+                      alt=""
+                      width={170}
+                      height={72}
+                      loading="lazy"
+                    />
+                  ) : (
+                    client.initials
+                  )}
+                </div>
                 <h3>{client.name}</h3>
                 <p>{client.segment}</p>
               </article>

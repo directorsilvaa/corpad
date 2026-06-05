@@ -4,7 +4,7 @@ import { clientLogos } from "../data/clients";
 import { servicePages } from "../data/servicePages";
 
 const whatsappUrl =
-  "https://wa.me/5516996094649?text=Ol%C3%A1%2C%20quero%20falar%20com%20um%20especialista%20da%20CORPAD%20Digital.";
+  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, vim pela pagina de clientes da CORPAD Digital.")}`;
 
 export default function ClientesPage() {
   return (
@@ -34,7 +34,7 @@ export default function ClientesPage() {
               ))}
             </div>
           </div>
-          <a href="/corpad-digital#projetos">Portfólio</a>
+          <a href="/portfolio">Portfólio</a>
           <a className="active" href="/clientes" aria-current="page">Clientes</a>
           <a href="/corpad-digital#sobre">Sobre</a>
         </nav>
@@ -74,7 +74,17 @@ export default function ClientesPage() {
         {clientLogos.map((client) => (
           <article className="client-logo-card" key={client.name}>
             <div className="client-logo-mark" aria-hidden="true">
-              {client.initials}
+              {client.logo ? (
+                <Image
+                  src={client.logo}
+                  alt=""
+                  width={170}
+                  height={72}
+                  loading="lazy"
+                />
+              ) : (
+                client.initials
+              )}
             </div>
             <h2>{client.name}</h2>
             <p>{client.segment}</p>

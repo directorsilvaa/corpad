@@ -112,14 +112,14 @@ export const servicePages: ServicePageContent[] = [
     slug: "e-commerce",
     navLabel: "E-commerce",
     cardTitle: "Lojas virtuais",
-    heroTitle: "Criação de e-commerce para vender online",
+    heroTitle: "E-commerce pronto para vender online",
     metaTitle: "Criação de E-commerce e Loja Virtual | CORPAD Digital",
     metaDescription:
       "Desenvolvimento de e-commerce e lojas virtuais para empresas que querem vender online com organização, segurança e experiência de compra eficiente.",
     intro:
-      "Uma loja virtual precisa ser simples de navegar, segura para comprar e fácil de administrar. A CORPAD Digital cria e-commerces pensados para apresentar produtos, organizar pedidos e transformar intenção de compra em venda.",
+      "Lojas virtuais seguras, organizadas e fáceis de administrar, com uma compra simples do começo ao fim.",
     highlights: [
-      "Estrutura de loja virtual organizada por categorias",
+      "Produtos organizados. Compra facilitada.",
       "Páginas de produto claras e completas",
       "Experiência de compra responsiva",
       "Base para gestão, campanhas e crescimento",
@@ -263,6 +263,7 @@ export const servicePages: ServicePageContent[] = [
       "Planejamento de conteúdo e campanhas",
       "Execução das ações prioritárias",
       "Análise de dados e otimizações",
+      "Relatórios, próximos passos e evolução",
     ],
     faqs: [
       {

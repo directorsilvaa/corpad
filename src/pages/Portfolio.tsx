@@ -1,10 +1,14 @@
 import Image from "@/components/ui/vite-image";
-import { ArrowLeft, X } from "lucide-react";
+import { ChevronDown, MessageCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   portfolioProjects,
   type PortfolioProject,
 } from "../data/portfolioProjects";
+import { servicePages } from "../data/servicePages";
+
+const whatsappUrl =
+  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, vim pelo portfolio da CORPAD Digital.")}`;
 
 export default function PortfolioPage() {
   const [previewProject, setPreviewProject] = useState<PortfolioProject | null>(
@@ -29,11 +33,43 @@ export default function PortfolioPage() {
 
   return (
     <main className="portfolio-page">
-      <header className="portfolio-page-nav">
-        <a href="/corpad-digital" aria-label="Voltar para CORPAD Digital">
-          <ArrowLeft size={18} />
-          CORPAD Digital
+      <header className="navbar">
+        <a className="brand" href="/corpad-digital" aria-label="Página inicial">
+          <Image
+            className="brand-logo"
+            src="/logo.png"
+            alt="Logo CORPAD"
+            width={1500}
+            height={390}
+            priority
+          />
         </a>
+
+        <nav className="nav-links" aria-label="Navegação principal">
+          <div className="nav-menu">
+            <a className="nav-menu-trigger" href="/corpad-digital#servicos">
+              Serviços <ChevronDown size={14} strokeWidth={2.2} />
+            </a>
+            <div className="nav-submenu" aria-label="Serviços">
+              {servicePages.map((item) => (
+                <a href={`/servicos/${item.slug}`} key={item.slug}>
+                  {item.navLabel}
+                </a>
+              ))}
+            </div>
+          </div>
+          <a className="active" href="/portfolio" aria-current="page">
+            Portfólio
+          </a>
+          <a href="/clientes">Clientes</a>
+          <a href="/corpad-digital#sobre">Sobre</a>
+        </nav>
+
+        <div className="nav-actions">
+          <a className="nav-cta" href={whatsappUrl} target="_blank" rel="noreferrer">
+            WhatsApp <MessageCircle size={15} />
+          </a>
+        </div>
       </header>
 
       <section className="portfolio-page-hero">

@@ -203,7 +203,31 @@ const MarqueeItem = () => (
 const whatsappUrl =
   "https://wa.me/5516996094649?text=Ol%C3%A1%2C%20quero%20falar%20com%20um%20especialista%20da%20CORPAD%20Digital.";
 
-export function CinematicFooter() {
+type FooterLink = {
+  label: string;
+  href: string;
+};
+
+const defaultFooterLinks: FooterLink[] = [
+  { label: "Soluções", href: "#solucoes" },
+  { label: "Projetos", href: "#projetos" },
+  { label: "Clientes", href: "/clientes" },
+  { label: "Sobre", href: "#sobre" },
+];
+
+type CinematicFooterProps = {
+  heading?: string;
+  solutionLabel?: string;
+  solutionHref?: string;
+  links?: FooterLink[];
+};
+
+export function CinematicFooter({
+  heading = "Pronto para crescer?",
+  solutionLabel = "Ver soluções",
+  solutionHref = "#servicos",
+  links = defaultFooterLinks,
+}: CinematicFooterProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const giantTextRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -292,7 +316,7 @@ export function CinematicFooter() {
               ref={headingRef}
               className="footer-text-glow mb-12 text-center text-5xl font-black tracking-tighter md:text-8xl"
             >
-              Pronto para crescer?
+              {heading}
             </h2>
 
             <div ref={linksRef} className="flex w-full flex-col items-center gap-6">
@@ -310,43 +334,25 @@ export function CinematicFooter() {
 
                 <MagneticButton
                   as="a"
-                  href="#servicos"
+                  href={solutionHref}
                   className="footer-glass-pill group flex items-center gap-3 rounded-full bg-[#69e8ff]/20 px-10 py-5 text-sm font-black text-white shadow-[0_0_35px_rgba(105,232,255,0.22)] md:text-base"
                 >
                   <Briefcase className="h-6 w-6 text-primary transition-colors group-hover:text-white" />
-                  Ver soluções
+                  {solutionLabel}
                 </MagneticButton>
               </div>
 
               <div className="mt-2 flex w-full flex-wrap justify-center gap-3 md:gap-6">
-                <MagneticButton
-                  as="a"
-                  href="#solucoes"
-                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-bold text-white/86 hover:text-white md:text-sm"
-                >
-                  Soluções
-                </MagneticButton>
-                <MagneticButton
-                  as="a"
-                  href="#projetos"
-                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-bold text-white/86 hover:text-white md:text-sm"
-                >
-                  Projetos
-                </MagneticButton>
-                <MagneticButton
-                  as="a"
-                  href="/clientes"
-                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-bold text-white/86 hover:text-white md:text-sm"
-                >
-                  Clientes
-                </MagneticButton>
-                <MagneticButton
-                  as="a"
-                  href="#sobre"
-                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-bold text-white/86 hover:text-white md:text-sm"
-                >
-                  Sobre
-                </MagneticButton>
+                {links.map((link) => (
+                  <MagneticButton
+                    as="a"
+                    href={link.href}
+                    className="footer-glass-pill rounded-full px-6 py-3 text-xs font-bold text-white/86 hover:text-white md:text-sm"
+                    key={link.href}
+                  >
+                    {link.label}
+                  </MagneticButton>
+                ))}
               </div>
             </div>
           </div>
