@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useEffect, useRef } from "react";
-import { ArrowUp, ArrowUpRight, Briefcase, MessageCircle } from "lucide-react";
+import { ArrowUp, Briefcase, MessageCircle } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
@@ -200,6 +200,9 @@ const MarqueeItem = () => (
   </div>
 );
 
+const whatsappUrl =
+  "https://wa.me/5516996094649?text=Ol%C3%A1%2C%20quero%20falar%20com%20um%20especialista%20da%20CORPAD%20Digital.";
+
 export function CinematicFooter() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const giantTextRef = useRef<HTMLDivElement>(null);
@@ -296,11 +299,13 @@ export function CinematicFooter() {
               <div className="flex w-full flex-wrap justify-center gap-4">
                 <MagneticButton
                   as="a"
-                  href="mailto:contato@corpad.com.br"
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noreferrer"
                   className="footer-glass-pill group flex items-center gap-3 rounded-full bg-[#69e8ff]/20 px-10 py-5 text-sm font-black text-white shadow-[0_0_35px_rgba(105,232,255,0.22)] md:text-base"
                 >
                   <MessageCircle className="h-6 w-6 text-primary transition-colors group-hover:text-white" />
-                  Falar com especialista
+                  Falar pelo WhatsApp
                 </MagneticButton>
 
                 <MagneticButton
@@ -330,6 +335,13 @@ export function CinematicFooter() {
                 </MagneticButton>
                 <MagneticButton
                   as="a"
+                  href="/clientes"
+                  className="footer-glass-pill rounded-full px-6 py-3 text-xs font-bold text-white/86 hover:text-white md:text-sm"
+                >
+                  Clientes
+                </MagneticButton>
+                <MagneticButton
+                  as="a"
                   href="#sobre"
                   className="footer-glass-pill rounded-full px-6 py-3 text-xs font-bold text-white/86 hover:text-white md:text-sm"
                 >
@@ -341,7 +353,7 @@ export function CinematicFooter() {
 
           <div className="relative z-20 flex w-full flex-col items-center justify-between gap-6 px-6 pb-8 md:flex-row md:px-12">
             <div className="order-2 text-[10px] font-bold uppercase tracking-widest text-white/78 md:order-1 md:text-xs">
-              © 2026 Corpad Digital. Todos os direitos reservados.
+              © 2026 CORPAD Digital. Todos os direitos reservados.
             </div>
 
             <div className="footer-glass-pill order-1 flex cursor-default items-center gap-2 rounded-full border-[#69e8ff]/60 bg-[#69e8ff]/12 px-6 py-3 md:order-2">
@@ -355,7 +367,7 @@ export function CinematicFooter() {
                 pela
               </span>
               <span className="ml-1 text-xs font-black tracking-normal text-white md:text-sm">
-                Corpad
+                CORPAD
               </span>
             </div>
 

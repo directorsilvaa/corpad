@@ -4,6 +4,10 @@ import GsapAnimations from "./GsapAnimations";
 import Home from "./pages/Home";
 import CorpadPage from "./pages/CorpadDigital";
 import CorpadConsultoria from "./pages/CorpadConsultoria";
+import ClientesPage from "./pages/Clientes";
+import PortfolioPage from "./pages/Portfolio";
+import ServicePage from "./pages/ServicePage";
+import { getServicePageBySlug } from "./data/servicePages";
 import "./globals.css";
 
 function App() {
@@ -15,6 +19,22 @@ function App() {
 
   if (pathname === "/corpad-consultoria") {
     return <CorpadConsultoria />;
+  }
+
+  if (pathname === "/portfolio") {
+    return <PortfolioPage />;
+  }
+
+  if (pathname === "/clientes") {
+    return <ClientesPage />;
+  }
+
+  if (pathname.startsWith("/servicos/")) {
+    const service = getServicePageBySlug(pathname.replace("/servicos/", ""));
+
+    if (service) {
+      return <ServicePage service={service} />;
+    }
   }
 
   return <Home />;

@@ -116,7 +116,7 @@ export default function PortfolioCarousel({ projects }: PortfolioCarouselProps) 
           {projects.map((project, index) => (
             <article
               className={`portfolio-project-card portfolio-project-card-${
-                (index % 5) + 1
+                (index % 6) + 1
               }`}
               key={`${project.client}-${index}`}
             >

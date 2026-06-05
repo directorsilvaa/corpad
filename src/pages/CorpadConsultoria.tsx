@@ -1,7 +1,6 @@
 import Image from "@/components/ui/vite-image";
 import {
   Activity,
-  ArrowUpRight,
   CheckCircle2,
   ClipboardList,
   Phone,
@@ -38,6 +37,9 @@ const testimonials = [
   "O suporte estratégico da CORPAD foi fundamental para o crescimento da nossa empresa.",
 ];
 
+const whatsappUrl =
+  "https://wa.me/5516996094649?text=Ol%C3%A1%2C%20quero%20falar%20com%20um%20especialista%20da%20CORPAD%20Consultoria.";
+
 export default function CorpadConsultoria() {
   return (
     <main className="consulting-page">
@@ -58,8 +60,8 @@ export default function CorpadConsultoria() {
           <a href="#sobre">Equipe</a>
           <a href="#resultados">Conteudos</a>
         </nav>
-        <a className="consulting-nav-button" href="#contato">
-          Fale Conosco
+        <a className="consulting-nav-button" href={whatsappUrl} target="_blank" rel="noreferrer">
+          WhatsApp
         </a>
       </header>
 
@@ -74,9 +76,9 @@ export default function CorpadConsultoria() {
             agora ao alcance da sua empresa.
           </p>
           <div className="consulting-actions">
-            <a className="consulting-primary" href="#contato">
-              Fale com nossa equipe
-              <ArrowUpRight size={17} />
+            <a className="consulting-primary" href={whatsappUrl} target="_blank" rel="noreferrer">
+              Fale pelo WhatsApp
+              <Phone size={17} />
             </a>
           </div>
           <div className="consulting-family-proof" aria-label="Clientes atendidos">
@@ -301,13 +303,13 @@ export default function CorpadConsultoria() {
           </p>
         </div>
         <div className="consulting-actions">
-          <a className="consulting-primary" href="mailto:contato@corpad.com.br">
+          <a className="consulting-primary" href={whatsappUrl} target="_blank" rel="noreferrer">
             <Rocket size={18} />
             Solicitar Diagnóstico Gratuito
           </a>
-          <a className="consulting-secondary" href="mailto:contato@corpad.com.br">
+          <a className="consulting-secondary" href={whatsappUrl} target="_blank" rel="noreferrer">
             <Phone size={18} />
-            Falar com um Especialista
+            Falar pelo WhatsApp
           </a>
         </div>
       </section>

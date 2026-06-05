@@ -2,10 +2,12 @@ import Image from "@/components/ui/vite-image";
 import {
   ArrowUpRight,
   Check,
+  ChevronDown,
   Code2,
   Layers3,
   Map,
   Megaphone,
+  MessageCircle,
   MousePointer2,
   Rocket,
   Search,
@@ -20,21 +22,28 @@ import HypedAnimationsSection from "../components/HypedAnimationsSection";
 import LightRays from "../components/LightRays";
 import PortfolioCarousel from "../components/PortfolioCarousel";
 import ScrollReveal from "../components/ScrollReveal";
+import { clientLogos } from "../data/clients";
+import { portfolioProjects } from "../data/portfolioProjects";
+import { servicePages } from "../data/servicePages";
 
-const navItems = [
-  { label: "Soluções", href: "#solucoes", active: true },
-  { label: "Projetos", href: "#projetos" },
-  { label: "Sobre", href: "#sobre" },
-];
+const serviceNavItems = servicePages.map((service) => ({
+  label: service.navLabel,
+  href: `/servicos/${service.slug}`,
+}));
 
 const supportPhrases = [
   "Mais de 20 anos desenvolvendo soluções digitais para empresas que querem evoluir.",
+  "Clientes de diferentes segmentos já confiaram na CORPAD Digital.",
 ];
+
+const whatsappUrl =
+  "https://wa.me/5516996094649?text=Ol%C3%A1%2C%20quero%20falar%20com%20um%20especialista%20da%20CORPAD%20Digital.";
 
 const services = [
   {
     title: "Sites profissionais",
     icon: Layers3,
+    href: "/servicos/criacao-de-sites",
     description:
       "Desenvolvemos sites modernos, responsivos e otimizados para transmitir credibilidade, apresentar sua empresa com clareza e transformar visitantes em oportunidades de negócio.",
     fit: "Para empresas que precisam de uma presença digital forte, profissional e confiável.",
@@ -42,6 +51,7 @@ const services = [
   {
     title: "Lojas virtuais",
     icon: ShoppingCart,
+    href: "/servicos/e-commerce",
     description:
       "Criamos e-commerces práticos, seguros e preparados para venda, com estrutura para cadastro de produtos, gestão de estoque, preços, descrições e otimização para buscadores.",
     fit: "Para empresas que querem vender online com mais organização e profissionalismo.",
@@ -49,6 +59,7 @@ const services = [
   {
     title: "Marketing digital",
     icon: Megaphone,
+    href: "/servicos/marketing-digital",
     description:
       "Planejamos estratégias para fortalecer sua marca, atrair o público certo, gerar leads qualificados e aproximar sua comunicação dos objetivos comerciais da empresa.",
     fit: "Para empresas que querem sair do improviso e crescer com direção no digital.",
@@ -56,6 +67,7 @@ const services = [
   {
     title: "Tráfego pago",
     icon: MousePointer2,
+    href: "/servicos/trafego-pago",
     description:
       "Criamos, gerenciamos e otimizamos campanhas em Google, Instagram, Facebook, TikTok e LinkedIn para aumentar sua visibilidade e gerar resultados mais rápidos.",
     fit: "Para empresas que querem atrair clientes agora, com campanhas mensuráveis e bem direcionadas.",
@@ -63,6 +75,7 @@ const services = [
   {
     title: "Hospedagem de alta performance",
     icon: ServerCog,
+    href: "/servicos/hospedagem-de-sites",
     description:
       "Oferecemos hospedagem rápida, segura e estável para garantir que seu site esteja sempre disponível, protegido e preparado para entregar uma boa experiência ao usuário.",
     fit: "Para empresas que não querem perder vendas por lentidão, instabilidade ou falhas técnicas.",
@@ -70,6 +83,7 @@ const services = [
   {
     title: "Automação de processos",
     icon: Workflow,
+    href: "/servicos/automacao",
     description:
       "Automatizamos tarefas, integramos ferramentas e reduzimos processos manuais para que sua empresa ganhe tempo, reduza falhas e opere com mais inteligência.",
     fit: "Para empresas que querem escalar sem depender de processos lentos e repetitivos.",
@@ -141,69 +155,20 @@ const processJourney = [
   },
 ];
 
-const caseCards = [
-  {
-    client: "JS Grupo",
-    service: "Site institucional",
-    url: "https://jsgrupo.com/",
-    image: "/projetos/js.png",
-    challenge:
-      "O grupo precisava de uma presença digital organizada para apresentar sua estrutura e áreas de atuação.",
-    solution:
-      "Criamos uma experiência institucional com navegação clara, comunicação objetiva e foco em credibilidade.",
-    result:
-      "Um site mais profissional para apoiar relacionamento, apresentação comercial e descoberta da marca.",
-  },
-  {
-    client: "Instituto Mont Care",
-    service: "Site para saúde",
-    url: "https://institutomontcare.com.br/",
-    image: "/projetos/insti.png",
-    challenge:
-      "A instituição precisava apresentar serviços, especialidades e informações de atendimento com mais clareza.",
-    solution:
-      "Desenvolvemos uma estrutura visual acolhedora, direta e preparada para orientar o visitante.",
-    result:
-      "Uma presença digital mais confiável para pacientes, familiares e parceiros.",
-  },
-  {
-    client: "Clínica Vitacore",
-    service: "Site clínico",
-    url: "https://www.clinicavitacore.com.br/",
-    image: "/projetos/clinicavitacore.png",
-    challenge:
-      "A clínica precisava destacar seus serviços e facilitar o entendimento da jornada de atendimento.",
-    solution:
-      "Organizamos conteúdo, chamadas e áreas institucionais em uma interface leve e responsiva.",
-    result:
-      "Um canal digital mais claro, acessível e alinhado à experiência do paciente.",
-  },
-  {
-    client: "Principia Medicina",
-    service: "Site médico",
-    url: "https://principiamedicina.com.br/",
-    image: "/projetos/principiamedicina.png",
-    challenge:
-      "O projeto precisava comunicar autoridade, cuidado e informação médica de forma simples.",
-    solution:
-      "Criamos uma apresentação digital com hierarquia visual, conteúdo organizado e navegação objetiva.",
-    result:
-      "Uma vitrine digital preparada para apresentar especialidades e aproximar pacientes da clínica.",
-  },
-];
+const caseCards = portfolioProjects.slice(0, 6);
 
 const faqs = [
-  ["A Corpad Digital cria sites personalizados?", "Sim. Cada site é desenvolvido de acordo com a identidade, os objetivos e as necessidades da empresa."],
+  ["A CORPAD Digital cria sites personalizados?", "Sim. Cada site é desenvolvido de acordo com a identidade, os objetivos e as necessidades da empresa."],
   ["Vocês também fazem campanhas de tráfego pago?", "Sim. Criamos, gerenciamos e otimizamos campanhas em Google Ads, Instagram, Facebook, TikTok e LinkedIn."],
   ["Posso contratar apenas um serviço?", "Sim. Você pode contratar uma solução específica ou combinar diferentes serviços de acordo com a necessidade da sua empresa."],
-  ["A Corpad oferece suporte após a entrega?", "Sim. Dependendo do serviço contratado, a Corpad oferece suporte, acompanhamento técnico e melhorias contínuas."],
+  ["A CORPAD oferece suporte após a entrega?", "Sim. Dependendo do serviço contratado, a CORPAD oferece suporte, acompanhamento técnico e melhorias contínuas."],
   ["Vocês desenvolvem lojas virtuais?", "Sim. Criamos e-commerces com estrutura para venda, organização de produtos, gestão de estoque e otimização para buscadores."],
   ["A automação serve para qualquer empresa?", "A automação pode ser aplicada em diferentes tipos de negócio, principalmente quando existem tarefas repetitivas, integração entre sistemas ou processos manuais que consomem muito tempo."],
 ];
 
 const faqItems = [
   {
-    question: "A Corpad Digital cria sites personalizados?",
+    question: "A CORPAD Digital cria sites personalizados?",
     answer:
       "Sim. Cada site e desenvolvido de acordo com a identidade, os objetivos e as necessidades da empresa.",
     points: ["Layout sob medida", "Estrutura responsiva", "Foco em conversao"],
@@ -224,7 +189,7 @@ const faqItems = [
     command: "selecionar servico ideal",
   },
   {
-    question: "A Corpad oferece suporte apos a entrega?",
+    question: "A CORPAD oferece suporte apos a entrega?",
     answer:
       "Sim. Dependendo do servico contratado, oferecemos suporte, acompanhamento tecnico e melhorias continuas.",
     points: ["Acompanhamento tecnico", "Ajustes e melhorias", "Orientacao especializada"],
@@ -278,21 +243,26 @@ export default function CorpadPage() {
         </a>
 
         <nav className="nav-links" aria-label="Navegação principal">
-          {navItems.map((item) => (
-            <a
-              className={item.active ? "active" : undefined}
-              href={item.href}
-              key={item.label}
-              aria-current={item.active ? "page" : undefined}
-            >
-              {item.label}
+          <div className="nav-menu">
+            <a className="active nav-menu-trigger" href="#solucoes" aria-current="page">
+              Serviços <ChevronDown size={14} strokeWidth={2.2} />
             </a>
-          ))}
+            <div className="nav-submenu" aria-label="Serviços">
+              {serviceNavItems.map((item) => (
+                <a href={item.href} key={item.label}>
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+          <a href="#projetos">Portfólio</a>
+          <a href="/clientes">Clientes</a>
+          <a href="#sobre">Sobre</a>
         </nav>
 
         <div className="nav-actions">
-          <a className="nav-cta" href="#contato">
-            Faça parte <ArrowUpRight size={15} />
+          <a className="nav-cta" href={whatsappUrl} target="_blank" rel="noreferrer">
+            WhatsApp <MessageCircle size={15} />
           </a>
         </div>
       </header>
@@ -312,8 +282,8 @@ export default function CorpadPage() {
           </p>
 
           <div className="hero-actions">
-            <a className="primary-cta" href="#contato">
-              Falar com um especialista <ArrowUpRight size={17} />
+            <a className="primary-cta" href={whatsappUrl} target="_blank" rel="noreferrer">
+              Falar pelo WhatsApp <MessageCircle size={17} />
             </a>
             <a className="secondary-cta" href="#solucoes">
               Conhecer soluções
@@ -330,6 +300,9 @@ export default function CorpadPage() {
               </span>
             ))}
           </div>
+          <a className="clients-inline-link" href="/clientes">
+            Ver clientes que confiaram na CORPAD <ArrowUpRight size={14} />
+          </a>
         </div>
       </section>
 
@@ -359,7 +332,7 @@ export default function CorpadPage() {
             comunicação, segurança e conversão trabalhando juntos.
           </p>
           <p>
-            A Corpad Digital organiza tudo isso em uma estrutura digital
+            A CORPAD Digital organiza tudo isso em uma estrutura digital
             inteligente, profissional e orientada para crescimento.
           </p>
         </div>
@@ -375,7 +348,7 @@ export default function CorpadPage() {
         </div>
         <div className="solution-copy">
           <p>
-            A Corpad Digital une tecnologia, marketing e performance para criar
+            A CORPAD Digital une tecnologia, marketing e performance para criar
             soluções sob medida para o seu negócio.
           </p>
           <p>
@@ -384,6 +357,29 @@ export default function CorpadPage() {
             vender e operar com mais eficiência.
           </p>
         </div>
+      </section>
+
+      <section className="clients-carousel-section" aria-label="Clientes que confiaram na CORPAD">
+        <div className="section-copy centered-copy">
+          <span className="section-kicker">Clientes</span>
+          <h2>Empresas que já confiaram na CORPAD</h2>
+        </div>
+
+        <div className="clients-carousel" aria-hidden="true">
+          <div className="clients-carousel-track">
+            {[...clientLogos, ...clientLogos].map((client, index) => (
+              <article className="client-logo-card" key={`${client.name}-${index}`}>
+                <div className="client-logo-mark">{client.initials}</div>
+                <h3>{client.name}</h3>
+                <p>{client.segment}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <a className="clients-carousel-link" href="/clientes">
+          Ver todos os clientes <ArrowUpRight size={15} />
+        </a>
       </section>
 
       <FastDevelopmentSection />
@@ -401,13 +397,13 @@ export default function CorpadPage() {
             const Icon = service.icon;
 
             return (
-              <article className="service-card" key={service.title}>
+              <a className="service-card" href={service.href} key={service.title}>
                 <span className="service-icon" aria-hidden="true">
                   <Icon size={22} />
                 </span>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
-              </article>
+              </a>
             );
           })}
         </div>
@@ -420,7 +416,7 @@ export default function CorpadPage() {
             Sua empresa mais preparada para vender, atender e crescer no digital
           </h2>
           <p>
-            Com a Corpad Digital, sua empresa ganha uma estrutura mais
+            Com a CORPAD Digital, sua empresa ganha uma estrutura mais
             profissional, estratégica e eficiente para competir no ambiente
             online.
           </p>
@@ -441,7 +437,7 @@ export default function CorpadPage() {
       <section className="differentials-section" id="sobre">
         <div className="section-copy centered-copy">
           <span className="section-kicker">Diferenciais</span>
-          <h2>Por que empresas escolhem a Corpad Digital?</h2>
+          <h2>Por que empresas escolhem a CORPAD Digital?</h2>
         </div>
 
         <div className="differential-grid">
@@ -501,13 +497,18 @@ export default function CorpadPage() {
           <span className="section-kicker">Portfólio</span>
           <h2>Projetos digitais criados para empresas reais</h2>
           <p>
-            A Corpad Digital já ajudou empresas a modernizarem sua presença
+            A CORPAD Digital já ajudou empresas a modernizarem sua presença
             online, estruturarem canais de venda, melhorarem sua comunicação e
             tornarem seus processos mais eficientes.
           </p>
         </div>
 
         <PortfolioCarousel projects={caseCards} />
+        <div className="portfolio-section-actions">
+          <a className="secondary-cta" href="/portfolio">
+            Ver portfólio completo <ArrowUpRight size={17} />
+          </a>
+        </div>
 
         <div className="case-grid" hidden>
           {caseCards.map((card) => (
@@ -545,8 +546,8 @@ export default function CorpadPage() {
             acompanham o potencial do seu negócio, está na hora de mudar.
           </p>
         </div>
-        <a className="primary-cta" href="#contato">
-          Converse com a Corpad Digital <ArrowUpRight size={17} />
+        <a className="primary-cta" href={whatsappUrl} target="_blank" rel="noreferrer">
+          Converse pelo WhatsApp <MessageCircle size={17} />
         </a>
       </section>
 
@@ -570,7 +571,7 @@ export default function CorpadPage() {
                     </li>
                   ))}
                 </ul>
-                <a href="#contato">
+                <a href={whatsappUrl} target="_blank" rel="noreferrer">
                   Ver detalhes <ArrowUpRight size={14} />
                 </a>
               </div>
@@ -580,7 +581,7 @@ export default function CorpadPage() {
                   <i>site</i>
                   <i>trafego</i>
                   <i>automacao</i>
-                  <code>corpad digital --acao "{item.command}"</code>
+                  <code>CORPAD Digital --acao "{item.command}"</code>
                 </div>
               </div>
             </article>
@@ -596,11 +597,11 @@ export default function CorpadPage() {
           lucrativa?
         </h2>
         <p>
-          A Corpad Digital desenvolve a estrutura que sua empresa precisa para
+          A CORPAD Digital desenvolve a estrutura que sua empresa precisa para
           atrair mais clientes, vender melhor e crescer com tecnologia.
         </p>
-        <a className="primary-cta" href="mailto:contato@corpad.com.br">
-          Fale com um especialista agora <ArrowUpRight size={17} />
+        <a className="primary-cta" href={whatsappUrl} target="_blank" rel="noreferrer">
+          Fale com um especialista agora <MessageCircle size={17} />
         </a>
       </section>
       <CinematicFooter />
