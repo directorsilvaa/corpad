@@ -201,7 +201,7 @@ const MarqueeItem = () => (
 );
 
 const whatsappUrl =
-  "https://wa.me/5516996094649?text=Ol%C3%A1%2C%20quero%20falar%20com%20um%20especialista%20da%20CORPAD%20Digital.";
+  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei o site da CORPAD e gostaria de falar com um especialista para entender qual solucao faz mais sentido para minha empresa.")}`;
 
 type FooterLink = {
   label: string;

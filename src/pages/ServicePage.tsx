@@ -33,12 +33,12 @@ type ServicePageProps = {
 const whatsappPhone = "5516996094649";
 
 const serviceWhatsappMessages: Record<string, string> = {
-  "criacao-de-sites": "Ola, vim por causa da criacao de sites.",
-  "e-commerce": "Ola, vim por causa do e-commerce.",
-  "hospedagem-de-sites": "Ola, vim por causa da hospedagem.",
-  "marketing-digital": "Ola, vim por causa do marketing digital.",
-  "trafego-pago": "Ola, vim por causa do trafego pago.",
-  automacao: "Ola, vim por causa da automacao.",
+  "criacao-de-sites": "Ola, tudo bem? Acessei a pagina de Criacao de Sites da CORPAD Digital e gostaria de conversar sobre um site profissional para minha empresa.",
+  "e-commerce": "Ola, tudo bem? Acessei a pagina de E-commerce da CORPAD Digital e gostaria de entender como criar uma loja virtual para minha empresa.",
+  "hospedagem-de-sites": "Ola, tudo bem? Acessei a pagina de Hospedagem de Sites da CORPAD Digital e gostaria de saber mais sobre hospedagem segura e de alta performance.",
+  "marketing-digital": "Ola, tudo bem? Acessei a pagina de Marketing Digital da CORPAD Digital e gostaria de conhecer estrategias para fortalecer minha empresa.",
+  "trafego-pago": "Ola, tudo bem? Acessei a pagina de Trafego Pago da CORPAD Digital e gostaria de conversar sobre campanhas para atrair mais clientes.",
+  automacao: "Ola, tudo bem? Acessei a pagina de Automacao da CORPAD Digital e gostaria de entender como automatizar processos na minha empresa.",
 };
 
 function buildWhatsappUrl(message: string) {
@@ -73,7 +73,7 @@ export default function ServicePage({ service }: ServicePageProps) {
   const isAutomation = service.slug === "automacao";
   const serviceWhatsappUrl = buildWhatsappUrl(
     serviceWhatsappMessages[service.slug] ??
-      `Ola, vim por causa de ${service.navLabel.toLowerCase()}.`
+      `Ola, tudo bem? Acessei a pagina de ${service.navLabel} da CORPAD Digital e gostaria de falar com um especialista.`
   );
   const highlights = isWebsiteCreation
     ? service.highlights.slice(0, 4)

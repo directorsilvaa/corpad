@@ -37,7 +37,7 @@ const supportPhrases = [
 ];
 
 const whatsappUrl =
-  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, vim pelo site da CORPAD Digital.")}`;
+  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei a pagina da CORPAD Digital e gostaria de conhecer as solucoes digitais para minha empresa.")}`;
 
 const services = [
   {
@@ -382,8 +382,6 @@ export default function CorpadPage() {
                     client.initials
                   )}
                 </div>
-                <h3>{client.name}</h3>
-                <p>{client.segment}</p>
               </article>
             ))}
           </div>

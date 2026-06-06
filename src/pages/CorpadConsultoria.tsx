@@ -1,6 +1,7 @@
 import Image from "@/components/ui/vite-image";
 import {
   Activity,
+  ArrowRight,
   CheckCircle2,
   ClipboardList,
   Phone,
@@ -37,132 +38,99 @@ const testimonials = [
   "O suporte estratégico da CORPAD foi fundamental para o crescimento da nossa empresa.",
 ];
 
+const aboutLogos = [
+  ["BR Tax", "Logotipo-BR-Tax__1_-removebg-preview.png"],
+  ["TK Soft", "tk_soft.webp"],
+  ["Total Rede", "total_rede.webp"],
+  ["BR Build", "Logotipo-BR-Build.png.webp"],
+  ["Avant Medical", "Logotipo-Avant-Medical.png"],
+  ["Global Trade", "Logotipo-Global-Trade.webp"],
+];
+
+const aboutStats = [
+  ["20+", "Anos de experiencia"],
+  ["320+", "Projetos entregues"],
+  ["98%", "Satisfacao dos clientes"],
+  ["40+", "Parceiros de longo prazo"],
+];
+
 const whatsappUrl =
-  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, vim por causa da consultoria.")}`;
+  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei a pagina de Consultoria Empresarial da CORPAD e gostaria de falar com um especialista para entender as solucoes para minha empresa.")}`;
 
 export default function CorpadConsultoria() {
   return (
     <main className="consulting-page">
-      <header className="consulting-nav">
-        <a className="consulting-brand" href="#top" aria-label="Página inicial">
-          <Image
-            className="consulting-brand-logo"
-            src="/logo.png"
-            alt="CORPAD"
-            width={1500}
-            height={390}
-            priority
-          />
-        </a>
-        <nav aria-label="Navegação principal">
-          <a className="active" href="#top">Home</a>
-          <a href="#solucoes">Consultoria</a>
-          <a href="#sobre">Equipe</a>
-          <a href="#resultados">Conteudos</a>
+      <header className="consulting-topbar">
+        <nav className="consulting-topbar-links" aria-label="Navegacao principal">
+          <a href="#solucoes">Serviços</a>
+          <a href="#sobre">Sobre nós</a>
+          <a href="#contato">Contato</a>
         </nav>
-        <a className="consulting-nav-button" href={whatsappUrl} target="_blank" rel="noreferrer">
-          WhatsApp
+        <a className="consulting-topbar-brand" href="#top" aria-label="Pagina inicial">
+          CORPAD
+        </a>
+        <a className="consulting-topbar-cta" href={whatsappUrl} target="_blank" rel="noreferrer">
+          Entrar em contato
         </a>
       </header>
-
       <section className="consulting-hero" id="top">
+        <Image
+          className="consulting-hero-bg"
+          src="/consultoria/bg.png"
+          alt=""
+          fill
+          width={1792}
+          height={1024}
+          priority
+        />
         <div className="consulting-hero-copy">
-          <span className="consulting-kicker">Gestao empresarial e tecnologia</span>
           <h1>
-            Viabilizamos crescimento atraves da <strong>administracao inteligente</strong> do seu negocio.
+            Consultoria empresarial
+            <span>focada em resultados.</span>
           </h1>
           <p>
-            O modelo de consultoria que une estrategia, processos e tecnologia,
-            agora ao alcance da sua empresa.
+            Ajudamos empresas a transformar desafios complexos em direcao clara,
+            processos organizados e resultados reais.
           </p>
           <div className="consulting-actions">
             <a className="consulting-primary" href={whatsappUrl} target="_blank" rel="noreferrer">
-              Fale pelo WhatsApp
-              <Phone size={17} />
+              Agendar diagnóstico
+              <ArrowRight size={17} />
             </a>
-          </div>
-          <div className="consulting-family-proof" aria-label="Clientes atendidos">
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <b>+ 300</b>
-            <small>Empresas atendidas</small>
-          </div>
-        </div>
-        <div className="consulting-hero-portrait" aria-hidden="true">
-          <div className="consulting-portrait-frame">
-            <Image
-              className="consulting-portrait-image"
-              src="/hero-consultoria.png"
-              alt=""
-              width={1024}
-              height={1024}
-              priority
-            />
-          </div>
-          <div className="consulting-floating-card consulting-floating-card-left">
-            <CheckCircle2 size={20} />
-            Planejamento
-          </div>
-          <div className="consulting-floating-card consulting-floating-card-right">
-            <CheckCircle2 size={20} />
-            Liberdade
+            <a className="consulting-secondary" href="#solucoes">
+              Ver serviços
+            </a>
           </div>
         </div>
       </section>
-
       <section className="consulting-section consulting-split" id="sobre">
-        <div className="consulting-about-heading">
-          <span className="consulting-kicker">Sobre a CORPAD</span>
-          <h2>Mais do que consultoria. Parceiros do seu crescimento.</h2>
-          <p>
-            Atuamos na intersecao entre gestao, tecnologia e dados para ajudar
-            empresas a operar com mais clareza.
-          </p>
-          <div className="consulting-about-metrics" aria-label="Resumo da CORPAD">
-            <span>
-              <b>20+</b>
-              anos de experiencia
+        <div className="consulting-about-logos" aria-label="Clientes e parceiros">
+          {aboutLogos.map(([name, file]) => (
+            <span key={name}>
+              <Image
+                src={`/logotiposclientes/${file}`}
+                alt={name}
+                width={140}
+                height={52}
+              />
             </span>
-            <span>
-              <b>360</b>
-              visao do negocio
-            </span>
-          </div>
+          ))}
         </div>
-        <div className="consulting-text-stack">
-          <article>
-            <CheckCircle2 size={18} />
-            <div>
-              <strong>Processos eficientes</strong>
-              <p>
-                Organizamos fluxos, responsabilidades e rotinas para reduzir
-                gargalos e dar mais previsibilidade a operacao.
-              </p>
-            </div>
-          </article>
-          <article>
-            <CheckCircle2 size={18} />
-            <div>
-              <strong>Tecnologia aplicada</strong>
-              <p>
-                Conectamos ferramentas, infraestrutura e automacoes ao que a
-                empresa realmente precisa para crescer.
-              </p>
-            </div>
-          </article>
-          <article>
-            <CheckCircle2 size={18} />
-            <div>
-              <strong>Decisoes com dados</strong>
-              <p>
-                Transformamos informacoes em indicadores claros para apoiar
-                escolhas melhores e resultados consistentes.
-              </p>
-            </div>
-          </article>
+        <div className="consulting-about-main">
+          <span className="consulting-about-watermark" aria-hidden="true">ABOUT</span>
+          <p>
+            Somos uma consultoria dedicada a ajudar empresas a tomar melhores
+            decisoes, melhorar a performance e crescer com mais consistencia.
+            Transformamos complexidade em resultados.
+          </p>
+        </div>
+        <div className="consulting-about-metrics" aria-label="Resumo da CORPAD">
+          {aboutStats.map(([value, label]) => (
+            <span key={label}>
+              <b>{value}</b>
+              {label}
+            </span>
+          ))}
         </div>
       </section>
 
@@ -318,3 +286,5 @@ export default function CorpadConsultoria() {
     </main>
   );
 }
+
+

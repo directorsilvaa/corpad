@@ -4,7 +4,7 @@ import { clientLogos } from "../data/clients";
 import { servicePages } from "../data/servicePages";
 
 const whatsappUrl =
-  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, vim pela pagina de clientes da CORPAD Digital.")}`;
+  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei a pagina de clientes da CORPAD Digital e gostaria de saber como a CORPAD pode ajudar minha empresa.")}`;
 
 export default function ClientesPage() {
   return (
@@ -86,8 +86,6 @@ export default function ClientesPage() {
                 client.initials
               )}
             </div>
-            <h2>{client.name}</h2>
-            <p>{client.segment}</p>
           </article>
         ))}
       </section>

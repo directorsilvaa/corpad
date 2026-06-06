@@ -8,7 +8,7 @@ import {
 import { servicePages } from "../data/servicePages";
 
 const whatsappUrl =
-  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, vim pelo portfolio da CORPAD Digital.")}`;
+  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei o portfolio da CORPAD Digital e gostaria de conversar sobre um projeto para minha empresa.")}`;
 
 export default function PortfolioPage() {
   const [previewProject, setPreviewProject] = useState<PortfolioProject | null>(

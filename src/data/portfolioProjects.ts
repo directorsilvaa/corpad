@@ -85,4 +85,16 @@ export const portfolioProjects: PortfolioProject[] = [
     result:
       "Uma página focada em conversão para apoiar campanhas e aquisição de clientes.",
   },
+  ...Array.from({ length: 23 }, (_, index) => {
+    const projectNumber = index + 8;
+
+    return {
+      client: `Projeto ${projectNumber}`,
+      service: "Projeto digital",
+      image: `/projetos/${projectNumber}.png`,
+      challenge: "Apresentar a marca com clareza e presenca digital profissional.",
+      solution: "Criamos uma interface visual alinhada ao posicionamento do projeto.",
+      result: "Uma pagina preparada para fortalecer a comunicacao online da marca.",
+    };
+  }),
 ];
