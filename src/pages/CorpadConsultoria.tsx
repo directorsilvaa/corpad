@@ -1,36 +1,99 @@
 import Image from "@/components/ui/vite-image";
+import type { CSSProperties } from "react";
 import {
   Activity,
   ArrowRight,
   CheckCircle2,
   ClipboardList,
+  Handshake,
+  Lightbulb,
+  Network,
   Phone,
   Rocket,
   Search,
+  SmilePlus,
+  Sparkles,
   TrendingUp,
+  Trophy,
+  UsersRound,
   Wrench,
 } from "lucide-react";
 import { CinematicFooter } from "@/components/ui/motion-footer";
+import ConsultingSolutionCard from "../components/ConsultingSolutionCard";
 import ConsultingSolutionsSection from "../components/ConsultingSolutionsSection";
+import LightRays from "../components/LightRays";
 
 const differentials = [
-  ["Foco em Resultados", "Cada solução é desenvolvida para gerar impacto real nos indicadores do negócio."],
-  ["Atendimento Personalizado", "Entendemos a realidade da sua empresa para entregar estratégias alinhadas aos seus objetivos."],
-  ["Tecnologia e Inovação", "Utilizamos ferramentas modernas para aumentar eficiência e competitividade."],
-  ["Decisões Baseadas em Dados", "Transformamos informações em inteligência para apoiar decisões mais assertivas."],
-  ["Equipe Especializada", "Profissionais experientes em gestão, tecnologia e estratégia empresarial."],
-  ["Soluções Integradas", "Uma única empresa para cuidar da gestão, tecnologia e crescimento do seu negócio."],
+  {
+    title: "Foco em Resultados",
+    icon: TrendingUp,
+    description:
+      "Cada solucao e desenvolvida para gerar impacto real nos indicadores do negocio.",
+  },
+  {
+    title: "Atendimento Personalizado",
+    icon: UsersRound,
+    description:
+      "Entendemos a realidade da sua empresa para entregar estrategias alinhadas aos seus objetivos.",
+  },
+  {
+    title: "Tecnologia e Inovacao",
+    icon: Sparkles,
+    description:
+      "Utilizamos ferramentas modernas para aumentar eficiencia e competitividade.",
+  },
+  {
+    title: "Decisoes Baseadas em Dados",
+    icon: Lightbulb,
+    description:
+      "Transformamos informacoes em inteligencia para apoiar decisoes mais assertivas.",
+  },
+  {
+    title: "Equipe Especializada",
+    icon: CheckCircle2,
+    description:
+      "Profissionais experientes em gestao, tecnologia e estrategia empresarial.",
+  },
+  {
+    title: "Solucoes Integradas",
+    icon: Network,
+    description:
+      "Uma unica empresa para cuidar da gestao, tecnologia e crescimento do seu negocio.",
+  },
 ];
 
 const methodology = [
-  ["Diagnóstico", "Analisamos sua operação para identificar desafios, gargalos e oportunidades."],
-  ["Planejamento", "Desenvolvemos estratégias personalizadas alinhadas aos objetivos da empresa."],
-  ["Implementação", "Aplicamos soluções práticas para melhorar processos e resultados."],
-  ["Monitoramento", "Acompanhamos indicadores e realizamos ajustes contínuos."],
-  ["Crescimento", "Estruturamos sua empresa para crescer de forma organizada e sustentável."],
+  {
+    title: "Diagnostico",
+    icon: Search,
+    description:
+      "Analisamos sua operacao para identificar desafios, gargalos e oportunidades.",
+  },
+  {
+    title: "Planejamento",
+    icon: ClipboardList,
+    description:
+      "Desenvolvemos estrategias personalizadas alinhadas aos objetivos da empresa.",
+  },
+  {
+    title: "Implementacao",
+    icon: Wrench,
+    description:
+      "Aplicamos solucoes praticas para melhorar processos e resultados.",
+  },
+  {
+    title: "Monitoramento",
+    icon: Activity,
+    description:
+      "Acompanhamos indicadores e realizamos ajustes continuos.",
+  },
+  {
+    title: "Crescimento",
+    icon: TrendingUp,
+    description:
+      "Estruturamos sua empresa para crescer de forma organizada e sustentavel.",
+  },
 ];
-
-const methodologyIcons = [Search, ClipboardList, Wrench, Activity, TrendingUp];
 
 const testimonials = [
   "A CORPAD nos ajudou a organizar processos internos e melhorar significativamente nossos resultados.",
@@ -48,10 +111,34 @@ const aboutLogos = [
 ];
 
 const aboutStats = [
-  ["20+", "Anos de experiencia"],
-  ["320+", "Projetos entregues"],
-  ["98%", "Satisfacao dos clientes"],
-  ["40+", "Parceiros de longo prazo"],
+  {
+    value: "20+",
+    label: "Anos de experiencia",
+    detail: "Estrategia aplicada em diferentes mercados",
+    progress: "86%",
+    icon: Trophy,
+  },
+  {
+    value: "320+",
+    label: "Projetos entregues",
+    detail: "Do diagnostico a implementacao",
+    progress: "92%",
+    icon: Sparkles,
+  },
+  {
+    value: "98%",
+    label: "Satisfacao dos clientes",
+    detail: "Acompanhamento proximo e recorrente",
+    progress: "98%",
+    icon: SmilePlus,
+  },
+  {
+    value: "40+",
+    label: "Parceiros de longo prazo",
+    detail: "Relacionamentos construidos com consistencia",
+    progress: "78%",
+    icon: Handshake,
+  },
 ];
 
 const whatsappUrl =
@@ -59,7 +146,21 @@ const whatsappUrl =
 
 export default function CorpadConsultoria() {
   return (
-    <main className="consulting-page">
+    <main className="consulting-page consulting-digital-idv">
+      <LightRays
+        className="consulting-light-rays"
+        raysOrigin="top-center"
+        raysColor="#8df0ff"
+        raysSpeed={0.72}
+        lightSpread={0.68}
+        rayLength={2}
+        pulsating
+        fadeDistance={1.05}
+        saturation={1.1}
+        mouseInfluence={0.08}
+        noiseAmount={0.04}
+        distortion={0.065}
+      />
       <header className="consulting-topbar">
         <nav className="consulting-topbar-links" aria-label="Navegacao principal">
           <a href="#solucoes">Serviços</a>
@@ -67,7 +168,14 @@ export default function CorpadConsultoria() {
           <a href="#contato">Contato</a>
         </nav>
         <a className="consulting-topbar-brand" href="#top" aria-label="Pagina inicial">
-          CORPAD
+          <Image
+            className="consulting-topbar-logo"
+            src="/logo.png"
+            alt="CORPAD"
+            width={1500}
+            height={390}
+            priority
+          />
         </a>
         <a className="consulting-topbar-cta" href={whatsappUrl} target="_blank" rel="noreferrer">
           Entrar em contato
@@ -85,21 +193,31 @@ export default function CorpadConsultoria() {
         />
         <div className="consulting-hero-copy">
           <h1>
-            Consultoria empresarial
-            <span>focada em resultados.</span>
+            Consultoria Empresarial
+            <span>Focada Em Resultados.</span>
           </h1>
           <p>
-            Ajudamos empresas a transformar desafios complexos em direcao clara,
-            processos organizados e resultados reais.
+            Ajudamos Empresas A Transformar Desafios Complexos Em Direcao Clara,
+            Processos Organizados E Resultados Reais.
           </p>
           <div className="consulting-actions">
             <a className="consulting-primary" href={whatsappUrl} target="_blank" rel="noreferrer">
-              Agendar diagnóstico
+              Agendar Diagnóstico
               <ArrowRight size={17} />
             </a>
             <a className="consulting-secondary" href="#solucoes">
-              Ver serviços
+              Ver Serviços
             </a>
+          </div>
+          <div className="consulting-hero-proof" aria-label="Resumo da consultoria">
+            <span>
+              <CheckCircle2 size={12} strokeWidth={3} />
+              Mais de 20 anos de experiencia
+            </span>
+            <span>
+              <CheckCircle2 size={12} strokeWidth={3} />
+              Estrategia, tecnologia e dados
+            </span>
           </div>
         </div>
       </section>
@@ -117,6 +235,10 @@ export default function CorpadConsultoria() {
           ))}
         </div>
         <div className="consulting-about-main">
+          <div className="consulting-about-title">
+            <span className="consulting-kicker">Sobre</span>
+            <h2>Sobre A CORPAD</h2>
+          </div>
           <span className="consulting-about-watermark" aria-hidden="true">ABOUT</span>
           <p>
             Somos uma consultoria dedicada a ajudar empresas a tomar melhores
@@ -125,11 +247,22 @@ export default function CorpadConsultoria() {
           </p>
         </div>
         <div className="consulting-about-metrics" aria-label="Resumo da CORPAD">
-          {aboutStats.map(([value, label]) => (
-            <span key={label}>
-              <b>{value}</b>
-              {label}
-            </span>
+          {aboutStats.map(({ value, label, detail, progress, icon: Icon }) => (
+            <article
+              className="consulting-about-metric"
+              key={label}
+              style={{ "--metric-size": progress } as CSSProperties}
+            >
+              <div className="consulting-about-metric-top">
+                <span className="consulting-about-metric-icon" aria-hidden="true">
+                  <Icon size={18} strokeWidth={2.25} />
+                </span>
+                <b>{value}</b>
+              </div>
+              <strong>{label}</strong>
+              <p>{detail}</p>
+              <i aria-hidden="true" />
+            </article>
           ))}
         </div>
       </section>
@@ -145,13 +278,14 @@ export default function CorpadConsultoria() {
             solucoes que conversam entre si.
           </p>
         </div>
-        <div className="consulting-differentials">
-          {differentials.map(([title, description], index) => (
-            <article key={title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <h3>{title}</h3>
-              <p>{description}</p>
-            </article>
+        <div className="consulting-card-grid">
+          {differentials.map((differential) => (
+            <ConsultingSolutionCard
+              key={differential.title}
+              title={differential.title}
+              description={differential.description}
+              icon={differential.icon}
+            />
           ))}
         </div>
       </section>
@@ -167,24 +301,14 @@ export default function CorpadConsultoria() {
             melhoria continua em cada etapa.
           </p>
         </div>
-        <div className="consulting-steps">
-          {methodology.map(([title, description], index) => (
-            <article key={title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                {(() => {
-                  const Icon = methodologyIcons[index];
-
-                  return (
-                    <i aria-hidden="true">
-                      <Icon size={22} />
-                    </i>
-                  );
-                })()}
-                <h3>{title}</h3>
-                <p>{description}</p>
-              </div>
-            </article>
+        <div className="consulting-card-grid">
+          {methodology.map((step) => (
+            <ConsultingSolutionCard
+              key={step.title}
+              title={step.title}
+              description={step.description}
+              icon={step.icon}
+            />
           ))}
         </div>
       </section>
