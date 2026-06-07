@@ -32,7 +32,7 @@ const clientLogoSources: ClientLogoSource[] = [
   {
     name: "Instituto Sirio",
     segment: "Saude",
-    file: "Logo-Instituto-Sirio.png",
+    file: "Logotipo-Instituto-Sirio-crop.png",
   },
   {
     name: "Clinica da Cidade",
@@ -75,19 +75,14 @@ const clientLogoSources: ClientLogoSource[] = [
     file: "Design_sem_nome__9_-removebg-preview.png",
   },
   {
-    name: "Design Sem Nome 8",
+    name: "Franklin Assis",
     segment: "Cliente",
-    file: "Design_sem_nome__8_-removebg-preview.png",
+    file: "Logotipo-Franklin-Assis-crop.png",
   },
   {
-    name: "Design Sem Nome 10",
+    name: "JS Grupo",
     segment: "Cliente",
-    file: "Design_sem_nome__10___1_-removebg-preview.png",
-  },
-  {
-    name: "Cliente 2",
-    segment: "Cliente",
-    file: "2.png",
+    file: "Logotipo-JS-Grupo.png",
   },
   {
     name: "Cliente 3",
@@ -95,9 +90,9 @@ const clientLogoSources: ClientLogoSource[] = [
     file: "3.png",
   },
   {
-    name: "Cliente 4",
-    segment: "Cliente",
-    file: "4.png",
+    name: "Instituto Montcare",
+    segment: "Saude",
+    file: "Logotipo-Instituto-Montcare-preto.png",
   },
   {
     name: "Andre Nakao",
@@ -352,7 +347,7 @@ const clientLogoSources: ClientLogoSource[] = [
   {
     name: "Girou Potiguar",
     segment: "Cliente",
-    file: "Logotipo-Girou-Potiguar.png",
+    file: "Logotipo-Girou-Potiguar-crop.png",
   },
   {
     name: "Fibra TK",
@@ -430,11 +425,6 @@ const clientLogoSources: ClientLogoSource[] = [
     file: "Logotipo-Clinica-Dia-Medicina.webp",
   },
   {
-    name: "Clinica Dia Medicina 1",
-    segment: "Saude",
-    file: "Logotipo-Clinica-Dia-Medicina (1).webp",
-  },
-  {
     name: "Clinica Alano",
     segment: "Saude",
     file: "Logotipo-Clinica-Alano.png",
@@ -466,11 +456,36 @@ const clientLogoSources: ClientLogoSource[] = [
   },
 ];
 
-export const clientLogos: ClientLogo[] = clientLogoSources.map((client) => ({
+const importantClientLogoNames = [
+  "Casa do Vovo",
+  "Clinica Principia",
+  "e-Construnet",
+  "Global Trade",
+  "Fibra TK",
+  "Lobus Medical",
+  "Medic",
+  "Salvador Medical",
+  "AEAA MA",
+  "Clinica da Cidade",
+  "Instituto Sirio",
+];
+
+const importantClientLogoNameSet = new Set(importantClientLogoNames);
+
+const prioritizedClientLogoSources = [
+  ...importantClientLogoNames
+    .map((name) => clientLogoSources.find((client) => client.name === name))
+    .filter((client): client is ClientLogoSource => Boolean(client)),
+  ...clientLogoSources.filter((client) => !importantClientLogoNameSet.has(client.name)),
+];
+
+export const clientLogos: ClientLogo[] = prioritizedClientLogoSources.map((client) => ({
   name: client.name,
   initials: getInitials(client.name),
   segment: client.segment,
   logo: logoPath(client.file),
 }));
+
+export const importantClientLogos: ClientLogo[] = clientLogos.slice(0, importantClientLogoNames.length);
 
 export const featuredClientLogos: ClientLogo[] = clientLogos.slice(0, 10);

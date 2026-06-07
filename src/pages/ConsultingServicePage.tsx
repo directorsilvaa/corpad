@@ -351,11 +351,27 @@ function CloudServerDetails() {
       </div>
 
       <div className="consulting-cloud-plans">
-        {serverOptions.map((option) => (
-          <article key={option.title}>
-            <span>{option.eyebrow}</span>
-            <h3>{option.title}</h3>
-            <p>{option.text}</p>
+        {serverOptions.map((option, index) => {
+          const Icon = index === 0 ? Server : DatabaseZap;
+          const variant = index === 0 ? "vps" : "dedicated";
+
+          return (
+          <article className={`consulting-cloud-plan consulting-cloud-plan-${variant}`} key={option.title}>
+            <div className="consulting-cloud-plan-visual">
+              <span className="consulting-cloud-plan-icon">
+                <Icon size={25} strokeWidth={2.1} />
+              </span>
+              <div className="consulting-cloud-plan-bars">
+                <i />
+                <i />
+                <i />
+              </div>
+            </div>
+            <div className="consulting-cloud-plan-copy">
+              <span>{option.eyebrow}</span>
+              <h3>{option.title}</h3>
+              <p>{option.text}</p>
+            </div>
             <ul>
               {option.items.map((item) => (
                 <li key={item}>
@@ -365,7 +381,8 @@ function CloudServerDetails() {
               ))}
             </ul>
           </article>
-        ))}
+          );
+        })}
       </div>
 
       <div className="consulting-cloud-usage">
@@ -549,15 +566,40 @@ function ConsultingServiceVisual({
 function CloudHostingHeroVisual() {
   return (
     <div className="consulting-cloud-hosting-hero-visual" aria-hidden="true">
-      <div className="consulting-cloud-hosting-panel" />
-      <Image
-        className="consulting-cloud-hosting-person"
-        src="/consultoria/cloud-hosting-hero.png"
-        alt=""
-        width={1024}
-        height={1024}
-        priority
-      />
+      <div className="consulting-cloud-hosting-panel">
+        <div className="consulting-cloud-hosting-grid" />
+        <div className="consulting-cloud-hosting-orbit consulting-cloud-hosting-orbit-a" />
+        <div className="consulting-cloud-hosting-orbit consulting-cloud-hosting-orbit-b" />
+        <div className="consulting-cloud-hosting-core">
+          <Cloud size={54} strokeWidth={1.7} />
+          <span />
+          <span />
+        </div>
+        <div className="consulting-cloud-hosting-server consulting-cloud-hosting-server-a">
+          <Server size={18} strokeWidth={2.2} />
+          <i />
+          <i />
+          <i />
+        </div>
+        <div className="consulting-cloud-hosting-server consulting-cloud-hosting-server-b">
+          <DatabaseZap size={18} strokeWidth={2.2} />
+          <i />
+          <i />
+          <i />
+        </div>
+        <div className="consulting-cloud-hosting-server consulting-cloud-hosting-server-c">
+          <ShieldCheck size={18} strokeWidth={2.2} />
+          <i />
+          <i />
+          <i />
+        </div>
+        <div className="consulting-cloud-hosting-stream consulting-cloud-hosting-stream-a" />
+        <div className="consulting-cloud-hosting-stream consulting-cloud-hosting-stream-b" />
+        <div className="consulting-cloud-hosting-stream consulting-cloud-hosting-stream-c" />
+        <div className="consulting-cloud-hosting-particle consulting-cloud-hosting-particle-a" />
+        <div className="consulting-cloud-hosting-particle consulting-cloud-hosting-particle-b" />
+        <div className="consulting-cloud-hosting-particle consulting-cloud-hosting-particle-c" />
+      </div>
       <div className="consulting-cloud-hosting-score">
         <strong>A+</strong>
         <span>

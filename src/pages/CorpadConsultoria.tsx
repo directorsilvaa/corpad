@@ -24,6 +24,7 @@ import ConsultingSolutionCard from "../components/ConsultingSolutionCard";
 import ConsultingSolutionsSection from "../components/ConsultingSolutionsSection";
 import LightRays from "../components/LightRays";
 import { consultingServicePages } from "../data/consultingServicePages";
+import { importantClientLogos } from "../data/clients";
 
 const differentials = [
   {
@@ -98,18 +99,18 @@ const methodology = [
 ];
 
 const testimonials = [
-  "A CORPAD nos ajudou a organizar processos internos e melhorar significativamente nossos resultados.",
-  "Com as soluções implementadas, conseguimos aumentar nossa produtividade e ter mais controle sobre a operação.",
-  "O suporte estratégico da CORPAD foi fundamental para o crescimento da nossa empresa.",
-];
-
-const aboutLogos = [
-  ["BR Tax", "Logotipo-BR-Tax__1_-removebg-preview.png"],
-  ["TK Soft", "tk_soft.webp"],
-  ["Total Rede", "total_rede.webp"],
-  ["BR Build", "Logotipo-BR-Build.png.webp"],
-  ["Avant Medical", "Logotipo-Avant-Medical.png"],
-  ["Global Trade", "Logotipo-Global-Trade.webp"],
+  {
+    text: "A CORPAD nos ajudou a organizar processos internos e melhorar significativamente nossos resultados.",
+    author: "V.P.",
+  },
+  {
+    text: "Com as soluções implementadas, conseguimos aumentar nossa produtividade e ter mais controle sobre a operação.",
+    author: "R.M.",
+  },
+  {
+    text: "O suporte estratégico da CORPAD foi fundamental para o crescimento da nossa empresa.",
+    author: "A.C.",
+  },
 ];
 
 const aboutStats = [
@@ -207,12 +208,12 @@ export default function CorpadConsultoria() {
         />
         <div className="consulting-hero-copy">
           <h1>
-            Consultoria Empresarial
-            <span>Focada Em Resultados.</span>
+            CONSULTORIA EMPRESARIAL
+            <span>FOCADA EM RESULTADOS.</span>
           </h1>
           <p>
-            Ajudamos Empresas A Transformar Desafios Complexos Em Direcao Clara,
-            Processos Organizados E Resultados Reais.
+            AJUDAMOS EMPRESAS A TRANSFORMAR DESAFIOS COMPLEXOS EM DIRECAO CLARA,
+            PROCESSOS ORGANIZADOS E RESULTADOS REAIS.
           </p>
           <div className="consulting-actions">
             <a className="consulting-primary" href={whatsappUrl} target="_blank" rel="noreferrer">
@@ -237,11 +238,11 @@ export default function CorpadConsultoria() {
       </section>
       <section className="consulting-section consulting-split" id="sobre">
         <div className="consulting-about-logos" aria-label="Clientes e parceiros">
-          {aboutLogos.map(([name, file]) => (
-            <span key={name}>
+          {importantClientLogos.map((client) => (
+            <span key={client.name}>
               <Image
-                src={`/logotiposclientes/${file}`}
-                alt={name}
+                src={client.logo ?? ""}
+                alt={client.name}
                 width={140}
                 height={52}
               />
@@ -362,11 +363,11 @@ export default function CorpadConsultoria() {
         <div className="consulting-testimonials-carousel">
           <div className="consulting-testimonials">
             {[...testimonials, ...testimonials].map((testimonial, index) => (
-              <blockquote key={`${testimonial}-${index}`}>
-                <p>{testimonial}</p>
+              <blockquote key={`${testimonial.author}-${index}`}>
+                <p>{testimonial.text}</p>
                 <footer>
                   <span>{String((index % testimonials.length) + 1).padStart(2, "0")}</span>
-                  Cliente CORPAD
+                  {testimonial.author}
                 </footer>
               </blockquote>
             ))}

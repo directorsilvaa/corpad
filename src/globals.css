@@ -16028,7 +16028,8 @@ h1 em {
     radial-gradient(circle at 88% 0%, rgba(105, 232, 255, 0.14), transparent 22rem),
     radial-gradient(circle at 12% 18%, rgba(18, 103, 232, 0.06), transparent 28rem),
     linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
-  box-shadow: 0 0 0 100vmax #ffffff;
+  box-shadow: none;
+  clip-path: none;
 }
 
 .consulting-digital-idv .consulting-section-heading h2,
@@ -16974,32 +16975,209 @@ h1 em {
   bottom: 44px;
   width: min(440px, 78%);
   height: 318px;
+  overflow: hidden;
   border-radius: 24px 24px 24px 10px;
   background:
-    radial-gradient(circle at 76% 12%, rgba(255, 255, 255, 0.16), transparent 11rem),
-    linear-gradient(135deg, #7f93f5, #4767ce);
-  box-shadow: 0 30px 72px rgba(71, 103, 206, 0.22);
+    radial-gradient(circle at 50% 44%, rgba(105, 232, 255, 0.34), transparent 8rem),
+    radial-gradient(circle at 78% 16%, rgba(255, 255, 255, 0.22), transparent 11rem),
+    linear-gradient(135deg, #f8fcff 0%, #dceeff 42%, #6b83f2 100%);
+  box-shadow:
+    0 30px 72px rgba(71, 103, 206, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .consulting-cloud-hosting-panel::before {
   position: absolute;
-  inset: 24px;
+  inset: 30px;
   content: "";
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.42);
   border-radius: 50%;
+  animation: consulting-cloud-hosting-ring 7.5s ease-in-out infinite;
 }
 
-.consulting-cloud-hosting-person {
-  position: absolute !important;
-  right: 22px;
-  bottom: 28px;
+.consulting-cloud-hosting-grid,
+.consulting-cloud-hosting-orbit,
+.consulting-cloud-hosting-core,
+.consulting-cloud-hosting-server,
+.consulting-cloud-hosting-stream,
+.consulting-cloud-hosting-particle {
+  position: absolute;
+}
+
+.consulting-cloud-hosting-grid {
+  inset: 0;
+  opacity: 0.28;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.62) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.62) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(circle at 50% 48%, #000 0%, transparent 72%);
+  animation: consulting-cloud-hosting-grid 9s linear infinite;
+}
+
+.consulting-cloud-hosting-orbit {
+  z-index: 1;
+  border: 1px solid rgba(18, 103, 232, 0.18);
+  border-radius: 50%;
+  box-shadow: 0 0 32px rgba(105, 232, 255, 0.14);
+}
+
+.consulting-cloud-hosting-orbit-a {
+  inset: 42px 74px 54px 70px;
+  animation: consulting-cloud-hosting-orbit 8s linear infinite;
+}
+
+.consulting-cloud-hosting-orbit-b {
+  inset: 76px 114px 82px 112px;
+  border-style: dashed;
+  animation: consulting-cloud-hosting-orbit 12s linear infinite reverse;
+}
+
+.consulting-cloud-hosting-core {
+  top: 82px;
+  left: 50%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 122px;
+  height: 92px;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.46);
+  border-radius: 36px;
+  background:
+    radial-gradient(circle at 32% 22%, rgba(255, 255, 255, 0.42), transparent 3rem),
+    linear-gradient(135deg, #1267e8, #48d7ff);
+  box-shadow:
+    0 22px 46px rgba(18, 103, 232, 0.3),
+    0 0 44px rgba(105, 232, 255, 0.28);
+  transform: translateX(-50%);
+  animation: consulting-cloud-hosting-core 4.6s ease-in-out infinite;
+}
+
+.consulting-cloud-hosting-core span {
+  position: absolute;
+  inset: -12px;
+  border: 1px solid rgba(105, 232, 255, 0.38);
+  border-radius: inherit;
+  opacity: 0;
+  animation: consulting-cloud-hosting-pulse 2.8s ease-in-out infinite;
+}
+
+.consulting-cloud-hosting-core span:nth-child(3) {
+  animation-delay: 1.35s;
+}
+
+.consulting-cloud-hosting-server {
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 22px repeat(3, 1fr);
+  align-items: center;
+  gap: 8px;
+  width: 138px;
+  min-height: 46px;
+  padding: 9px 11px;
+  border: 1px solid rgba(18, 103, 232, 0.12);
+  border-radius: 8px;
+  color: #1267e8;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow:
+    0 16px 34px rgba(24, 48, 78, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  animation: consulting-cloud-hosting-card 5.2s ease-in-out infinite;
+}
+
+.consulting-cloud-hosting-server i {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(18, 103, 232, 0.16);
+  overflow: hidden;
+}
+
+.consulting-cloud-hosting-server i::after {
+  display: block;
+  width: 44%;
+  height: 100%;
+  content: "";
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1267e8, #69e8ff);
+  animation: consulting-cloud-hosting-load 2.4s ease-in-out infinite;
+}
+
+.consulting-cloud-hosting-server-a {
+  top: 64px;
+  left: 36px;
+}
+
+.consulting-cloud-hosting-server-b {
+  right: 34px;
+  top: 178px;
+  animation-delay: 0.7s;
+}
+
+.consulting-cloud-hosting-server-c {
+  left: 48px;
+  bottom: 42px;
+  animation-delay: 1.25s;
+}
+
+.consulting-cloud-hosting-stream {
   z-index: 2;
-  width: min(620px, 100%) !important;
-  height: 360px !important;
-  border-radius: 0 0 20px 0;
-  object-fit: cover;
-  object-position: 58% 50%;
-  filter: drop-shadow(0 22px 34px rgba(38, 58, 113, 0.2));
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.82), transparent);
+  transform-origin: left center;
+  animation: consulting-cloud-hosting-stream 2.6s ease-in-out infinite;
+}
+
+.consulting-cloud-hosting-stream-a {
+  top: 124px;
+  left: 142px;
+  width: 104px;
+  rotate: 19deg;
+}
+
+.consulting-cloud-hosting-stream-b {
+  top: 174px;
+  right: 122px;
+  width: 94px;
+  rotate: -23deg;
+  animation-delay: 0.75s;
+}
+
+.consulting-cloud-hosting-stream-c {
+  left: 156px;
+  bottom: 104px;
+  width: 112px;
+  rotate: -12deg;
+  animation-delay: 1.4s;
+}
+
+.consulting-cloud-hosting-particle {
+  z-index: 2;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 18px rgba(105, 232, 255, 0.86);
+  animation: consulting-cloud-hosting-particle 4.8s ease-in-out infinite;
+}
+
+.consulting-cloud-hosting-particle-a {
+  top: 74px;
+  right: 104px;
+}
+
+.consulting-cloud-hosting-particle-b {
+  left: 116px;
+  bottom: 106px;
+  animation-delay: 1.2s;
+}
+
+.consulting-cloud-hosting-particle-c {
+  right: 178px;
+  bottom: 52px;
+  animation-delay: 2s;
 }
 
 .consulting-cloud-hosting-domain,
@@ -17077,6 +17255,7 @@ h1 em {
   min-height: 56px;
   padding: 9px 14px;
   color: #45b86a;
+  animation: consulting-cloud-hosting-score-float 4.8s ease-in-out infinite;
 }
 
 .consulting-cloud-hosting-score strong {
@@ -17176,12 +17355,65 @@ h1 em {
     border-radius: 18px 18px 18px 8px;
   }
 
-  .consulting-cloud-hosting-person {
-    right: -26px;
-    bottom: 48px;
-    width: 112% !important;
-    height: 250px !important;
-    object-position: 58% 50%;
+  .consulting-cloud-hosting-core {
+    top: 58px;
+    width: 94px;
+    height: 72px;
+    border-radius: 26px;
+  }
+
+  .consulting-cloud-hosting-core svg {
+    width: 42px;
+    height: 42px;
+  }
+
+  .consulting-cloud-hosting-server {
+    width: 108px;
+    min-height: 40px;
+    grid-template-columns: 20px repeat(3, 1fr);
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .consulting-cloud-hosting-server-a {
+    top: 34px;
+    left: 18px;
+  }
+
+  .consulting-cloud-hosting-server-b {
+    top: 126px;
+    right: 18px;
+  }
+
+  .consulting-cloud-hosting-server-c {
+    left: 24px;
+    bottom: 28px;
+  }
+
+  .consulting-cloud-hosting-orbit-a {
+    inset: 34px 42px 44px;
+  }
+
+  .consulting-cloud-hosting-orbit-b {
+    inset: 62px 74px;
+  }
+
+  .consulting-cloud-hosting-stream-a {
+    top: 94px;
+    left: 98px;
+    width: 74px;
+  }
+
+  .consulting-cloud-hosting-stream-b {
+    top: 130px;
+    right: 92px;
+    width: 64px;
+  }
+
+  .consulting-cloud-hosting-stream-c {
+    left: 112px;
+    bottom: 80px;
+    width: 76px;
   }
 
   .consulting-cloud-hosting-domain {
@@ -17444,6 +17676,122 @@ h1 em {
 
   50% {
     translate: 0 -10px;
+  }
+}
+
+@keyframes consulting-cloud-hosting-score-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-0.5deg);
+  }
+
+  50% {
+    transform: translate3d(0, -11px, 0) rotate(1deg);
+  }
+}
+
+@keyframes consulting-cloud-hosting-grid {
+  to {
+    background-position: 34px 34px;
+  }
+}
+
+@keyframes consulting-cloud-hosting-ring {
+  0%,
+  100% {
+    opacity: 0.42;
+    transform: scale(0.96);
+  }
+
+  50% {
+    opacity: 0.82;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes consulting-cloud-hosting-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes consulting-cloud-hosting-core {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-12px) scale(1.035);
+  }
+}
+
+@keyframes consulting-cloud-hosting-pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+
+  44% {
+    opacity: 0.78;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.28);
+  }
+}
+
+@keyframes consulting-cloud-hosting-card {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -9px, 0);
+  }
+}
+
+@keyframes consulting-cloud-hosting-load {
+  0%,
+  100% {
+    transform: translateX(-12%);
+    opacity: 0.54;
+  }
+
+  50% {
+    transform: translateX(124%);
+    opacity: 1;
+  }
+}
+
+@keyframes consulting-cloud-hosting-stream {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(-20px) scaleX(0.4);
+  }
+
+  45% {
+    opacity: 1;
+  }
+
+  70% {
+    transform: translateX(22px) scaleX(1);
+  }
+}
+
+@keyframes consulting-cloud-hosting-particle {
+  0%,
+  100% {
+    opacity: 0.28;
+    transform: translate3d(0, 0, 0) scale(0.82);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate3d(10px, -18px, 0) scale(1.18);
   }
 }
 
@@ -17713,8 +18061,8 @@ h1 em {
 .consulting-digital-idv .consulting-cloud-plans {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 34px;
+  gap: clamp(18px, 2.8vw, 30px);
+  margin-top: 40px;
 }
 
 .consulting-digital-idv .consulting-cloud-plans article,
@@ -17732,40 +18080,196 @@ h1 em {
 }
 
 .consulting-digital-idv .consulting-cloud-plans article {
+  position: relative;
   display: grid;
+  grid-template-rows: auto 1fr auto;
   align-content: start;
-  min-height: 430px;
-  padding: clamp(24px, 3vw, 34px);
+  min-height: 470px;
+  padding: 0;
+  overflow: hidden;
+  isolation: isolate;
   transition:
     transform 260ms var(--ease),
     border-color 260ms var(--ease),
     box-shadow 260ms var(--ease);
 }
 
-.consulting-digital-idv .consulting-cloud-plans article:hover {
-  transform: translateY(-8px);
-  border-color: rgba(53, 169, 184, 0.3);
+.consulting-digital-idv .consulting-cloud-plan::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.9), transparent 34%),
+    radial-gradient(circle at 16% 100%, rgba(18, 103, 232, 0.08), transparent 14rem);
+  pointer-events: none;
+}
+
+.consulting-digital-idv .consulting-cloud-plan-dedicated {
+  border-color: rgba(18, 103, 232, 0.2);
   box-shadow:
-    0 28px 70px rgba(24, 48, 78, 0.11),
-    0 0 34px rgba(105, 232, 255, 0.14);
+    0 26px 74px rgba(18, 103, 232, 0.13),
+    0 0 38px rgba(105, 232, 255, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.consulting-digital-idv .consulting-cloud-plans article:hover {
+  transform: translateY(-10px);
+  border-color: rgba(18, 103, 232, 0.28);
+  box-shadow:
+    0 34px 86px rgba(24, 48, 78, 0.13),
+    0 0 44px rgba(105, 232, 255, 0.18);
+}
+
+.consulting-digital-idv .consulting-cloud-plan-visual {
+  position: relative;
+  min-height: 134px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(18, 103, 232, 0.1);
+  background:
+    radial-gradient(circle at 24% 32%, rgba(105, 232, 255, 0.42), transparent 7rem),
+    radial-gradient(circle at 82% 14%, rgba(18, 103, 232, 0.18), transparent 9rem),
+    linear-gradient(135deg, #f7fcff, #eaf6ff);
+}
+
+.consulting-digital-idv .consulting-cloud-plan-dedicated .consulting-cloud-plan-visual {
+  background:
+    radial-gradient(circle at 22% 34%, rgba(105, 232, 255, 0.48), transparent 7rem),
+    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.28), transparent 8rem),
+    linear-gradient(135deg, #1267e8, #30c8f6);
+}
+
+.consulting-digital-idv .consulting-cloud-plan-visual::before,
+.consulting-digital-idv .consulting-cloud-plan-visual::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.consulting-digital-idv .consulting-cloud-plan-visual::before {
+  inset: 20px 24px;
+  border: 1px solid rgba(18, 103, 232, 0.12);
+  border-radius: 8px;
+  background-image:
+    linear-gradient(rgba(18, 103, 232, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 103, 232, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+  animation: consulting-cloud-plan-grid 8s linear infinite;
+}
+
+.consulting-digital-idv .consulting-cloud-plan-dedicated .consulting-cloud-plan-visual::before {
+  border-color: rgba(255, 255, 255, 0.2);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.13) 1px, transparent 1px);
+}
+
+.consulting-digital-idv .consulting-cloud-plan-visual::after {
+  right: -42px;
+  bottom: -74px;
+  width: 190px;
+  height: 190px;
+  border: 1px solid rgba(18, 103, 232, 0.1);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 22px rgba(255, 255, 255, 0.28);
+  animation: consulting-cloud-plan-orbit 9s linear infinite;
+}
+
+.consulting-digital-idv .consulting-cloud-plan-icon {
+  position: absolute;
+  top: 34px;
+  left: 34px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border: 1px solid rgba(18, 103, 232, 0.14);
+  border-radius: 8px;
+  color: #1267e8;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 18px 38px rgba(24, 48, 78, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+  animation: consulting-cloud-plan-float 4.8s ease-in-out infinite;
+}
+
+.consulting-digital-idv .consulting-cloud-plan-dedicated .consulting-cloud-plan-icon {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 18px 38px rgba(0, 52, 130, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.consulting-digital-idv .consulting-cloud-plan-bars {
+  position: absolute;
+  right: 34px;
+  bottom: 34px;
+  z-index: 1;
+  display: grid;
+  gap: 8px;
+  width: min(210px, 42%);
+}
+
+.consulting-digital-idv .consulting-cloud-plan-bars i {
+  display: block;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(18, 103, 232, 0.12);
+}
+
+.consulting-digital-idv .consulting-cloud-plan-dedicated .consulting-cloud-plan-bars i {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.consulting-digital-idv .consulting-cloud-plan-bars i::after {
+  display: block;
+  width: 62%;
+  height: 100%;
+  content: "";
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1267e8, #69e8ff);
+  animation: consulting-cloud-plan-load 2.7s ease-in-out infinite;
+}
+
+.consulting-digital-idv .consulting-cloud-plan-dedicated .consulting-cloud-plan-bars i::after {
+  background: linear-gradient(90deg, #ffffff, #9ef6ff);
+}
+
+.consulting-digital-idv .consulting-cloud-plan-bars i:nth-child(2)::after {
+  width: 84%;
+  animation-delay: 0.28s;
+}
+
+.consulting-digital-idv .consulting-cloud-plan-bars i:nth-child(3)::after {
+  width: 48%;
+  animation-delay: 0.56s;
+}
+
+.consulting-digital-idv .consulting-cloud-plan-copy {
+  padding: clamp(24px, 3vw, 34px) clamp(24px, 3vw, 34px) 0;
 }
 
 .consulting-digital-idv .consulting-cloud-plans article > span,
+.consulting-digital-idv .consulting-cloud-plan-copy > span,
 .consulting-digital-idv .consulting-cloud-stability article > span {
-  color: #35a9b8;
-  font-size: 11px;
+  color: #1267e8;
+  font-size: 10px;
   font-weight: 900;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
 .consulting-digital-idv .consulting-cloud-plans h3,
 .consulting-digital-idv .consulting-cloud-usage h3,
 .consulting-digital-idv .consulting-cloud-stability h3 {
-  margin: 14px 0 0;
+  margin: 12px 0 0;
   color: #17213a;
-  font-size: clamp(28px, 3.2vw, 42px);
-  font-weight: 850;
+  font-size: clamp(30px, 3.3vw, 46px);
+  font-weight: 900;
   letter-spacing: -0.055em;
   line-height: 1;
 }
@@ -17783,9 +18287,10 @@ h1 em {
 
 .consulting-digital-idv .consulting-cloud-plans ul {
   display: grid;
-  gap: 10px;
-  margin: 24px 0 0;
-  padding: 0;
+  align-self: end;
+  gap: 9px;
+  margin: 26px 0 0;
+  padding: 0 clamp(24px, 3vw, 34px) clamp(24px, 3vw, 34px);
   list-style: none;
 }
 
@@ -17793,19 +18298,22 @@ h1 em {
   display: flex;
   gap: 10px;
   align-items: center;
-  min-height: 42px;
-  padding: 10px 12px;
-  border: 1px solid rgba(53, 169, 184, 0.12);
-  border-radius: 8px;
+  min-height: 40px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(18, 103, 232, 0.1);
   color: #42546c;
-  background: rgba(255, 255, 255, 0.72);
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 800;
+}
+
+.consulting-digital-idv .consulting-cloud-plans li:last-child {
+  border-bottom: 0;
 }
 
 .consulting-digital-idv .consulting-cloud-plans li svg {
   flex: 0 0 auto;
   color: #1267e8;
+  filter: drop-shadow(0 0 8px rgba(18, 103, 232, 0.16));
 }
 
 .consulting-digital-idv .consulting-cloud-usage {
@@ -18297,6 +18805,40 @@ h1 em {
   }
 }
 
+@keyframes consulting-cloud-plan-grid {
+  to {
+    background-position: 24px 24px;
+  }
+}
+
+@keyframes consulting-cloud-plan-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes consulting-cloud-plan-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+@keyframes consulting-cloud-plan-load {
+  0%,
+  100% {
+    transform: translateX(-18%);
+  }
+
+  50% {
+    transform: translateX(84%);
+  }
+}
+
 .consulting-digital-idv .consulting-cloud-stability {
   display: none;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -18324,11 +18866,11 @@ h1 em {
   gap: 18px;
   min-height: 150px;
   padding: 20px;
-  border: 1px solid rgba(18, 103, 232, 0.11);
+  border: 0;
   border-radius: 8px;
   color: #52667d;
   background: #ffffff;
-  box-shadow: 0 18px 46px rgba(24, 48, 78, 0.07);
+  box-shadow: 0 18px 46px rgba(24, 48, 78, 0.055);
   font-size: 13px;
   font-weight: 700;
   line-height: 1.42;
@@ -18347,7 +18889,6 @@ h1 em {
 
 .consulting-digital-idv .consulting-service-process li:hover {
   transform: translateY(-6px);
-  border-color: rgba(53, 169, 184, 0.3);
   box-shadow:
     0 24px 58px rgba(24, 48, 78, 0.1),
     0 0 34px rgba(105, 232, 255, 0.12);
@@ -18455,6 +18996,10 @@ h1 em {
     grid-template-columns: 1fr;
   }
 
+  .consulting-digital-idv .consulting-cloud-plans article {
+    min-height: auto;
+  }
+
   .consulting-digital-idv .consulting-cloud-locations {
     grid-template-columns: 1fr;
     min-height: auto;
@@ -18499,6 +19044,15 @@ h1 em {
 
   .consulting-digital-idv .consulting-cloud-detail {
     width: calc(100% - 28px);
+  }
+
+  .consulting-digital-idv .consulting-cloud-plan-visual {
+    min-height: 118px;
+  }
+
+  .consulting-digital-idv .consulting-cloud-plan-bars {
+    right: 22px;
+    width: min(170px, 48%);
   }
 
   .consulting-digital-idv .consulting-cloud-locations {
@@ -18704,6 +19258,8 @@ h1 em {
     0 22px 62px rgba(24, 48, 78, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.96);
   font-size: clamp(18px, 1.28vw, 23px);
+  text-align: justify;
+  text-align-last: left;
   line-height: 1.32;
 }
 
@@ -18996,7 +19552,17 @@ h1 em {
     inset 0 1px 0 rgba(255, 255, 255, 0.96);
   font-size: clamp(15px, 1.18vw, 18px);
   font-weight: 650;
+  text-align: justify;
+  text-align-last: left;
   line-height: 1.68;
+}
+
+.consulting-digital-idv .consulting-card p,
+.consulting-digital-idv .consulting-differentials article p,
+.consulting-digital-idv .consulting-method-ui .consulting-steps p,
+.consulting-digital-idv .consulting-testimonials blockquote p {
+  text-align: justify;
+  text-align-last: left;
 }
 
 .consulting-digital-idv .consulting-result-metrics {
