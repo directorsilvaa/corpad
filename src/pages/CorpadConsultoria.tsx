@@ -4,6 +4,7 @@ import {
   Activity,
   ArrowRight,
   CheckCircle2,
+  ChevronDown,
   ClipboardList,
   Handshake,
   Lightbulb,
@@ -22,6 +23,7 @@ import { CinematicFooter } from "@/components/ui/motion-footer";
 import ConsultingSolutionCard from "../components/ConsultingSolutionCard";
 import ConsultingSolutionsSection from "../components/ConsultingSolutionsSection";
 import LightRays from "../components/LightRays";
+import { consultingServicePages } from "../data/consultingServicePages";
 
 const differentials = [
   {
@@ -163,7 +165,19 @@ export default function CorpadConsultoria() {
       />
       <header className="consulting-topbar">
         <nav className="consulting-topbar-links" aria-label="Navegacao principal">
-          <a href="#solucoes">Serviços</a>
+          <div className="consulting-service-menu">
+            <a className="consulting-service-trigger" href="#solucoes">
+              Serviços
+              <ChevronDown size={14} strokeWidth={2.4} />
+            </a>
+            <div className="consulting-service-submenu" aria-label="Serviços">
+              {consultingServicePages.map((service) => (
+                <a href={`/corpad-consultoria/servicos/${service.slug}`} key={service.slug}>
+                  {service.navLabel}
+                </a>
+              ))}
+            </div>
+          </div>
           <a href="#sobre">Sobre nós</a>
           <a href="#contato">Contato</a>
         </nav>
