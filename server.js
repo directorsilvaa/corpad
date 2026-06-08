@@ -9,13 +9,21 @@ const port = process.env.PORT || 3000;
 const distPath = path.join(__dirname, "dist");
 
 app.use(
-  express.static(distPath, {
+  "/assets",
+  express.static(path.join(distPath, "assets"), {
     maxAge: "1y",
     immutable: true,
   }),
 );
 
+app.use(
+  express.static(distPath, {
+    maxAge: 0,
+  }),
+);
+
 app.use((_request, response) => {
+  response.setHeader("Cache-Control", "no-store");
   response.sendFile(path.join(distPath, "index.html"));
 });
 
