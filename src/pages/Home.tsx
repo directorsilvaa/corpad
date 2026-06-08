@@ -1,7 +1,10 @@
 import {
   ArrowRight,
   BriefcaseBusiness,
+  FileText,
   Globe2,
+  Mail,
+  MessageCircle,
 } from "lucide-react";
 import Image from "@/components/ui/vite-image";
 
@@ -18,8 +21,8 @@ export default function Home() {
         <Image
           src="/logo.png"
           alt="CORPAD"
-          width={1500}
-          height={390}
+          width={300}
+          height={78}
           priority
         />
       </a>
@@ -68,6 +71,28 @@ export default function Home() {
             </a>
           </div>
         </article>
+
+        <footer className="gateway-info-strip" aria-label="Informacoes da CORPAD">
+          <span>CORPAD (r) Todos os direitos reservados 2024</span>
+          <span>CNPJ: 01.434.659/0001-19</span>
+          <span>Fundada em 1996</span>
+          <a href="mailto:contato@corpad.com.br">
+            <Mail size={17} strokeWidth={2.1} />
+            contato@corpad.com.br
+          </a>
+          <a href="/termos-de-uso">
+            <FileText size={17} strokeWidth={2.1} />
+            Termos de Uso
+          </a>
+          <a
+            href="https://wa.me/5516996094649?text=Ola%2C%20tudo%20bem%3F%20Acessei%20o%20site%20da%20CORPAD%20e%20gostaria%20de%20falar%20com%20voces."
+            target="_blank"
+            rel="noreferrer"
+          >
+            <MessageCircle size={18} strokeWidth={2.1} />
+            Clique para falar conosco
+          </a>
+        </footer>
       </section>
     </main>
   );

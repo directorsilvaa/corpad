@@ -1,18 +1,43 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import GsapAnimations from "./GsapAnimations";
 import Home from "./pages/Home";
-import CorpadPage from "./pages/CorpadDigital";
-import CorpadConsultoria from "./pages/CorpadConsultoria";
-import ConsultingServicePage from "./pages/ConsultingServicePage";
-import ClientesPage from "./pages/Clientes";
-import PortfolioPage from "./pages/Portfolio";
-import ServicePage from "./pages/ServicePage";
-import BlogPage from "./pages/Blog";
-import AdminPage from "./pages/Admin";
-import { getConsultingServicePageBySlug } from "./data/consultingServicePages";
-import { getServicePageBySlug } from "./data/servicePages";
 import "./globals.css";
+
+const GsapAnimations = React.lazy(() => import("./GsapAnimations"));
+const CorpadPage = React.lazy(() => import("./pages/CorpadDigital"));
+const CorpadConsultoria = React.lazy(() => import("./pages/CorpadConsultoria"));
+const ConsultingServiceRoute = React.lazy(() => import("./pages/ConsultingServiceRoute"));
+const ClientesPage = React.lazy(() => import("./pages/Clientes"));
+const PortfolioPage = React.lazy(() => import("./pages/Portfolio"));
+const ServiceRoute = React.lazy(() => import("./pages/ServiceRoute"));
+const BlogPage = React.lazy(() => import("./pages/Blog"));
+const AdminPage = React.lazy(() => import("./pages/Admin"));
+
+function DeferredAnimations() {
+  const [enabled, setEnabled] = React.useState(false);
+
+  React.useEffect(() => {
+    const loadAnimations = () => setEnabled(true);
+
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(loadAnimations, { timeout: 1800 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = globalThis.setTimeout(loadAnimations, 1200);
+    return () => globalThis.clearTimeout(timeoutId);
+  }, []);
+
+  if (!enabled) {
+    return null;
+  }
+
+  return (
+    <React.Suspense fallback={null}>
+      <GsapAnimations />
+    </React.Suspense>
+  );
+}
 
 function App() {
   const pathname = window.location.pathname;
@@ -26,13 +51,7 @@ function App() {
   }
 
   if (pathname.startsWith("/corpad-consultoria/servicos/")) {
-    const service = getConsultingServicePageBySlug(
-      pathname.replace("/corpad-consultoria/servicos/", "")
-    );
-
-    if (service) {
-      return <ConsultingServicePage service={service} />;
-    }
+    return <ConsultingServiceRoute />;
   }
 
   if (pathname === "/portfolio") {
@@ -52,11 +71,7 @@ function App() {
   }
 
   if (pathname.startsWith("/servicos/")) {
-    const service = getServicePageBySlug(pathname.replace("/servicos/", ""));
-
-    if (service) {
-      return <ServicePage service={service} />;
-    }
+    return <ServiceRoute />;
   }
 
   return <Home />;
@@ -64,7 +79,9 @@ function App() {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <GsapAnimations />
-    <App />
+    <DeferredAnimations />
+    <React.Suspense fallback={null}>
+      <App />
+    </React.Suspense>
   </React.StrictMode>,
 );

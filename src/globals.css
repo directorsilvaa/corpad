@@ -1,5 +1,3 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -44,7 +42,7 @@ body {
   overflow-x: hidden;
   background: var(--bg);
   color: var(--text);
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
 body::before {
@@ -10993,7 +10991,7 @@ h1 em {
   padding: 24px clamp(18px, 5vw, 72px) 0;
   background: #ffffff;
   color: #102036;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
 .consulting-page::selection {
@@ -12321,7 +12319,7 @@ h1 em {
   max-width: 620px;
   margin: 22px 0 0;
   color: #17212a;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(42px, 4.7vw, 68px);
   font-weight: 400;
   letter-spacing: 0;
@@ -12337,7 +12335,7 @@ h1 em {
 .consulting-hero-copy h1 strong,
 .consulting-hero-copy h1 em {
   color: #75e5ed;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-style: normal;
   font-weight: 800;
   letter-spacing: 0;
@@ -12355,7 +12353,7 @@ h1 em {
   max-width: 520px;
   margin-top: 22px;
   color: #475569;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   font-weight: 500;
   line-height: 1.62;
@@ -15013,6 +15011,63 @@ h1 em {
   transform: translateX(4px);
 }
 
+.gateway-info-strip {
+  position: relative;
+  z-index: 3;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px clamp(18px, 3vw, 30px);
+  min-height: 72px;
+  margin-top: calc(clamp(18px, 3vw, 34px) * -1);
+  padding: 16px clamp(18px, 3vw, 32px);
+  border: 1px solid rgba(141, 240, 255, 0.1);
+  border-radius: 0 0 8px 8px;
+  color: rgba(219, 239, 244, 0.7);
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(105, 232, 255, 0.1), transparent 18rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018));
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  animation: gateway-card-rise 860ms 180ms var(--ease) both;
+}
+
+.gateway-info-strip span,
+.gateway-info-strip a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 24px;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.gateway-info-strip a {
+  color: rgba(245, 251, 255, 0.82);
+  transition:
+    color 220ms var(--ease),
+    transform 220ms var(--ease);
+}
+
+.gateway-info-strip a svg {
+  color: #8df0ff;
+  opacity: 0.88;
+}
+
+.gateway-info-strip a:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
 @keyframes gateway-card-rise {
   from {
     opacity: 0;
@@ -15083,6 +15138,11 @@ h1 em {
     padding-top: 28px;
   }
 
+  .gateway-info-strip {
+    margin-top: 0;
+    border-radius: 8px;
+  }
+
   .gateway-hero::before {
     display: none;
   }
@@ -15128,7 +15188,7 @@ h1 em {
   padding: clamp(72px, 9vw, 116px) max(18px, calc((100vw - 1280px) / 2));
   border-top: 0;
   color: #14223a;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   background:
     radial-gradient(circle at 12% 18%, rgba(17, 103, 216, 0.07), transparent 28rem),
     linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
@@ -15163,7 +15223,7 @@ h1 em {
 .consulting-method-ui .consulting-ui-heading h2 {
   max-width: 760px;
   color: #17213a;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(40px, 4.8vw, 64px);
   font-weight: 800;
   letter-spacing: -0.055em;
@@ -15175,7 +15235,7 @@ h1 em {
 .consulting-method-ui .consulting-ui-heading h2 em {
   display: inline;
   color: #1267e8;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-style: normal;
   font-weight: 800;
 }
@@ -15303,7 +15363,7 @@ h1 em {
   max-width: 220px;
   margin: 0;
   color: #1267e8;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(20px, 1.45vw, 26px);
   font-style: normal;
   font-weight: 800;
@@ -15599,7 +15659,7 @@ h1 em {
 .consulting-final-cta h2 {
   max-width: 620px;
   color: #ffffff;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(36px, 4.7vw, 62px);
   font-weight: 800;
   letter-spacing: -0.06em;
@@ -15681,7 +15741,7 @@ h1 em {
 
 .consulting-results h2 {
   color: #ffffff;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-weight: 800;
   letter-spacing: -0.06em;
 }
@@ -19467,6 +19527,228 @@ h1 em {
   font-size: 10px;
   font-weight: 650;
   line-height: 1.42;
+}
+
+.consulting-digital-idv.consulting-cloud-service-page {
+  --cloud-accent: #2f6f9f;
+  --cloud-accent-deep: #1e5b86;
+  --cloud-accent-dark: #173f62;
+  --cloud-accent-soft: rgba(47, 111, 159, 0.14);
+  --cloud-accent-line: rgba(47, 111, 159, 0.28);
+  --cloud-accent-glow: rgba(47, 111, 159, 0.22);
+  --cloud-ice: #e7f1f7;
+  --cloud-ice-strong: #d6e8f2;
+}
+
+.consulting-digital-idv.consulting-cloud-service-page {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(47, 111, 159, 0.11), transparent 24rem),
+    radial-gradient(circle at 15% 22%, rgba(39, 47, 56, 0.045), transparent 28rem),
+    linear-gradient(180deg, #ffffff 0%, #f8fbfd 52%, #ffffff 100%);
+}
+
+.consulting-digital-idv.consulting-cloud-service-page .consulting-service-hero::before {
+  border-left-color: rgba(47, 111, 159, 0.12);
+  background:
+    linear-gradient(90deg, rgba(47, 111, 159, 0.08) 0 1px, transparent 1px 100%),
+    linear-gradient(180deg, rgba(47, 111, 159, 0.06) 0 1px, transparent 1px 100%),
+    linear-gradient(135deg, rgba(249, 252, 253, 0.92), rgba(239, 246, 250, 0.72));
+  background-size: 64px 64px, 64px 64px, auto;
+}
+
+.consulting-digital-idv.consulting-cloud-service-page .consulting-service-hero::after {
+  background: radial-gradient(circle, rgba(47, 111, 159, 0.18), transparent 66%);
+}
+
+.consulting-digital-idv.consulting-cloud-service-page .consulting-service-hero-copy h1 span,
+.consulting-digital-idv.consulting-cloud-service-page .consulting-cloud-usage-heading h3 span,
+.consulting-cloud-locations-copy h2 span,
+.consulting-cloud-hero-badge,
+.consulting-cloud-hosting-score,
+.consulting-cloud-hosting-score strong,
+.consulting-cloud-hosting-server,
+.consulting-digital-idv .consulting-cloud-plan-icon,
+.consulting-digital-idv .consulting-cloud-plan-dedicated .consulting-cloud-plan-icon,
+.consulting-digital-idv .consulting-cloud-plans article > span,
+.consulting-digital-idv .consulting-cloud-plan-copy > span,
+.consulting-digital-idv .consulting-cloud-stability article > span,
+.consulting-digital-idv .consulting-cloud-plans li svg,
+.consulting-digital-idv.consulting-cloud-service-page .consulting-cloud-usage-heading .consulting-kicker,
+.consulting-cloud-usage-visual,
+.consulting-cloud-usage-card-featured .consulting-cloud-usage-visual,
+.consulting-digital-idv .consulting-cloud-location-grid strong {
+  color: var(--cloud-accent);
+}
+
+.consulting-cloud-hero-badge {
+  border-color: var(--cloud-accent-line);
+  background: var(--cloud-accent-soft);
+}
+
+.consulting-digital-idv.consulting-cloud-service-page .consulting-primary,
+.consulting-cloud-features-cta,
+.consulting-cloud-usage-card a,
+.consulting-cloud-hosting-domain span {
+  background: linear-gradient(135deg, var(--cloud-accent), var(--cloud-accent-deep));
+  box-shadow:
+    0 16px 34px rgba(30, 91, 134, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.consulting-cloud-usage-card a:hover {
+  background: linear-gradient(135deg, #397daa, var(--cloud-accent-deep));
+  box-shadow:
+    0 16px 32px rgba(30, 91, 134, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.consulting-digital-idv.consulting-cloud-service-page .consulting-secondary {
+  border-color: rgba(47, 111, 159, 0.34);
+}
+
+.consulting-digital-idv.consulting-cloud-service-page .consulting-secondary:hover {
+  border-color: rgba(47, 111, 159, 0.56);
+  box-shadow:
+    0 18px 42px rgba(24, 48, 78, 0.14),
+    0 0 28px rgba(47, 111, 159, 0.12);
+}
+
+.consulting-cloud-hosting-panel {
+  border-color: rgba(47, 111, 159, 0.14);
+  background:
+    radial-gradient(circle at 50% 44%, rgba(47, 111, 159, 0.2), transparent 8rem),
+    radial-gradient(circle at 78% 16%, rgba(255, 255, 255, 0.42), transparent 11rem),
+    linear-gradient(135deg, #ffffff 0%, #f0f6fa 48%, var(--cloud-ice-strong) 100%);
+}
+
+.consulting-cloud-hosting-panel::before,
+.consulting-cloud-hosting-orbit,
+.consulting-cloud-hosting-core span,
+.consulting-cloud-hosting-server,
+.consulting-digital-idv .consulting-cloud-plan-visual::before,
+.consulting-digital-idv .consulting-cloud-plan-visual::after,
+.consulting-cloud-usage-visual,
+.consulting-cloud-usage-card-featured .consulting-cloud-usage-visual {
+  border-color: var(--cloud-accent-line);
+}
+
+.consulting-cloud-hosting-grid {
+  background-image:
+    linear-gradient(rgba(47, 111, 159, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 111, 159, 0.12) 1px, transparent 1px);
+}
+
+.consulting-cloud-hosting-core {
+  background:
+    radial-gradient(circle at 32% 22%, rgba(255, 255, 255, 0.42), transparent 3rem),
+    linear-gradient(135deg, var(--cloud-accent-dark), var(--cloud-accent));
+  box-shadow:
+    0 22px 46px rgba(36, 52, 64, 0.24),
+    0 0 44px var(--cloud-accent-glow);
+}
+
+.consulting-cloud-hosting-server i {
+  background: rgba(47, 111, 159, 0.14);
+}
+
+.consulting-cloud-hosting-server i::after,
+.consulting-digital-idv .consulting-cloud-plan-bars i::after,
+.consulting-digital-idv .consulting-cloud-plan-dedicated .consulting-cloud-plan-bars i::after {
+  background: linear-gradient(90deg, var(--cloud-accent-deep), #8fb9d2);
+}
+
+.consulting-cloud-hosting-stream {
+  background: linear-gradient(90deg, transparent, rgba(47, 111, 159, 0.36), transparent);
+}
+
+.consulting-cloud-hosting-particle {
+  background: var(--cloud-accent);
+  box-shadow: 0 0 18px rgba(47, 111, 159, 0.58);
+}
+
+.consulting-digital-idv.consulting-cloud-service-page .consulting-service-content {
+  background:
+    radial-gradient(circle at 50% 110%, rgba(47, 111, 159, 0.14), transparent 24rem),
+    linear-gradient(180deg, rgba(248, 252, 255, 0.96), rgba(238, 246, 250, 0.9));
+}
+
+.consulting-cloud-features-heading h2::after,
+.consulting-cloud-usage-card::before {
+  background: linear-gradient(90deg, rgba(47, 111, 159, 0), var(--cloud-accent), rgba(47, 111, 159, 0));
+}
+
+.consulting-cloud-feature::before {
+  background: linear-gradient(90deg, rgba(47, 111, 159, 0), rgba(47, 111, 159, 0.48));
+}
+
+.consulting-cloud-feature::after {
+  background: linear-gradient(90deg, rgba(47, 111, 159, 0.48), rgba(47, 111, 159, 0));
+}
+
+.consulting-cloud-feature span {
+  border-color: var(--cloud-accent-line);
+  color: var(--cloud-accent);
+  background:
+    radial-gradient(circle at 50% 26%, rgba(143, 185, 210, 0.34), transparent 62%),
+    #ffffff;
+  box-shadow:
+    0 12px 28px rgba(30, 91, 134, 0.12),
+    0 0 0 7px rgba(47, 111, 159, 0.08);
+}
+
+.consulting-digital-idv .consulting-cloud-plan-visual,
+.consulting-digital-idv .consulting-cloud-plan-dedicated .consulting-cloud-plan-visual {
+  background:
+    radial-gradient(circle at 24% 32%, rgba(143, 185, 210, 0.36), transparent 7rem),
+    radial-gradient(circle at 82% 14%, rgba(47, 111, 159, 0.16), transparent 9rem),
+    linear-gradient(135deg, #f7fcff, var(--cloud-ice));
+}
+
+.consulting-cloud-usage-visual,
+.consulting-cloud-usage-card-featured .consulting-cloud-usage-visual {
+  background:
+    linear-gradient(90deg, rgba(47, 111, 159, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(47, 111, 159, 0.06) 1px, transparent 1px),
+    radial-gradient(circle at 50% 44%, rgba(143, 185, 210, 0.2), transparent 7rem),
+    #f7fcfd;
+}
+
+.consulting-cloud-usage-visual i {
+  border-color: var(--cloud-accent-line);
+}
+
+.consulting-digital-idv .consulting-cloud-locations {
+  border-color: rgba(47, 111, 159, 0.12);
+  background:
+    radial-gradient(circle at 72% 18%, rgba(47, 111, 159, 0.15), transparent 24rem),
+    linear-gradient(180deg, #f6fbff 0%, #eef7fb 100%);
+}
+
+.consulting-digital-idv .consulting-cloud-locations::after {
+  background: linear-gradient(180deg, var(--cloud-accent), var(--cloud-accent-deep));
+  box-shadow: -18px 0 42px rgba(30, 91, 134, 0.16);
+}
+
+.consulting-cloud-map-shape::before,
+.consulting-cloud-map-shape::after {
+  background: #dbe8f0;
+  filter: drop-shadow(0 14px 24px rgba(47, 111, 159, 0.08));
+}
+
+.consulting-cloud-map-dot {
+  background: var(--cloud-accent);
+  box-shadow:
+    0 0 0 5px rgba(47, 111, 159, 0.18),
+    0 0 0 12px rgba(47, 111, 159, 0.08),
+    0 10px 24px rgba(47, 111, 159, 0.28);
+}
+
+.consulting-cloud-map-dot::after {
+  border-color: rgba(47, 111, 159, 0.28);
+}
+
+.consulting-digital-idv .consulting-cloud-location-grid article {
+  border-color: rgba(47, 111, 159, 0.16);
 }
 
 @keyframes location-pulse {
@@ -24652,7 +24934,7 @@ h1 em {
 .blog-post-card h2,
 .blog-article h1 {
   color: #17213a;
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-weight: 900;
   letter-spacing: -0.045em;
 }
@@ -29148,6 +29430,18 @@ h1 em {
   .gateway-column {
     min-height: auto;
     padding: 28px 20px;
+  }
+
+  .gateway-info-strip {
+    align-content: center;
+    min-height: auto;
+    padding: 18px 14px;
+  }
+
+  .gateway-info-strip span,
+  .gateway-info-strip a {
+    width: 100%;
+    white-space: normal;
   }
 
   .gateway-card-visual {

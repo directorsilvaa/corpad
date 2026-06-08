@@ -236,8 +236,8 @@ export default function CorpadPage() {
             className="brand-logo"
             src="/logo.png"
             alt="Logo"
-            width={1500}
-            height={390}
+            width={300}
+            height={78}
             priority
           />
         </a>
