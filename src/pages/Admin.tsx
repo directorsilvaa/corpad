@@ -1,5 +1,4 @@
 import {
-  BarChart3,
   Bold,
   CalendarDays,
   CheckCircle2,
@@ -40,7 +39,6 @@ import {
   blogCategories,
   defaultBlogSettings,
   deleteBlogPost,
-  getBlogAnalytics,
   getBlogSettings,
   listBlogCategories,
   listBlogPosts,
@@ -59,10 +57,10 @@ type AdminTab =
   | "media"
   | "ctas"
   | "seo"
-  | "leads"
   | "settings";
 
 const whatsappUrl = "https://wa.me/5516996094649";
+const rememberedAdminEmailKey = "corpad_admin_remembered_email";
 
 const emptyPost: BlogPostInput = {
   title: "",
@@ -112,14 +110,6 @@ function formatDate(value: string | null | undefined) {
   );
 }
 
-function getPostViews(post: BlogPost, index: number) {
-  return Math.max(24, 320 - index * 37 + post.title.length);
-}
-
-function getPostLeads(post: BlogPost, index: number) {
-  return post.ctaUrl ? Math.max(1, Math.floor(getPostViews(post, index) / 34)) : 0;
-}
-
 export default function AdminPage() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -129,21 +119,27 @@ export default function AdminPage() {
   const [form, setForm] = useState<BlogPostInput>(emptyPost);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberEmail, setRememberEmail] = useState(false);
   const [message, setMessage] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingAuthorPhoto, setUploadingAuthorPhoto] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
   const [newCategory, setNewCategory] = useState("");
   const [blogSettings, setBlogSettings] = useState({
     ...defaultBlogSettings,
   });
-  const [analytics, setAnalytics] = useState(getBlogAnalytics());
 
   useEffect(() => {
     document.title = "Admin | CORPAD";
     setCategories(listBlogCategories());
     setBlogSettings(getBlogSettings());
-    setAnalytics(getBlogAnalytics());
+
+    const rememberedEmail = localStorage.getItem(rememberedAdminEmailKey);
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
+      setRememberEmail(true);
+    }
 
     isAdminLoggedIn()
       .then((session) => {
@@ -157,7 +153,10 @@ export default function AdminPage() {
   const publishedPosts = posts.filter((post) => post.status === "published").length;
   const scheduledPosts = posts.filter((post) => post.status === "scheduled").length;
   const draftPosts = posts.filter((post) => post.status === "draft").length;
-  const totalLeads = posts.reduce((total, post, index) => total + (analytics[post.slug]?.leads ?? getPostLeads(post, index)), 0);
+  const totalPosts = posts.length;
+  const categoriesInUse = new Set(posts.map((post) => post.category).filter(Boolean)).size;
+  const recentPosts = posts.slice(0, 5);
+  const editorialQueue = posts.filter((post) => post.status !== "published").slice(0, 5);
   const mediaItems = posts
     .filter((post) => post.coverImage)
     .map((post) => ({ url: post.coverImage, alt: post.imageAlt, title: post.title }));
@@ -166,7 +165,6 @@ export default function AdminPage() {
   async function refreshPosts() {
     const nextPosts = await listBlogPosts();
     setPosts(nextPosts);
-    setAnalytics(getBlogAnalytics());
   }
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
@@ -175,6 +173,11 @@ export default function AdminPage() {
 
     try {
       await adminLogin(email, password);
+      if (rememberEmail) {
+        localStorage.setItem(rememberedAdminEmailKey, email);
+      } else {
+        localStorage.removeItem(rememberedAdminEmailKey);
+      }
       setLoggedIn(true);
       await refreshPosts();
     } catch (error) {
@@ -268,6 +271,22 @@ export default function AdminPage() {
       setMessage(error instanceof Error ? error.message : "Nao foi possivel enviar a imagem.");
     } finally {
       setUploadingImage(false);
+    }
+  }
+
+  async function handleAuthorPhotoUpload(file: File | null) {
+    if (!file) return;
+
+    setUploadingAuthorPhoto(true);
+    setMessage("");
+
+    try {
+      const imageUrl = await uploadBlogImage(file);
+      setForm((current) => ({ ...current, authorPhoto: imageUrl }));
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Nao foi possivel enviar a foto do autor.");
+    } finally {
+      setUploadingAuthorPhoto(false);
     }
   }
 
@@ -386,6 +405,16 @@ export default function AdminPage() {
                 required
               />
             </label>
+            <div className="admin-login-options">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={rememberEmail}
+                  onChange={(event) => setRememberEmail(event.target.checked)}
+                />
+                Lembrar meu e-mail
+              </label>
+            </div>
             {message && <p className="admin-message">{message}</p>}
             <button type="submit">Entrar</button>
           </form>
@@ -409,7 +438,6 @@ export default function AdminPage() {
           <AdminNavButton activeTab={activeTab} tab="media" setActiveTab={setActiveTab} icon={<ImagePlus size={18} />} label="Midia" />
           <AdminNavButton activeTab={activeTab} tab="ctas" setActiveTab={setActiveTab} icon={<MessageCircle size={18} />} label="CTAs" />
           <AdminNavButton activeTab={activeTab} tab="seo" setActiveTab={setActiveTab} icon={<Search size={18} />} label="SEO" />
-          <AdminNavButton activeTab={activeTab} tab="leads" setActiveTab={setActiveTab} icon={<BarChart3 size={18} />} label="Leads" />
           <AdminNavButton activeTab={activeTab} tab="settings" setActiveTab={setActiveTab} icon={<Settings size={18} />} label="Configuracoes" />
           <a href="/blog" target="_blank" rel="noreferrer">
             <Eye size={18} /> Ver blog
@@ -438,23 +466,50 @@ export default function AdminPage() {
 
         {activeTab === "dashboard" && (
           <>
+            <section className="admin-dashboard-hero" aria-label="Visao geral do blog">
+              <div>
+                <span>Resumo editorial</span>
+                <strong>{totalPosts > 0 ? `${totalPosts} artigos cadastrados` : "Comece criando o primeiro artigo"}</strong>
+                <p>
+                  Acompanhe rascunhos, agendamentos, categorias e os ultimos conteudos sem sair do fluxo de publicacao.
+                </p>
+              </div>
+              <button type="button" onClick={openNewPost}>
+                <Plus size={18} /> Novo artigo
+              </button>
+            </section>
+
             <section className="admin-stats" aria-label="Resumo do blog">
               <StatCard label="Artigos publicados" value={publishedPosts} detail="Visiveis no blog" icon={<CheckCircle2 size={15} />} />
               <StatCard label="Rascunhos" value={draftPosts} detail="Em producao" icon={<FileText size={15} />} />
               <StatCard label="Agendados" value={scheduledPosts} detail="Publicacao futura" icon={<CalendarDays size={15} />} />
-              <StatCard label="Leads gerados" value={totalLeads} detail="Estimativa por CTA" icon={<MessageCircle size={15} />} />
+              <StatCard label="Categorias usadas" value={categoriesInUse} detail="Organizacao editorial" icon={<List size={15} />} />
             </section>
-            <section className="admin-panel-grid">
-              <AdminPanel title="Ultimos artigos criados" eyebrow="Recentes">
-                <PostMiniList posts={posts.slice(0, 4)} />
+
+            <section className="admin-dashboard-grid">
+              <AdminPanel title="Ultimos artigos" eyebrow="Recentes">
+                <DashboardPostList posts={recentPosts} onEdit={editPost} onToggle={togglePostVisibility} />
               </AdminPanel>
-              <AdminPanel title="Artigos mais acessados" eyebrow="Analytics">
-                {posts.slice(0, 4).map((post, index) => (
-                  <div className="admin-mini-row" key={post.id}>
-                    <span>{post.title}</span>
-                    <strong>{analytics[post.slug]?.views ?? getPostViews(post, index)} views</strong>
-                  </div>
-                ))}
+
+              <AdminPanel title="Fila editorial" eyebrow="Pendencias">
+                <DashboardPostList posts={editorialQueue} onEdit={editPost} onToggle={togglePostVisibility} emptyText="Nenhum rascunho ou artigo agendado." />
+              </AdminPanel>
+
+              <AdminPanel title="Publicacao" eyebrow="Checklist">
+                <div className="admin-dashboard-checklist">
+                  <span className={publishedPosts > 0 ? "done" : ""}>
+                    <CheckCircle2 size={16} /> Publicar primeiro artigo
+                  </span>
+                  <span className={categoriesInUse > 0 ? "done" : ""}>
+                    <List size={16} /> Definir categorias em uso
+                  </span>
+                  <span className={mediaItems.length > 0 ? "done" : ""}>
+                    <ImagePlus size={16} /> Adicionar imagens aos artigos
+                  </span>
+                  <span className={posts.some((post) => post.metaTitle || post.metaDescription) ? "done" : ""}>
+                    <Search size={16} /> Revisar SEO dos conteudos
+                  </span>
+                </div>
               </AdminPanel>
             </section>
           </>
@@ -572,17 +627,6 @@ export default function AdminPage() {
                 <strong>{post.metaTitle || post.title}</strong>
                 <p>{post.metaDescription || post.excerpt}</p>
               </article>
-            ))}
-          </AdminPanel>
-        )}
-
-        {activeTab === "leads" && (
-          <AdminPanel title="Leads e cliques de CTA" eyebrow="Analytics simples">
-            {posts.map((post, index) => (
-              <div className="admin-mini-row" key={post.id}>
-                <span>{post.title}</span>
-                <strong>{analytics[post.slug]?.leads ?? getPostLeads(post, index)} leads</strong>
-              </div>
             ))}
           </AdminPanel>
         )}
@@ -790,10 +834,27 @@ export default function AdminPage() {
                   <input value={form.authorRole} onChange={(event) => setForm((current) => ({ ...current, authorRole: event.target.value }))} />
                 </label>
               </div>
-              <label>
-                Foto do autor
-                <input value={form.authorPhoto} onChange={(event) => setForm((current) => ({ ...current, authorPhoto: event.target.value }))} placeholder="URL da foto" />
-              </label>
+              <div className="admin-field-label">
+                <strong>Foto do autor</strong>
+                <div className="admin-image-field admin-author-photo-field">
+                  {form.authorPhoto ? (
+                    <img src={form.authorPhoto} alt="" />
+                  ) : (
+                    <span>
+                      <UserRound size={22} />
+                      Selecione uma foto
+                    </span>
+                  )}
+                  <div>
+                    <input value={form.authorPhoto} onChange={(event) => setForm((current) => ({ ...current, authorPhoto: event.target.value }))} placeholder="URL da foto" />
+                    <label className="admin-upload-button">
+                      <Upload size={16} />
+                      {uploadingAuthorPhoto ? "Enviando..." : "Enviar foto"}
+                      <input type="file" accept="image/*" onChange={(event) => void handleAuthorPhotoUpload(event.target.files?.[0] ?? null)} disabled={uploadingAuthorPhoto} />
+                    </label>
+                  </div>
+                </div>
+              </div>
               <label>
                 Mini bio
                 <textarea value={form.authorBio} onChange={(event) => setForm((current) => ({ ...current, authorBio: event.target.value }))} rows={3} />
@@ -893,6 +954,54 @@ function PostMiniList({ posts }: { posts: BlogPost[] }) {
   );
 }
 
+function DashboardPostList({
+  posts,
+  onEdit,
+  onToggle,
+  emptyText = "Nenhum artigo cadastrado ainda.",
+}: {
+  posts: BlogPost[];
+  onEdit: (post: BlogPost) => void;
+  onToggle: (post: BlogPost) => void;
+  emptyText?: string;
+}) {
+  if (posts.length === 0) {
+    return (
+      <div className="admin-dashboard-empty">
+        <FileText size={20} />
+        <span>{emptyText}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="admin-dashboard-list">
+      {posts.map((post) => (
+        <article key={post.id}>
+          <div>
+            <span>{getStatusLabel(post.status)}</span>
+            <small>{post.category}</small>
+          </div>
+          <strong>{post.title}</strong>
+          <p>{post.excerpt}</p>
+          <footer>
+            <small>{formatDate(post.publishedAt)}</small>
+            <div>
+              <button type="button" onClick={() => onEdit(post)}>
+                <Edit3 size={15} /> Editar
+              </button>
+              <button type="button" onClick={() => onToggle(post)}>
+                {post.status === "published" ? <EyeOff size={15} /> : <Eye size={15} />}
+                {post.status === "published" ? "Despublicar" : "Publicar"}
+              </button>
+            </div>
+          </footer>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 function getStatusLabel(status: BlogPostStatus) {
   if (status === "published") return "Publicado";
   if (status === "scheduled") return "Agendado";
@@ -908,7 +1017,6 @@ function getTabTitle(tab: AdminTab) {
     media: "Biblioteca de midia",
     ctas: "CTAs e conversao",
     seo: "SEO dos artigos",
-    leads: "Leads do blog",
     settings: "Configuracoes",
   };
 
