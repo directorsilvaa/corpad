@@ -17,15 +17,29 @@ function DeferredAnimations() {
   const [enabled, setEnabled] = React.useState(false);
 
   React.useEffect(() => {
-    const loadAnimations = () => setEnabled(true);
-
-    if ("requestIdleCallback" in window) {
-      const idleId = window.requestIdleCallback(loadAnimations, { timeout: 1800 });
-      return () => window.cancelIdleCallback(idleId);
+    if (window.location.pathname === "/") {
+      return undefined;
     }
 
-    const timeoutId = globalThis.setTimeout(loadAnimations, 1200);
-    return () => globalThis.clearTimeout(timeoutId);
+    const loadAnimations = () => setEnabled(true);
+    let timeoutId: number | undefined;
+
+    const scheduleAnimations = () => {
+      timeoutId = window.setTimeout(loadAnimations, 3600);
+    };
+
+    if (document.readyState === "complete") {
+      scheduleAnimations();
+    } else {
+      window.addEventListener("load", scheduleAnimations, { once: true });
+    }
+
+    return () => {
+      window.removeEventListener("load", scheduleAnimations);
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   if (!enabled) {

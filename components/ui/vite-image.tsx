@@ -22,11 +22,11 @@ export default function Image({
 
   return (
     <img
-      src={isMainLogo ? "/logo-300.png" : src}
+      src={isMainLogo ? "/logo-180.png" : src}
       srcSet={
         srcSet ??
         (isMainLogo
-          ? "/logo-300.png 300w, /logo-600.png 600w, /logo.png 1500w"
+          ? "/logo-180.png 180w, /logo-300.png 300w, /logo-600.png 600w, /logo.png 1500w"
           : undefined)
       }
       sizes={sizes ?? (isMainLogo ? "(max-width: 620px) 142px, 249px" : undefined)}
