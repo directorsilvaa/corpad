@@ -46,6 +46,7 @@ export default function PortfolioPage() {
         </a>
 
         <nav className="nav-links" aria-label="Navegação principal">
+          <a href="/corpad-digital#sobre">Sobre</a>
           <div className="nav-menu">
             <a className="nav-menu-trigger" href="/corpad-digital#servicos">
               Serviços <ChevronDown size={14} strokeWidth={2.2} />
@@ -63,7 +64,7 @@ export default function PortfolioPage() {
           </a>
           <a href="/clientes">Clientes</a>
           <a href="/blog">Blog</a>
-          <a href="/corpad-digital#sobre">Sobre</a>
+          <a href="/corpad-digital#contato">Contato</a>
         </nav>
 
         <div className="nav-actions">

@@ -243,6 +243,7 @@ export default function CorpadPage() {
         </a>
 
         <nav className="nav-links" aria-label="Navegação principal">
+          <a href="#sobre">Sobre</a>
           <div className="nav-menu">
             <a className="active nav-menu-trigger" href="#solucoes" aria-current="page">
               Serviços <ChevronDown size={14} strokeWidth={2.2} />
@@ -258,7 +259,7 @@ export default function CorpadPage() {
           <a href="/portfolio">Portfólio</a>
           <a href="/clientes">Clientes</a>
           <a href="/blog">Blog</a>
-          <a href="#sobre">Sobre</a>
+          <a href="#contato">Contato</a>
         </nav>
 
         <div className="nav-actions">

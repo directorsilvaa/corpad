@@ -22,6 +22,7 @@ export default function ClientesPage() {
         </a>
 
         <nav className="nav-links" aria-label="Navegação principal">
+          <a href="/corpad-digital#sobre">Sobre</a>
           <div className="nav-menu">
             <a className="nav-menu-trigger" href="/corpad-digital#servicos">
               Serviços <ChevronDown size={14} strokeWidth={2.2} />
@@ -37,7 +38,7 @@ export default function ClientesPage() {
           <a href="/portfolio">Portfólio</a>
           <a className="active" href="/clientes" aria-current="page">Clientes</a>
           <a href="/blog">Blog</a>
-          <a href="/corpad-digital#sobre">Sobre</a>
+          <a href="/corpad-digital#contato">Contato</a>
         </nav>
 
         <div className="nav-actions">

@@ -520,6 +520,7 @@ function BlogNavbar() {
       </a>
 
       <nav className="nav-links" aria-label="Navegacao principal">
+        <a href="/corpad-digital#sobre">Sobre</a>
         <div className="nav-menu">
           <a className="nav-menu-trigger" href="/corpad-digital#servicos">
             Servicos <ChevronDown size={14} strokeWidth={2.2} />
@@ -532,13 +533,12 @@ function BlogNavbar() {
             ))}
           </div>
         </div>
-        <a href="/corpad-digital">Digital</a>
-        <a href="/corpad-consultoria">Consultoria</a>
         <a href="/portfolio">Portfolio</a>
         <a href="/clientes">Clientes</a>
         <a className="active" href="/blog" aria-current="page">
           Blog
         </a>
+        <a href="/corpad-digital#contato">Contato</a>
       </nav>
 
       <div className="nav-actions">

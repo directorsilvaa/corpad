@@ -384,11 +384,16 @@ export async function deleteBlogPost(id: string) {
 }
 
 export async function uploadBlogImage(file: File) {
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Envie um arquivo de imagem valido.");
+  }
+
   if (hasSupabaseConfig && supabase) {
-    const extension = file.name.split(".").pop() || "png";
+    const extension = file.type.split("/").pop()?.replace("jpeg", "jpg") || file.name.split(".").pop() || "png";
     const path = `${crypto.randomUUID()}.${extension}`;
     const { error } = await supabase.storage.from("blog-images").upload(path, file, {
       cacheControl: "31536000",
+      contentType: file.type,
       upsert: false,
     });
 

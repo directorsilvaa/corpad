@@ -66,6 +66,7 @@ export default function ConsultingServicePage({ service }: ConsultingServicePage
     >
       <header className="consulting-topbar">
         <nav className="consulting-topbar-links" aria-label="Navegacao principal">
+          <a href="/corpad-consultoria#sobre">Sobre</a>
           <div className="consulting-service-menu">
             <a className="consulting-service-trigger" href="/corpad-consultoria#solucoes">
               Serviços
@@ -79,8 +80,8 @@ export default function ConsultingServicePage({ service }: ConsultingServicePage
               ))}
             </div>
           </div>
+          <a href="/clientes">Clientes</a>
           <a href="/blog">Blog</a>
-          <a href="/corpad-consultoria#sobre">Sobre nós</a>
           <a href="/corpad-consultoria#contato">Contato</a>
         </nav>
         <a className="consulting-topbar-brand" href="/corpad-consultoria" aria-label="Pagina inicial">

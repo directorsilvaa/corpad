@@ -111,6 +111,7 @@ export default function ServicePage({ service }: ServicePageProps) {
         </a>
 
         <nav className="nav-links" aria-label="Navegação principal">
+          <a href="/corpad-digital#sobre">Sobre</a>
           <div className="nav-menu">
             <a className="active nav-menu-trigger" href="/corpad-digital#servicos" aria-current="page">
               Serviços <ChevronDown size={14} strokeWidth={2.2} />
@@ -126,7 +127,7 @@ export default function ServicePage({ service }: ServicePageProps) {
           <a href="/portfolio">Portfólio</a>
           <a href="/clientes">Clientes</a>
           <a href="/blog">Blog</a>
-          <a href="/corpad-digital#sobre">Sobre</a>
+          <a href="/corpad-digital#contato">Contato</a>
         </nav>
 
         <div className="nav-actions">

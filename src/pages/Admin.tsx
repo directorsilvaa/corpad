@@ -725,7 +725,16 @@ export default function AdminPage() {
                 <label className="admin-upload-button">
                   <Upload size={16} />
                   {uploadingNewAuthorPhoto ? "Enviando..." : "Enviar foto"}
-                  <input type="file" accept="image/*" onChange={(event) => void handleNewAuthorPhotoUpload(event.target.files?.[0] ?? null)} disabled={uploadingNewAuthorPhoto} />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(event) => {
+                      const file = event.currentTarget.files?.[0] ?? null;
+                      event.currentTarget.value = "";
+                      void handleNewAuthorPhotoUpload(file);
+                    }}
+                    disabled={uploadingNewAuthorPhoto}
+                  />
                 </label>
               </div>
               <textarea
@@ -756,7 +765,11 @@ export default function AdminPage() {
                         <input
                           type="file"
                           accept="image/*"
-                          onChange={(event) => void handleStoredAuthorPhotoUpload(author.id, event.target.files?.[0] ?? null)}
+                          onChange={(event) => {
+                            const file = event.currentTarget.files?.[0] ?? null;
+                            event.currentTarget.value = "";
+                            void handleStoredAuthorPhotoUpload(author.id, file);
+                          }}
                           disabled={uploadingAuthorPhotoId === author.id}
                         />
                       </label>
@@ -961,7 +974,16 @@ export default function AdminPage() {
                     <label className="admin-upload-button">
                       <Upload size={16} />
                       {uploadingImage ? "Enviando..." : "Enviar imagem"}
-                      <input type="file" accept="image/*" onChange={(event) => void handleImageUpload(event.target.files?.[0] ?? null)} disabled={uploadingImage} />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(event) => {
+                          const file = event.currentTarget.files?.[0] ?? null;
+                          event.currentTarget.value = "";
+                          void handleImageUpload(file);
+                        }}
+                        disabled={uploadingImage}
+                      />
                     </label>
                   </div>
                 </div>
@@ -1043,7 +1065,16 @@ export default function AdminPage() {
                     <label className="admin-upload-button">
                       <Upload size={16} />
                       {uploadingAuthorPhoto ? "Enviando..." : "Enviar foto"}
-                      <input type="file" accept="image/*" onChange={(event) => void handleAuthorPhotoUpload(event.target.files?.[0] ?? null)} disabled={uploadingAuthorPhoto} />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(event) => {
+                          const file = event.currentTarget.files?.[0] ?? null;
+                          event.currentTarget.value = "";
+                          void handleAuthorPhotoUpload(file);
+                        }}
+                        disabled={uploadingAuthorPhoto}
+                      />
                     </label>
                   </div>
                 </div>

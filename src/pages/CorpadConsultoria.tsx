@@ -166,6 +166,7 @@ export default function CorpadConsultoria() {
       />
       <header className="consulting-topbar">
         <nav className="consulting-topbar-links" aria-label="Navegacao principal">
+          <a href="#sobre">Sobre</a>
           <div className="consulting-service-menu">
             <a className="consulting-service-trigger" href="#solucoes">
               Serviços
@@ -179,8 +180,8 @@ export default function CorpadConsultoria() {
               ))}
             </div>
           </div>
+          <a href="/clientes">Clientes</a>
           <a href="/blog">Blog</a>
-          <a href="#sobre">Sobre nós</a>
           <a href="#contato">Contato</a>
         </nav>
         <a className="consulting-topbar-brand" href="#top" aria-label="Pagina inicial">
