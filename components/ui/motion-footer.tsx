@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { ArrowUp, Briefcase, MessageCircle } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);

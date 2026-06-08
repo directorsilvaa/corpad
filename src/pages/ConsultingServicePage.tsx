@@ -1,5 +1,5 @@
-import Image from "@/components/ui/vite-image";
-import { CinematicFooter } from "@/components/ui/motion-footer";
+import Image from "../../components/ui/vite-image";
+import { CinematicFooter } from "../../components/ui/motion-footer";
 import {
   ArrowRight,
   CheckCircle2,

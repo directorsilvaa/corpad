@@ -6,7 +6,7 @@ import {
   Mail,
   MessageCircle,
 } from "lucide-react";
-import Image from "@/components/ui/vite-image";
+import Image from "../../components/ui/vite-image";
 import { organizationJsonLd, usePageSeo } from "../lib/seo";
 
 export default function Home() {
