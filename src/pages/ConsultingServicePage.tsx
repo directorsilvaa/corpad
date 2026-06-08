@@ -21,41 +21,48 @@ import {
   Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useEffect } from "react";
 import {
   consultingServicePages,
   type ConsultingServicePageContent,
 } from "../data/consultingServicePages";
+import { organizationJsonLd, usePageSeo } from "../lib/seo";
 
 type ConsultingServicePageProps = {
   service: ConsultingServicePageContent;
 };
 
-const whatsappUrl =
-  `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei uma pagina de servico da CORPAD Consultoria e gostaria de falar com um especialista.")}`;
+const whatsappPhone = "5516996094649";
 
-function setMetaDescription(content: string) {
-  let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-
-  if (!meta) {
-    meta = document.createElement("meta");
-    meta.name = "description";
-    document.head.appendChild(meta);
-  }
-
-  meta.content = content;
+function buildConsultingWhatsappUrl(service: ConsultingServicePageContent) {
+  return `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
+    `Ola, tudo bem? Acessei a pagina de ${service.navLabel} da CORPAD Consultoria e gostaria de falar com um especialista.`
+  )}`;
 }
 
 export default function ConsultingServicePage({ service }: ConsultingServicePageProps) {
-  useEffect(() => {
-    document.title = service.metaTitle;
-    setMetaDescription(service.metaDescription);
-  }, [service]);
+  usePageSeo({
+    title: service.metaTitle,
+    description: service.metaDescription,
+    path: `/corpad-consultoria/servicos/${service.slug}`,
+    jsonLd: [
+      organizationJsonLd(),
+      {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: service.navLabel,
+        description: service.metaDescription,
+        provider: organizationJsonLd(),
+        areaServed: "Brasil",
+        url: `https://corpad.vercel.app/corpad-consultoria/servicos/${service.slug}`,
+      },
+    ],
+  });
 
   const isCloudServers = service.slug === "servidores-em-nuvem";
   const isBpoFinanceiro = service.slug === "bpo-financeiro";
   const visibleProcess = service.process.slice(0, 4);
   const cloudSectionIcons = [Zap, Network, ShieldCheck];
+  const whatsappUrl = buildConsultingWhatsappUrl(service);
 
   return (
     <main
@@ -236,6 +243,9 @@ export default function ConsultingServicePage({ service }: ConsultingServicePage
 }
 
 function CloudServerDetails() {
+  const cloudWhatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
+    "Ola, tudo bem? Acessei a pagina de Servidores em nuvem da CORPAD Consultoria e gostaria de saber mais sobre infraestrutura em nuvem."
+  )}`;
   const serverOptions = [
     {
       title: "Servidores VPS",
@@ -399,7 +409,7 @@ function CloudServerDetails() {
               </div>
               <h4>{title}</h4>
               <p>{text}</p>
-              <a href={whatsappUrl} target="_blank" rel="noreferrer">
+              <a href={cloudWhatsappUrl} target="_blank" rel="noreferrer">
                 Saiba mais
                 <ArrowRight size={14} strokeWidth={2.7} />
               </a>

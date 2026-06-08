@@ -20,11 +20,12 @@ import {
   TrendingUp,
   UserRoundCheck,
 } from "lucide-react";
-import { useEffect, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import PortfolioCarousel from "../components/PortfolioCarousel";
 import { featuredClientLogos } from "../data/clients";
 import { portfolioProjects } from "../data/portfolioProjects";
 import { servicePages, type ServicePageContent } from "../data/servicePages";
+import { faqJsonLd, organizationJsonLd, usePageSeo } from "../lib/seo";
 
 type ServicePageProps = {
   service: ServicePageContent;
@@ -47,23 +48,25 @@ function buildWhatsappUrl(message: string) {
 
 const portfolioPreviewProjects = portfolioProjects.slice(0, 6);
 
-function setMetaDescription(content: string) {
-  let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-
-  if (!meta) {
-    meta = document.createElement("meta");
-    meta.name = "description";
-    document.head.appendChild(meta);
-  }
-
-  meta.content = content;
-}
-
 export default function ServicePage({ service }: ServicePageProps) {
-  useEffect(() => {
-    document.title = service.metaTitle;
-    setMetaDescription(service.metaDescription);
-  }, [service]);
+  usePageSeo({
+    title: service.metaTitle,
+    description: service.metaDescription,
+    path: `/servicos/${service.slug}`,
+    jsonLd: [
+      organizationJsonLd(),
+      {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: service.navLabel,
+        description: service.metaDescription,
+        provider: organizationJsonLd(),
+        areaServed: "Brasil",
+        url: `https://corpad.vercel.app/servicos/${service.slug}`,
+      },
+      faqJsonLd(service.faqs),
+    ],
+  });
 
   const isWebsiteCreation = service.slug === "criacao-de-sites";
   const isEcommerce = service.slug === "e-commerce";

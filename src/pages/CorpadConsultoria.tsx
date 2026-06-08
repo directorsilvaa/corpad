@@ -25,6 +25,7 @@ import ConsultingSolutionsSection from "../components/ConsultingSolutionsSection
 import LightRays from "../components/LightRays";
 import { consultingServicePages } from "../data/consultingServicePages";
 import { importantClientLogos } from "../data/clients";
+import { organizationJsonLd, usePageSeo } from "../lib/seo";
 
 const differentials = [
   {
@@ -148,6 +149,22 @@ const whatsappUrl =
   `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei a pagina de Consultoria Empresarial da CORPAD e gostaria de falar com um especialista para entender as solucoes para minha empresa.")}`;
 
 export default function CorpadConsultoria() {
+  usePageSeo({
+    title: "CORPAD Consultoria | Gestão, Tecnologia, Dados e Estratégia",
+    description:
+      "Consultoria empresarial para organizar processos, apoiar decisões, melhorar resultados e conectar gestão, tecnologia, dados e estratégia.",
+    path: "/corpad-consultoria",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "CORPAD Consultoria",
+      url: "https://corpad.vercel.app/corpad-consultoria",
+      description:
+        "Consultoria empresarial para organizar processos, apoiar decisões, melhorar resultados e conectar gestão, tecnologia, dados e estratégia.",
+      publisher: organizationJsonLd(),
+    },
+  });
+
   return (
     <main className="consulting-page consulting-digital-idv">
       <LightRays

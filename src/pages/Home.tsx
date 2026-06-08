@@ -7,8 +7,25 @@ import {
   MessageCircle,
 } from "lucide-react";
 import Image from "@/components/ui/vite-image";
+import { organizationJsonLd, usePageSeo } from "../lib/seo";
 
 export default function Home() {
+  const currentYear = new Date().getFullYear();
+
+  usePageSeo({
+    title: "CORPAD | Soluções Digitais e Consultoria Empresarial",
+    description:
+      "Portal da CORPAD para soluções digitais e consultoria empresarial: tecnologia, marketing, infraestrutura, gestão e estratégia para empresas.",
+    path: "/",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "CORPAD",
+      url: "https://corpad.vercel.app/",
+      publisher: organizationJsonLd(),
+    },
+  });
+
   return (
     <main className="home-gateway">
       <div className="gateway-motion-bg" aria-hidden="true">
@@ -28,6 +45,7 @@ export default function Home() {
       </a>
 
       <section className="gateway-hero" aria-label="Entrada CORPAD">
+        <h1 className="sr-only">CORPAD Digital e CORPAD Consultoria</h1>
         <article className="gateway-column gateway-digital">
           <div className="gateway-card-visual" aria-hidden="true">
             <i />
@@ -36,9 +54,9 @@ export default function Home() {
           </div>
           <div className="gateway-copy">
             <span>Solucoes digitais</span>
-            <h1>
+            <h2>
               CORPAD <strong>Digital</strong>
-            </h1>
+            </h2>
             <p>
               Sites, sistemas, automacoes e estrutura digital para empresas que
               querem crescer com tecnologia.
@@ -73,7 +91,7 @@ export default function Home() {
         </article>
 
         <footer className="gateway-info-strip" aria-label="Informacoes da CORPAD">
-          <span>CORPAD (r) Todos os direitos reservados 2024</span>
+          <span>© {currentYear} CORPAD. Todos os direitos reservados</span>
           <span>CNPJ: 01.434.659/0001-19</span>
           <span>Fundada em 1996</span>
           <a href="mailto:contato@corpad.com.br">

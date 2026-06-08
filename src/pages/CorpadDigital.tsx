@@ -17,6 +17,7 @@ import {
   Workflow,
 } from "lucide-react";
 import { CinematicFooter } from "@/components/ui/motion-footer";
+import { faqJsonLd, organizationJsonLd, usePageSeo } from "../lib/seo";
 import FastDevelopmentSection from "../components/FastDevelopmentSection";
 import HypedAnimationsSection from "../components/HypedAnimationsSection";
 import LightRays from "../components/LightRays";
@@ -212,6 +213,17 @@ const faqItems = [
 ];
 
 export default function CorpadPage() {
+  usePageSeo({
+    title: "CORPAD Digital | Sites, Marketing, Tráfego Pago e Automação",
+    description:
+      "Soluções digitais para empresas: criação de sites, e-commerce, marketing digital, tráfego pago, hospedagem e automação de processos.",
+    path: "/corpad-digital",
+    jsonLd: [
+      organizationJsonLd(),
+      faqJsonLd(faqItems.map(({ question, answer }) => ({ question, answer }))),
+    ],
+  });
+
   return (
     <main className="verdant-page">
       <ScrollReveal />

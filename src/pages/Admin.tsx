@@ -52,6 +52,7 @@ import {
   slugify,
   uploadBlogImage,
 } from "../lib/blogPosts";
+import { usePageSeo } from "../lib/seo";
 
 type AdminTab =
   | "dashboard"
@@ -124,6 +125,13 @@ function formatDate(value: string | null | undefined) {
 }
 
 export default function AdminPage() {
+  usePageSeo({
+    title: "Admin | CORPAD",
+    description: "Área administrativa da CORPAD.",
+    path: "/admin",
+    noindex: true,
+  });
+
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<BlogPost[]>([]);

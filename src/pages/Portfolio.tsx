@@ -6,11 +6,26 @@ import {
   type PortfolioProject,
 } from "../data/portfolioProjects";
 import { servicePages } from "../data/servicePages";
+import { organizationJsonLd, usePageSeo } from "../lib/seo";
 
 const whatsappUrl =
   `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei o portfolio da CORPAD Digital e gostaria de conversar sobre um projeto para minha empresa.")}`;
 
 export default function PortfolioPage() {
+  usePageSeo({
+    title: "Portfólio CORPAD Digital | Projetos Digitais para Empresas",
+    description:
+      "Veja projetos digitais desenvolvidos pela CORPAD Digital para empresas: sites, portais, landing pages e experiências com foco em crescimento.",
+    path: "/portfolio",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: "Portfólio CORPAD Digital",
+      url: "https://corpad.vercel.app/portfolio",
+      publisher: organizationJsonLd(),
+    },
+  });
+
   const [previewProject, setPreviewProject] = useState<PortfolioProject | null>(
     null,
   );

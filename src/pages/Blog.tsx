@@ -25,6 +25,7 @@ import {
   registerBlogLead,
   registerBlogView,
 } from "../lib/blogPosts";
+import { organizationJsonLd, usePageSeo } from "../lib/seo";
 
 const whatsappUrl =
   `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei o blog da CORPAD e gostaria de conversar sobre uma solucao para minha empresa.")}`;
@@ -82,18 +83,6 @@ const defaultCategories: Array<{
 ];
 
 const defaultCategoryBySlug = new Map(defaultCategories.map((category) => [category.slug, category]));
-
-function setMetaDescription(content: string) {
-  let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-
-  if (!meta) {
-    meta = document.createElement("meta");
-    meta.name = "description";
-    document.head.appendChild(meta);
-  }
-
-  meta.content = content;
-}
 
 function normalize(value: string) {
   return value
@@ -201,12 +190,32 @@ export default function BlogPage() {
     const params = new URLSearchParams(window.location.search);
     return params.get("categoria") || allCategorySlug;
   }, []);
+  const seoTitle = activePost ? `${activePost.title} | Blog CORPAD` : `${settings.title} | CORPAD`;
+  const seoDescription = activePost
+    ? activePost.metaDescription || activePost.excerpt
+    : settings.description;
+  const seoPath = activePost ? `/blog/${activePost.slug}` : "/blog";
+
+  usePageSeo({
+    title: seoTitle,
+    description: seoDescription,
+    path: seoPath,
+    image: activePost?.coverImage || undefined,
+    type: activePost ? "article" : "website",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": activePost ? "Article" : "Blog",
+      headline: activePost?.title ?? settings.title,
+      description: seoDescription,
+      url: `https://corpad.vercel.app${seoPath}`,
+      image: activePost?.coverImage || "https://corpad.vercel.app/logo.png",
+      publisher: organizationJsonLd(),
+    },
+  });
 
   useEffect(() => {
     const blogSettings = getBlogSettings();
     setSettings(blogSettings);
-    document.title = `${blogSettings.title} | CORPAD`;
-    setMetaDescription(blogSettings.description);
 
     const loadPosts = async () => {
       setLoading(true);
@@ -216,8 +225,6 @@ export default function BlogPage() {
           const post = await getBlogPostBySlug(slug);
           setActivePost(post);
           if (post) {
-            document.title = `${post.title} | Blog CORPAD`;
-            setMetaDescription(post.metaDescription || post.excerpt);
             registerBlogView(post.slug);
           }
           return;

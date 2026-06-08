@@ -2,11 +2,26 @@ import Image from "@/components/ui/vite-image";
 import { Check, ChevronDown, MessageCircle } from "lucide-react";
 import { clientLogos } from "../data/clients";
 import { servicePages } from "../data/servicePages";
+import { organizationJsonLd, usePageSeo } from "../lib/seo";
 
 const whatsappUrl =
   `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei a pagina de clientes da CORPAD Digital e gostaria de saber como a CORPAD pode ajudar minha empresa.")}`;
 
 export default function ClientesPage() {
+  usePageSeo({
+    title: "Clientes CORPAD | Empresas e Projetos Atendidos",
+    description:
+      "Conheça empresas que confiaram na CORPAD para construir presença digital, comunicação, portais, landing pages e estruturas comerciais.",
+    path: "/clientes",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Clientes CORPAD",
+      url: "https://corpad.vercel.app/clientes",
+      publisher: organizationJsonLd(),
+    },
+  });
+
   return (
     <main className="clients-page">
       <header className="navbar">
