@@ -14,7 +14,6 @@ import {
   LayoutDashboard,
   Link as LinkIcon,
   List,
-  LockKeyhole,
   LogOut,
   MessageCircle,
   Newspaper,
@@ -486,18 +485,12 @@ export default function AdminPage() {
     return (
       <main className="admin-page admin-login-page">
         <section className="admin-login-panel">
-          <img src="/logo-admin.png" alt="CORPAD" />
-          <div className="admin-login-heading">
-            <span aria-hidden="true">
-              <LockKeyhole size={18} />
-            </span>
-            <h1>Bem-vindo de volta!</h1>
-            <p>Acesse o painel para gerenciar os posts do blog.</p>
-          </div>
+          <span className="admin-login-logo" aria-label="CORPAD">
+            <img src="/logo-admin.png" alt="" />
+          </span>
 
           <form onSubmit={handleLogin}>
-            <label>
-              E-mail
+            <label className="admin-login-field">
               <input
                 type="email"
                 value={email}
@@ -506,28 +499,19 @@ export default function AdminPage() {
                 required
               />
             </label>
-            <label>
-              Senha
+            <label className="admin-login-field">
               <input
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="Digite sua senha"
+                placeholder="Senha"
                 required
               />
             </label>
-            <div className="admin-login-options">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={rememberEmail}
-                  onChange={(event) => setRememberEmail(event.target.checked)}
-                />
-                Lembrar meu e-mail
-              </label>
-            </div>
             {message && <p className="admin-message">{message}</p>}
-            <button type="submit">Entrar</button>
+            <button className="admin-login-submit" type="submit">
+              Entrar
+            </button>
           </form>
         </section>
       </main>
