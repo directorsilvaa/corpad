@@ -31,12 +31,18 @@ const whatsappUrl =
 
 const allCategorySlug = "todos";
 
-const categories: Array<{
+const defaultCategories: Array<{
   title: string;
   description: string;
   slug: string;
   Icon: LucideIcon;
 }> = [
+  {
+    title: "Automacao",
+    description: "Fluxos, sistemas e rotinas para ganhar produtividade.",
+    slug: "automacao",
+    Icon: Server,
+  },
   {
     title: "Digital",
     description: "Sites, presenca online, conversao e marca.",
@@ -74,6 +80,8 @@ const categories: Array<{
     Icon: Server,
   },
 ];
+
+const defaultCategoryBySlug = new Map(defaultCategories.map((category) => [category.slug, category]));
 
 function setMetaDescription(content: string) {
   let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
@@ -231,6 +239,34 @@ export default function BlogPage() {
       counts[categorySlug] = (counts[categorySlug] ?? 0) + 1;
       return counts;
     }, {});
+  }, [posts]);
+
+  const categories = useMemo(() => {
+    const postCategories = new Map<string, string>();
+
+    posts.forEach((post) => {
+      const categorySlug = getCategorySlug(post.category);
+      if (!postCategories.has(categorySlug)) {
+        postCategories.set(categorySlug, post.category);
+      }
+    });
+
+    if (postCategories.size === 0) {
+      return defaultCategories;
+    }
+
+    return Array.from(postCategories.entries())
+      .map(([categorySlug, title]) => {
+        const defaultCategory = defaultCategoryBySlug.get(categorySlug);
+
+        return {
+          title,
+          slug: categorySlug,
+          description: defaultCategory?.description ?? "Conteudos publicados nesta categoria.",
+          Icon: defaultCategory?.Icon ?? PenLine,
+        };
+      })
+      .sort((a, b) => a.title.localeCompare(b.title, "pt-BR"));
   }, [posts]);
 
   const filteredPosts = useMemo(() => {
