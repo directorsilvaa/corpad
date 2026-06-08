@@ -1,5 +1,6 @@
 import {
   Bold,
+  Bell,
   CalendarDays,
   CheckCircle2,
   Edit3,
@@ -35,13 +36,17 @@ import {
   BlogPost,
   BlogPostInput,
   BlogPostStatus,
+  BlogAuthor,
   BlogSettings,
   blogCategories,
+  defaultBlogAuthors,
   defaultBlogSettings,
   deleteBlogPost,
   getBlogSettings,
+  listBlogAuthors,
   listBlogCategories,
   listBlogPosts,
+  saveBlogAuthors,
   saveBlogSettings,
   saveBlogCategories,
   saveBlogPost,
@@ -58,6 +63,8 @@ type AdminTab =
   | "ctas"
   | "seo"
   | "settings";
+
+type EditorTab = "content" | "seo" | "author" | "cta";
 
 const whatsappUrl = "https://wa.me/5516996094649";
 const rememberedAdminEmailKey = "corpad_admin_remembered_email";
@@ -98,6 +105,13 @@ const editorActions = [
   { label: "CTA", token: "[cta]Quer melhorar sua empresa? Fale com um consultor.[/cta]", Icon: MessageCircle },
 ];
 
+const editorTabs: Array<{ id: EditorTab; label: string; Icon: typeof FileText }> = [
+  { id: "content", label: "Conteudo", Icon: FileText },
+  { id: "seo", label: "SEO", Icon: Search },
+  { id: "author", label: "Autor", Icon: UserRound },
+  { id: "cta", label: "CTA", Icon: MessageCircle },
+];
+
 function getReadingTime(content: string) {
   const words = content.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(words / 180));
@@ -115,6 +129,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [categories, setCategories] = useState<string[]>(blogCategories);
+  const [authors, setAuthors] = useState<BlogAuthor[]>(defaultBlogAuthors);
   const [editingId, setEditingId] = useState<string | undefined>();
   const [form, setForm] = useState<BlogPostInput>(emptyPost);
   const [email, setEmail] = useState("");
@@ -123,9 +138,19 @@ export default function AdminPage() {
   const [message, setMessage] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingAuthorPhoto, setUploadingAuthorPhoto] = useState(false);
+  const [uploadingNewAuthorPhoto, setUploadingNewAuthorPhoto] = useState(false);
+  const [uploadingAuthorPhotoId, setUploadingAuthorPhotoId] = useState<string | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
+  const [editorTab, setEditorTab] = useState<EditorTab>("content");
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
   const [newCategory, setNewCategory] = useState("");
+  const [newAuthor, setNewAuthor] = useState<BlogAuthor>({
+    id: "",
+    name: "",
+    role: "",
+    bio: "",
+    photo: "",
+  });
   const [blogSettings, setBlogSettings] = useState({
     ...defaultBlogSettings,
   });
@@ -133,6 +158,7 @@ export default function AdminPage() {
   useEffect(() => {
     document.title = "Admin | CORPAD";
     setCategories(listBlogCategories());
+    setAuthors(listBlogAuthors());
     setBlogSettings(getBlogSettings());
 
     const rememberedEmail = localStorage.getItem(rememberedAdminEmailKey);
@@ -160,7 +186,13 @@ export default function AdminPage() {
   const mediaItems = posts
     .filter((post) => post.coverImage)
     .map((post) => ({ url: post.coverImage, alt: post.imageAlt, title: post.title }));
-  const authors = Array.from(new Set(posts.map((post) => post.authorName).filter(Boolean)));
+  const authorUsage = useMemo(() => {
+    return posts.reduce<Record<string, number>>((usage, post) => {
+      if (!post.authorName) return usage;
+      usage[post.authorName] = (usage[post.authorName] ?? 0) + 1;
+      return usage;
+    }, {});
+  }, [posts]);
 
   async function refreshPosts() {
     const nextPosts = await listBlogPosts();
@@ -202,6 +234,7 @@ export default function AdminPage() {
       setForm(emptyPost);
       setEditingId(undefined);
       setEditorOpen(false);
+      setEditorTab("content");
       await refreshPosts();
       setMessage("Artigo salvo com sucesso.");
     } catch (error) {
@@ -215,6 +248,7 @@ export default function AdminPage() {
       setEditingId(undefined);
       setForm(emptyPost);
       setEditorOpen(false);
+      setEditorTab("content");
     }
     await refreshPosts();
   }
@@ -256,6 +290,7 @@ export default function AdminPage() {
     setPosts([]);
     setMessage("");
     setEditorOpen(false);
+    setEditorTab("content");
   }
 
   async function handleImageUpload(file: File | null) {
@@ -290,9 +325,42 @@ export default function AdminPage() {
     }
   }
 
+  async function handleNewAuthorPhotoUpload(file: File | null) {
+    if (!file) return;
+
+    setUploadingNewAuthorPhoto(true);
+    setMessage("");
+
+    try {
+      const imageUrl = await uploadBlogImage(file);
+      setNewAuthor((current) => ({ ...current, photo: imageUrl }));
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Nao foi possivel enviar a foto do autor.");
+    } finally {
+      setUploadingNewAuthorPhoto(false);
+    }
+  }
+
+  async function handleStoredAuthorPhotoUpload(authorId: string, file: File | null) {
+    if (!file) return;
+
+    setUploadingAuthorPhotoId(authorId);
+    setMessage("");
+
+    try {
+      const imageUrl = await uploadBlogImage(file);
+      updateAuthor(authorId, { photo: imageUrl });
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Nao foi possivel enviar a foto do autor.");
+    } finally {
+      setUploadingAuthorPhotoId(null);
+    }
+  }
+
   function openNewPost() {
     setEditingId(undefined);
     setForm({ ...emptyPost, category: categories[0] ?? blogCategories[0] });
+    setEditorTab("content");
     setEditorOpen(true);
   }
 
@@ -320,6 +388,7 @@ export default function AdminPage() {
       status: post.status,
       publishedAt: post.publishedAt,
     });
+    setEditorTab("content");
     setEditorOpen(true);
   }
 
@@ -359,6 +428,48 @@ export default function AdminPage() {
     nextCategories.splice(targetIndex, 0, category);
     setCategories(nextCategories);
     saveBlogCategories(nextCategories);
+  }
+
+  function persistAuthors(nextAuthors: BlogAuthor[]) {
+    setAuthors(nextAuthors);
+    saveBlogAuthors(nextAuthors);
+  }
+
+  function addAuthor() {
+    const trimmedName = newAuthor.name.trim();
+    if (!trimmedName) return;
+
+    persistAuthors([
+      ...authors,
+      {
+        ...newAuthor,
+        id: crypto.randomUUID(),
+        name: trimmedName,
+        role: newAuthor.role.trim() || "Autor",
+        bio: newAuthor.bio.trim(),
+        photo: newAuthor.photo.trim(),
+      },
+    ]);
+    setNewAuthor({ id: "", name: "", role: "", bio: "", photo: "" });
+  }
+
+  function updateAuthor(id: string, patch: Partial<BlogAuthor>) {
+    persistAuthors(authors.map((author) => (author.id === id ? { ...author, ...patch } : author)));
+  }
+
+  function removeAuthor(id: string) {
+    persistAuthors(authors.filter((author) => author.id !== id));
+  }
+
+  function applyAuthor(authorName: string) {
+    const author = authors.find((currentAuthor) => currentAuthor.name === authorName);
+    setForm((current) => ({
+      ...current,
+      authorName,
+      authorRole: author?.role ?? current.authorRole,
+      authorBio: author?.bio ?? current.authorBio,
+      authorPhoto: author?.photo ?? current.authorPhoto,
+    }));
   }
 
   function handleSaveSettings(event: FormEvent<HTMLFormElement>) {
@@ -424,8 +535,13 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="admin-page">
+      <main className="admin-page">
       <aside className="admin-sidebar">
+        <div className="admin-window-controls" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
         <a className="admin-brand" href="/">
           <img src="/logo-admin.png" alt="CORPAD" />
         </a>
@@ -454,12 +570,23 @@ export default function AdminPage() {
       <section className="admin-workspace">
         <header className="admin-header">
           <div>
-            <span>Painel administrador do blog institucional</span>
+            <span className="admin-system-status">
+              <i aria-hidden="true" />
+              Painel administrador do blog institucional
+            </span>
             <h1>{getTabTitle(activeTab)}</h1>
           </div>
-          <button type="button" onClick={openNewPost}>
-            <Plus size={18} /> Criar artigo
-          </button>
+          <div className="admin-header-actions" aria-label="Acoes do painel">
+            <button className="admin-icon-button" type="button" aria-label="Buscar">
+              <Search size={17} />
+            </button>
+            <button className="admin-icon-button" type="button" aria-label="Notificacoes">
+              <Bell size={17} />
+            </button>
+            <span className="admin-avatar" aria-label="Administrador">
+              <UserRound size={18} />
+            </span>
+          </div>
         </header>
 
         {message && <p className="admin-message admin-message-inline">{message}</p>}
@@ -473,6 +600,10 @@ export default function AdminPage() {
                 <p>
                   Acompanhe rascunhos, agendamentos, categorias e os ultimos conteudos sem sair do fluxo de publicacao.
                 </p>
+              </div>
+              <div className="admin-hero-orb" aria-hidden="true">
+                <span>{publishedPosts}</span>
+                <small>online</small>
               </div>
               <button type="button" onClick={openNewPost}>
                 <Plus size={18} /> Novo artigo
@@ -520,6 +651,9 @@ export default function AdminPage() {
             <div className="admin-section-heading">
               <span>Gestao de artigos</span>
               <strong>Criar, editar, excluir, publicar e agendar</strong>
+              <button className="admin-section-action" type="button" onClick={openNewPost}>
+                <Plus size={17} /> Criar artigo
+              </button>
             </div>
             {posts.length === 0 ? (
               <AdminEmpty />
@@ -586,13 +720,75 @@ export default function AdminPage() {
         )}
 
         {activeTab === "authors" && (
-          <section className="admin-panel-grid">
-            {(authors.length > 0 ? authors : ["Equipe CORPAD"]).map((author) => (
-              <AdminPanel title={author} eyebrow="Autor" key={author}>
-                <p>Edite nome, foto, cargo e mini bio dentro de cada artigo.</p>
-              </AdminPanel>
-            ))}
-          </section>
+          <AdminPanel title="Autores do blog" eyebrow="Equipe editorial">
+            <div className="admin-author-create">
+              <input
+                value={newAuthor.name}
+                onChange={(event) => setNewAuthor((current) => ({ ...current, name: event.target.value }))}
+                placeholder="Nome do autor"
+              />
+              <input
+                value={newAuthor.role}
+                onChange={(event) => setNewAuthor((current) => ({ ...current, role: event.target.value }))}
+                placeholder="Cargo"
+              />
+              <div className="admin-author-photo-input">
+                <input
+                  value={newAuthor.photo}
+                  onChange={(event) => setNewAuthor((current) => ({ ...current, photo: event.target.value }))}
+                  placeholder="URL da foto"
+                />
+                <label className="admin-upload-button">
+                  <Upload size={16} />
+                  {uploadingNewAuthorPhoto ? "Enviando..." : "Enviar foto"}
+                  <input type="file" accept="image/*" onChange={(event) => void handleNewAuthorPhotoUpload(event.target.files?.[0] ?? null)} disabled={uploadingNewAuthorPhoto} />
+                </label>
+              </div>
+              <textarea
+                value={newAuthor.bio}
+                onChange={(event) => setNewAuthor((current) => ({ ...current, bio: event.target.value }))}
+                placeholder="Mini bio"
+                rows={2}
+              />
+              <button type="button" onClick={addAuthor}>
+                <Plus size={16} /> Criar autor
+              </button>
+            </div>
+
+            <div className="admin-author-manager">
+              {authors.map((author) => (
+                <article className="admin-author-row" key={author.id}>
+                  <div className="admin-author-avatar">
+                    {author.photo ? <img src={author.photo} alt="" /> : <UserRound size={20} />}
+                  </div>
+                  <div className="admin-author-fields">
+                    <input value={author.name} onChange={(event) => updateAuthor(author.id, { name: event.target.value })} />
+                    <input value={author.role} onChange={(event) => updateAuthor(author.id, { role: event.target.value })} />
+                    <div className="admin-author-photo-input">
+                      <input value={author.photo} onChange={(event) => updateAuthor(author.id, { photo: event.target.value })} placeholder="URL da foto" />
+                      <label className="admin-upload-button">
+                        <Upload size={16} />
+                        {uploadingAuthorPhotoId === author.id ? "Enviando..." : "Enviar foto"}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(event) => void handleStoredAuthorPhotoUpload(author.id, event.target.files?.[0] ?? null)}
+                          disabled={uploadingAuthorPhotoId === author.id}
+                        />
+                      </label>
+                    </div>
+                    <textarea value={author.bio} onChange={(event) => updateAuthor(author.id, { bio: event.target.value })} rows={2} />
+                  </div>
+                  <div className="admin-author-actions">
+                    <span>{authorUsage[author.name] ?? 0} artigos</span>
+                    <button type="button" onClick={() => removeAuthor(author.id)}>
+                      <Trash2 size={15} /> Remover
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </AdminPanel>
         )}
 
         {activeTab === "media" && (
@@ -701,13 +897,19 @@ export default function AdminPage() {
             </div>
 
             <div className="admin-editor-tabs">
-              <a href="#article-content">Conteudo</a>
-              <a href="#article-seo">SEO</a>
-              <a href="#article-author">Autor</a>
-              <a href="#article-cta">CTA</a>
+              {editorTabs.map(({ id, label, Icon }) => (
+                <button
+                  className={editorTab === id ? "active" : ""}
+                  type="button"
+                  onClick={() => setEditorTab(id)}
+                  key={id}
+                >
+                  <Icon size={15} /> {label}
+                </button>
+              ))}
             </div>
 
-            <section id="article-content" className="admin-editor-section">
+            <section id="article-content" className="admin-editor-section" hidden={editorTab !== "content"}>
               <div className="admin-editor-split">
                 <label>
                   Titulo
@@ -801,7 +1003,7 @@ export default function AdminPage() {
               <p className="admin-read-time">Tempo estimado: {getReadingTime(form.content)} min de leitura</p>
             </section>
 
-            <section id="article-seo" className="admin-editor-section">
+            <section id="article-seo" className="admin-editor-section" hidden={editorTab !== "seo"}>
               <div className="admin-editor-split">
                 <label>
                   Meta title
@@ -823,11 +1025,18 @@ export default function AdminPage() {
               </article>
             </section>
 
-            <section id="article-author" className="admin-editor-section">
+            <section id="article-author" className="admin-editor-section" hidden={editorTab !== "author"}>
               <div className="admin-editor-split">
                 <label>
                   Autor
-                  <input value={form.authorName} onChange={(event) => setForm((current) => ({ ...current, authorName: event.target.value }))} />
+                  <select value={form.authorName} onChange={(event) => applyAuthor(event.target.value)}>
+                    {!authors.some((author) => author.name === form.authorName) && <option>{form.authorName}</option>}
+                    {authors.map((author) => (
+                      <option key={author.id} value={author.name}>
+                        {author.name}
+                      </option>
+                    ))}
+                  </select>
                 </label>
                 <label>
                   Cargo
@@ -861,7 +1070,7 @@ export default function AdminPage() {
               </label>
             </section>
 
-            <section id="article-cta" className="admin-editor-section">
+            <section id="article-cta" className="admin-editor-section" hidden={editorTab !== "cta"}>
               <div className="admin-editor-split">
                 <label>
                   Texto do botao
@@ -907,6 +1116,7 @@ function AdminNavButton({
 function StatCard({ label, value, detail, icon }: { label: string; value: number; detail: string; icon: ReactNode }) {
   return (
     <article className="admin-stat-card">
+      <span className="admin-stat-icon">{icon}</span>
       <span>{label}</span>
       <strong>{value}</strong>
       <small>

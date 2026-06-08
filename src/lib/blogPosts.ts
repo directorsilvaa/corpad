@@ -60,6 +60,7 @@ type BlogPostRow = {
 
 const localStorageKey = "corpad_blog_posts";
 const localCategoriesKey = "corpad_blog_categories";
+const localAuthorsKey = "corpad_blog_authors";
 const localSettingsKey = "corpad_blog_settings";
 const localAnalyticsKey = "corpad_blog_analytics";
 
@@ -76,6 +77,14 @@ export type BlogSettings = {
 };
 
 export type BlogAnalytics = Record<string, { views: number; leads: number; ctaClicks: number }>;
+
+export type BlogAuthor = {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  photo: string;
+};
 
 export const defaultBlogSettings: BlogSettings = {
   title: "Blog CORPAD",
@@ -97,6 +106,16 @@ export const blogCategories = [
   "Vendas",
   "Tecnologia",
   "Inteligencia artificial",
+];
+
+export const defaultBlogAuthors: BlogAuthor[] = [
+  {
+    id: "corpad-team",
+    name: "Equipe CORPAD",
+    role: "Conteudo institucional",
+    bio: "Conteudos sobre digital, consultoria e tecnologia para empresas.",
+    photo: "",
+  },
 ];
 
 export function slugify(value: string) {
@@ -209,6 +228,19 @@ export function listBlogCategories() {
 
 export function saveBlogCategories(categories: string[]) {
   localStorage.setItem(localCategoriesKey, JSON.stringify(categories.filter(Boolean)));
+}
+
+export function listBlogAuthors() {
+  try {
+    const authors = JSON.parse(localStorage.getItem(localAuthorsKey) ?? "[]") as BlogAuthor[];
+    return authors.length > 0 ? authors : defaultBlogAuthors;
+  } catch {
+    return defaultBlogAuthors;
+  }
+}
+
+export function saveBlogAuthors(authors: BlogAuthor[]) {
+  localStorage.setItem(localAuthorsKey, JSON.stringify(authors.filter((author) => author.name.trim())));
 }
 
 export function getBlogSettings(): BlogSettings {
