@@ -380,7 +380,10 @@ export default function AdminPage() {
               <span>Modo: {supabaseStatus.mode}</span>
               <span>URL: {supabaseStatus.hasUrl ? supabaseStatus.host : "VITE_SUPABASE_URL ausente"}</span>
               <span>
-                Chave: {supabaseStatus.hasAnonKey ? supabaseStatus.anonKeyPreview : "VITE_SUPABASE_ANON_KEY ausente"}
+                Chave:{" "}
+                {supabaseStatus.hasAnonKey
+                  ? `${supabaseStatus.keyName} ${supabaseStatus.anonKeyPreview}`
+                  : "VITE_SUPABASE_ANON_KEY ou VITE_SUPABASE_PUBLISHABLE_KEY ausente"}
               </span>
             </div>
             <label>
