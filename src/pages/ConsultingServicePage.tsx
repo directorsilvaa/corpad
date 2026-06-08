@@ -54,7 +54,6 @@ export default function ConsultingServicePage({ service }: ConsultingServicePage
 
   const isCloudServers = service.slug === "servidores-em-nuvem";
   const isBpoFinanceiro = service.slug === "bpo-financeiro";
-  const visibleHighlights = service.highlights.slice(0, 3);
   const visibleProcess = service.process.slice(0, 4);
   const cloudSectionIcons = [Zap, Network, ShieldCheck];
 
@@ -80,6 +79,7 @@ export default function ConsultingServicePage({ service }: ConsultingServicePage
               ))}
             </div>
           </div>
+          <a href="/blog">Blog</a>
           <a href="/corpad-consultoria#sobre">Sobre nós</a>
           <a href="/corpad-consultoria#contato">Contato</a>
         </nav>
@@ -146,14 +146,6 @@ export default function ConsultingServicePage({ service }: ConsultingServicePage
           ) : (
             <ConsultingServiceVisual slug={service.slug} label={service.navLabel} />
           )}
-          <div className="consulting-service-panel" aria-label="Destaques do serviço">
-            {visibleHighlights.map((highlight) => (
-              <span key={highlight}>
-                <CheckCircle2 size={17} strokeWidth={2.6} />
-                {highlight}
-              </span>
-            ))}
-          </div>
         </aside>
       </section>
 
@@ -539,22 +531,40 @@ function ConsultingServiceVisual({
 
   return (
     <div className={`consulting-service-visual consulting-service-visual-${slug}`} aria-hidden="true">
+      <div className="consulting-service-visual-grid" />
+      <div className="consulting-service-visual-halo" />
       <div className="consulting-service-orbit consulting-service-orbit-a" />
       <div className="consulting-service-orbit consulting-service-orbit-b" />
+      <div className="consulting-service-stream consulting-service-stream-a" />
+      <div className="consulting-service-stream consulting-service-stream-b" />
+      <div className="consulting-service-stream consulting-service-stream-c" />
       <div className="consulting-service-visual-core">
         <Icon size={46} strokeWidth={1.8} />
+        <span />
+        <span />
       </div>
       <div className="consulting-service-visual-card consulting-service-visual-card-a">
         <span />
         <strong>{label}</strong>
+        <i />
+        <i />
       </div>
       <div className="consulting-service-visual-card consulting-service-visual-card-b">
         <span />
         <strong>controle</strong>
+        <i />
+        <i />
       </div>
       <div className="consulting-service-visual-card consulting-service-visual-card-c">
         <span />
         <strong>resultado</strong>
+        <i />
+        <i />
+      </div>
+      <div className="consulting-service-visual-rail">
+        <span />
+        <span />
+        <span />
       </div>
       <i className="consulting-service-spark consulting-service-spark-a" />
       <i className="consulting-service-spark consulting-service-spark-b" />

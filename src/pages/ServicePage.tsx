@@ -125,6 +125,7 @@ export default function ServicePage({ service }: ServicePageProps) {
           </div>
           <a href="/portfolio">Portfólio</a>
           <a href="/clientes">Clientes</a>
+          <a href="/blog">Blog</a>
           <a href="/corpad-digital#sobre">Sobre</a>
         </nav>
 

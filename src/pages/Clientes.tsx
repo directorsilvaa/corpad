@@ -36,6 +36,7 @@ export default function ClientesPage() {
           </div>
           <a href="/portfolio">Portfólio</a>
           <a className="active" href="/clientes" aria-current="page">Clientes</a>
+          <a href="/blog">Blog</a>
           <a href="/corpad-digital#sobre">Sobre</a>
         </nav>
 

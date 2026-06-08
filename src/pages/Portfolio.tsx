@@ -62,6 +62,7 @@ export default function PortfolioPage() {
             Portfólio
           </a>
           <a href="/clientes">Clientes</a>
+          <a href="/blog">Blog</a>
           <a href="/corpad-digital#sobre">Sobre</a>
         </nav>
 

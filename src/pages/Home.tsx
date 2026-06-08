@@ -1,12 +1,36 @@
 import {
   ArrowRight,
+  BriefcaseBusiness,
+  Globe2,
 } from "lucide-react";
+import Image from "@/components/ui/vite-image";
 
 export default function Home() {
   return (
     <main className="home-gateway">
+      <div className="gateway-motion-bg" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+
+      <a className="gateway-home-brand" href="/" aria-label="Pagina inicial">
+        <Image
+          src="/logo.png"
+          alt="CORPAD"
+          width={1500}
+          height={390}
+          priority
+        />
+      </a>
+
       <section className="gateway-hero" aria-label="Entrada CORPAD">
         <article className="gateway-column gateway-digital">
+          <div className="gateway-card-visual" aria-hidden="true">
+            <i />
+            <i />
+            <Globe2 size={42} strokeWidth={1.7} />
+          </div>
           <div className="gateway-copy">
             <span>Solucoes digitais</span>
             <h1>
@@ -24,6 +48,11 @@ export default function Home() {
         </article>
 
         <article className="gateway-column gateway-consulting">
+          <div className="gateway-card-visual" aria-hidden="true">
+            <i />
+            <i />
+            <BriefcaseBusiness size={42} strokeWidth={1.7} />
+          </div>
           <div className="gateway-copy">
             <span>Consultoria estrategica</span>
             <h2>
@@ -40,7 +69,6 @@ export default function Home() {
           </div>
         </article>
       </section>
-
     </main>
   );
 }

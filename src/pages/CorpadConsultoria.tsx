@@ -179,6 +179,7 @@ export default function CorpadConsultoria() {
               ))}
             </div>
           </div>
+          <a href="/blog">Blog</a>
           <a href="#sobre">Sobre nós</a>
           <a href="#contato">Contato</a>
         </nav>

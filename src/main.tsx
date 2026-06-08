@@ -8,6 +8,8 @@ import ConsultingServicePage from "./pages/ConsultingServicePage";
 import ClientesPage from "./pages/Clientes";
 import PortfolioPage from "./pages/Portfolio";
 import ServicePage from "./pages/ServicePage";
+import BlogPage from "./pages/Blog";
+import AdminPage from "./pages/Admin";
 import { getConsultingServicePageBySlug } from "./data/consultingServicePages";
 import { getServicePageBySlug } from "./data/servicePages";
 import "./globals.css";
@@ -39,6 +41,14 @@ function App() {
 
   if (pathname === "/clientes") {
     return <ClientesPage />;
+  }
+
+  if (pathname === "/blog" || pathname.startsWith("/blog/")) {
+    return <BlogPage />;
+  }
+
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    return <AdminPage />;
   }
 
   if (pathname.startsWith("/servicos/")) {

@@ -257,6 +257,7 @@ export default function CorpadPage() {
           </div>
           <a href="/portfolio">Portfólio</a>
           <a href="/clientes">Clientes</a>
+          <a href="/blog">Blog</a>
           <a href="#sobre">Sobre</a>
         </nav>
 
