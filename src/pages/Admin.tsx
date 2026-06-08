@@ -32,6 +32,7 @@ import {
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { adminLogin, adminLogout, isAdminLoggedIn } from "../lib/adminAuth";
+import { getSupabaseConfigStatus } from "../lib/supabase";
 import {
   BlogPost,
   BlogPostInput,
@@ -138,6 +139,7 @@ export default function AdminPage() {
     ...defaultBlogSettings,
   });
   const [analytics, setAnalytics] = useState(getBlogAnalytics());
+  const supabaseStatus = getSupabaseConfigStatus();
 
   useEffect(() => {
     document.title = "Admin | CORPAD";
@@ -373,6 +375,14 @@ export default function AdminPage() {
           </div>
 
           <form onSubmit={handleLogin}>
+            <div className="admin-login-diagnostics" aria-label="Status da conexao Supabase">
+              <strong>{supabaseStatus.hasSupabaseConfig ? "Supabase configurado" : "Supabase nao configurado"}</strong>
+              <span>Modo: {supabaseStatus.mode}</span>
+              <span>URL: {supabaseStatus.hasUrl ? supabaseStatus.host : "VITE_SUPABASE_URL ausente"}</span>
+              <span>
+                Chave: {supabaseStatus.hasAnonKey ? supabaseStatus.anonKeyPreview : "VITE_SUPABASE_ANON_KEY ausente"}
+              </span>
+            </div>
             <label>
               E-mail
               <input

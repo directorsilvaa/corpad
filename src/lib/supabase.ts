@@ -8,3 +8,24 @@ export const hasSupabaseConfig = Boolean(supabaseUrl && supabaseAnonKey);
 export const supabase = hasSupabaseConfig
   ? createClient(supabaseUrl!, supabaseAnonKey!)
   : null;
+
+export function getSupabaseConfigStatus() {
+  let host = "";
+
+  try {
+    host = supabaseUrl ? new URL(supabaseUrl).host : "";
+  } catch {
+    host = "URL invalida";
+  }
+
+  return {
+    hasUrl: Boolean(supabaseUrl),
+    hasAnonKey: Boolean(supabaseAnonKey),
+    hasSupabaseConfig,
+    host,
+    anonKeyPreview: supabaseAnonKey
+      ? `${supabaseAnonKey.slice(0, 8)}...${supabaseAnonKey.slice(-6)}`
+      : "",
+    mode: import.meta.env.MODE,
+  };
+}
