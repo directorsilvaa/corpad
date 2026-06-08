@@ -1,4 +1,4 @@
-import Image from "../../components/ui/vite-image";
+import Image from "../components/ui/vite-image";
 import {
   ArrowLeft,
   BarChart3,

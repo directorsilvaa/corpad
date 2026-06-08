@@ -1,4 +1,4 @@
-import Image from "../../components/ui/vite-image";
+import Image from "../components/ui/vite-image";
 import type { CSSProperties } from "react";
 import {
   Activity,
@@ -19,7 +19,7 @@ import {
   UsersRound,
   Wrench,
 } from "lucide-react";
-import { CinematicFooter } from "../../components/ui/motion-footer";
+import { CinematicFooter } from "../components/ui/motion-footer";
 import ConsultingSolutionCard from "../components/ConsultingSolutionCard";
 import ConsultingSolutionsSection from "../components/ConsultingSolutionsSection";
 import LightRays from "../components/LightRays";

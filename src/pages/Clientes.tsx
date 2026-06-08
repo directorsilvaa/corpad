@@ -1,4 +1,4 @@
-import Image from "../../components/ui/vite-image";
+import Image from "../components/ui/vite-image";
 import { Check, ChevronDown, MessageCircle } from "lucide-react";
 import { clientLogos } from "../data/clients";
 import { servicePages } from "../data/servicePages";

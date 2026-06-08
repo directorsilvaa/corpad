@@ -1,4 +1,4 @@
-import Image from "../../components/ui/vite-image";
+import Image from "../components/ui/vite-image";
 import {
   ArrowUpRight,
   Check,
@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Workflow,
 } from "lucide-react";
-import { CinematicFooter } from "../../components/ui/motion-footer";
+import { CinematicFooter } from "../components/ui/motion-footer";
 import { faqJsonLd, organizationJsonLd, usePageSeo } from "../lib/seo";
 import FastDevelopmentSection from "../components/FastDevelopmentSection";
 import HypedAnimationsSection from "../components/HypedAnimationsSection";

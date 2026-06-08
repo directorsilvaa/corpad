@@ -1,4 +1,4 @@
-import Image from "../../components/ui/vite-image";
+import Image from "../components/ui/vite-image";
 import { ChevronDown, MessageCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
