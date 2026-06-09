@@ -15032,20 +15032,10 @@ h1 em {
   align-items: center;
   justify-content: center;
   gap: 10px clamp(18px, 3vw, 30px);
-  min-height: 72px;
-  margin-top: calc(clamp(18px, 3vw, 34px) * -1);
-  padding: 16px clamp(18px, 3vw, 32px);
-  border: 1px solid rgba(141, 240, 255, 0.1);
-  border-radius: 0 0 8px 8px;
-  color: rgba(219, 239, 244, 0.7);
+  margin-top: 2px;
+  padding: 0 clamp(10px, 2vw, 18px);
+  color: rgba(219, 239, 244, 0.62);
   text-align: center;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(105, 232, 255, 0.1), transparent 18rem),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018));
-  box-shadow:
-    0 24px 80px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(18px);
   animation: gateway-card-rise 860ms 180ms var(--ease) both;
 }
 
@@ -15058,13 +15048,13 @@ h1 em {
   min-height: 24px;
   color: inherit;
   font-size: 12px;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: 0;
   white-space: nowrap;
 }
 
 .gateway-info-strip a {
-  color: rgba(245, 251, 255, 0.82);
+  color: rgba(245, 251, 255, 0.76);
   transition:
     color 220ms var(--ease),
     transform 220ms var(--ease);
@@ -15152,7 +15142,7 @@ h1 em {
 
   .gateway-info-strip {
     margin-top: 0;
-    border-radius: 8px;
+    padding-top: 8px;
   }
 
   .gateway-hero::before {
