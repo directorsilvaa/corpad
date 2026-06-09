@@ -1,8 +1,6 @@
 dist/
 node_modules/
 out/
-assets/
-public/assets/
 
 *.log
 npm-debug.log*
