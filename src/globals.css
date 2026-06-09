@@ -15027,16 +15027,26 @@ h1 em {
   position: relative;
   z-index: 3;
   grid-column: 1 / -1;
+  display: grid;
+  justify-items: center;
+  row-gap: 12px;
+  justify-self: center;
+  align-items: center;
+  width: min(980px, 100%);
+  margin-top: clamp(18px, 3vw, 34px);
+  padding: 0;
+  color: rgba(219, 239, 244, 0.62);
+  text-align: center;
+  animation: gateway-card-rise 860ms 180ms var(--ease) both;
+}
+
+.gateway-info-main,
+.gateway-info-contact {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px clamp(18px, 3vw, 30px);
-  margin-top: 2px;
-  padding: 0 clamp(10px, 2vw, 18px);
-  color: rgba(219, 239, 244, 0.62);
-  text-align: center;
-  animation: gateway-card-rise 860ms 180ms var(--ease) both;
+  gap: 8px clamp(18px, 3vw, 30px);
 }
 
 .gateway-info-strip span,
@@ -15044,17 +15054,17 @@ h1 em {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 7px;
   min-height: 24px;
   color: inherit;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0;
   white-space: nowrap;
 }
 
 .gateway-info-strip a {
-  color: rgba(245, 251, 255, 0.76);
+  color: rgba(245, 251, 255, 0.78);
   transition:
     color 220ms var(--ease),
     transform 220ms var(--ease);
@@ -15141,8 +15151,8 @@ h1 em {
   }
 
   .gateway-info-strip {
-    margin-top: 0;
-    padding-top: 8px;
+    margin-top: 18px;
+    padding-top: 0;
   }
 
   .gateway-hero::before {
@@ -29437,12 +29447,18 @@ h1 em {
   .gateway-info-strip {
     align-content: center;
     min-height: auto;
-    padding: 18px 14px;
+    padding: 12px 0 0;
+  }
+
+  .gateway-info-main,
+  .gateway-info-contact {
+    width: 100%;
+    gap: 6px 16px;
   }
 
   .gateway-info-strip span,
   .gateway-info-strip a {
-    width: 100%;
+    width: auto;
     white-space: normal;
   }
 
