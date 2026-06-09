@@ -19,6 +19,60 @@ const ServiceRoute = React.lazy(() => import("./pages/ServiceRoute"));
 const BlogPage = React.lazy(() => import("./pages/Blog"));
 const AdminPage = React.lazy(() => import("./pages/Admin"));
 
+function useClientRoute() {
+  const [pathname, setPathname] = React.useState(window.location.pathname);
+
+  React.useEffect(() => {
+    const updatePathname = () => setPathname(window.location.pathname);
+
+    const handleClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+
+      const link = (event.target as Element | null)?.closest("a");
+      if (!link) {
+        return;
+      }
+
+      const target = link.getAttribute("target");
+      const href = link.getAttribute("href");
+      const download = link.hasAttribute("download");
+
+      if (!href || download || (target && target !== "_self") || href.startsWith("mailto:") || href.startsWith("tel:")) {
+        return;
+      }
+
+      const url = new URL(link.href, window.location.href);
+      const samePageHash = url.pathname === window.location.pathname && url.search === window.location.search && url.hash;
+
+      if (url.origin !== window.location.origin || samePageHash) {
+        return;
+      }
+
+      event.preventDefault();
+      window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
+      updatePathname();
+
+      if (url.hash) {
+        document.querySelector(url.hash)?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+    };
+
+    window.addEventListener("popstate", updatePathname);
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("popstate", updatePathname);
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  return pathname;
+}
+
 function DeferredAnimations() {
   const [enabled, setEnabled] = React.useState(false);
 
@@ -59,9 +113,7 @@ function DeferredAnimations() {
   );
 }
 
-function App() {
-  const pathname = window.location.pathname;
-
+function App({ pathname }: { pathname: string }) {
   if (pathname === "/corpad-digital") {
     return <CorpadPage />;
   }
@@ -97,11 +149,21 @@ function App() {
   return <Home />;
 }
 
+function Root() {
+  const pathname = useClientRoute();
+
+  return (
+    <>
+      <DeferredAnimations />
+      <React.Suspense fallback={null}>
+        <App pathname={pathname} />
+      </React.Suspense>
+    </>
+  );
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <DeferredAnimations />
-    <React.Suspense fallback={null}>
-      <App />
-    </React.Suspense>
+    <Root />
   </React.StrictMode>,
 );
