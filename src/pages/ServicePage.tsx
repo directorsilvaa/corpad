@@ -62,7 +62,7 @@ export default function ServicePage({ service }: ServicePageProps) {
         description: service.metaDescription,
         provider: organizationJsonLd(),
         areaServed: "Brasil",
-        url: `https://corpad.vercel.app/servicos/${service.slug}`,
+        url: `https://corpad.com.br/servicos/${service.slug}`,
       },
       faqJsonLd(service.faqs),
     ],

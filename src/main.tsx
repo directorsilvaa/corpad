@@ -3,6 +3,12 @@ import ReactDOM from "react-dom/client";
 import Home from "./pages/Home";
 import "./globals.css";
 
+if (window.location.hostname === "www.corpad.com.br") {
+  window.location.replace(
+    `https://corpad.com.br${window.location.pathname}${window.location.search}${window.location.hash}`,
+  );
+}
+
 const GsapAnimations = React.lazy(() => import("./GsapAnimations"));
 const CorpadPage = React.lazy(() => import("./pages/CorpadDigital"));
 const CorpadConsultoria = React.lazy(() => import("./pages/CorpadConsultoria"));

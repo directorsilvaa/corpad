@@ -207,8 +207,8 @@ export default function BlogPage() {
       "@type": activePost ? "Article" : "Blog",
       headline: activePost?.title ?? settings.title,
       description: seoDescription,
-      url: `https://corpad.vercel.app${seoPath}`,
-      image: activePost?.coverImage || "https://corpad.vercel.app/logo.png",
+      url: `https://corpad.com.br${seoPath}`,
+      image: activePost?.coverImage || "https://corpad.com.br/logo.png",
       publisher: organizationJsonLd(),
     },
   });

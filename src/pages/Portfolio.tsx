@@ -21,7 +21,7 @@ export default function PortfolioPage() {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
       name: "Portfólio CORPAD Digital",
-      url: "https://corpad.vercel.app/portfolio",
+      url: "https://corpad.com.br/portfolio",
       publisher: organizationJsonLd(),
     },
   });

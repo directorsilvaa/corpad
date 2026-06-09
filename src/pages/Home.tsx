@@ -21,7 +21,7 @@ export default function Home() {
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: "CORPAD",
-      url: "https://corpad.vercel.app/",
+      url: "https://corpad.com.br/",
       publisher: organizationJsonLd(),
     },
   });

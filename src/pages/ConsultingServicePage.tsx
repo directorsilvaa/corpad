@@ -53,7 +53,7 @@ export default function ConsultingServicePage({ service }: ConsultingServicePage
         description: service.metaDescription,
         provider: organizationJsonLd(),
         areaServed: "Brasil",
-        url: `https://corpad.vercel.app/corpad-consultoria/servicos/${service.slug}`,
+        url: `https://corpad.com.br/corpad-consultoria/servicos/${service.slug}`,
       },
     ],
   });

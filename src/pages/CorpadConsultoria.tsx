@@ -158,7 +158,7 @@ export default function CorpadConsultoria() {
       "@context": "https://schema.org",
       "@type": "WebPage",
       name: "CORPAD Consultoria",
-      url: "https://corpad.vercel.app/corpad-consultoria",
+      url: "https://corpad.com.br/corpad-consultoria",
       description:
         "Consultoria empresarial para organizar processos, apoiar decisões, melhorar resultados e conectar gestão, tecnologia, dados e estratégia.",
       publisher: organizationJsonLd(),

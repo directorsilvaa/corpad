@@ -17,7 +17,7 @@ export default function ClientesPage() {
       "@context": "https://schema.org",
       "@type": "WebPage",
       name: "Clientes CORPAD",
-      url: "https://corpad.vercel.app/clientes",
+      url: "https://corpad.com.br/clientes",
       publisher: organizationJsonLd(),
     },
   });

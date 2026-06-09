@@ -8,6 +8,15 @@ const app = express();
 const port = process.env.PORT || 3000;
 const distPath = path.join(__dirname, "dist");
 
+app.use((request, response, next) => {
+  if (request.hostname === "www.corpad.com.br") {
+    response.redirect(301, `https://corpad.com.br${request.originalUrl}`);
+    return;
+  }
+
+  next();
+});
+
 app.use(
   "/assets",
   express.static(path.join(distPath, "assets"), {
