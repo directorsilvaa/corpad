@@ -92,7 +92,7 @@ export default function Home() {
 
         <footer className="gateway-info-strip" aria-label="Informacoes da CORPAD">
           <div className="gateway-info-main">
-            <span>© {currentYear} CORPAD. Todos os direitos reservados</span>
+            <span>&copy; {currentYear} CORPAD. Todos os direitos reservados</span>
             <span>CNPJ: 01.434.659/0001-19</span>
             <span>Fundada em 1996</span>
           </div>

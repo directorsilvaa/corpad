@@ -15035,9 +15035,21 @@ h1 em {
   width: min(980px, 100%);
   margin-top: clamp(18px, 3vw, 34px);
   padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
   color: rgba(219, 239, 244, 0.62);
   text-align: center;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
   animation: gateway-card-rise 860ms 180ms var(--ease) both;
+}
+
+.gateway-info-strip::before,
+.gateway-info-strip::after {
+  display: none;
+  content: none;
 }
 
 .gateway-info-main,
@@ -15047,6 +15059,11 @@ h1 em {
   align-items: center;
   justify-content: center;
   gap: 8px clamp(18px, 3vw, 30px);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .gateway-info-strip span,
