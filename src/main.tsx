@@ -18,6 +18,7 @@ const PortfolioPage = React.lazy(() => import("./pages/Portfolio"));
 const ServiceRoute = React.lazy(() => import("./pages/ServiceRoute"));
 const BlogPage = React.lazy(() => import("./pages/Blog"));
 const AdminPage = React.lazy(() => import("./pages/Admin"));
+const TermsOfUsePage = React.lazy(() => import("./pages/TermsOfUse"));
 
 function useClientRoute() {
   const [pathname, setPathname] = React.useState(window.location.pathname);
@@ -140,6 +141,10 @@ function App({ pathname }: { pathname: string }) {
 
   if (pathname === "/admin" || pathname.startsWith("/admin/")) {
     return <AdminPage />;
+  }
+
+  if (pathname === "/termos-de-uso") {
+    return <TermsOfUsePage />;
   }
 
   if (pathname.startsWith("/servicos/")) {
