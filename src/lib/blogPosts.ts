@@ -393,17 +393,23 @@ export async function deleteBlogPost(id: string) {
   writeLocalPosts(readLocalPosts().filter((post) => post.id !== id));
 }
 
-export async function uploadBlogImage(file: File) {
+type BlogImageUploadOptions = {
+  variant?: "cover" | "original";
+};
+
+export async function uploadBlogImage(file: File, options: BlogImageUploadOptions = {}) {
   if (!file.type.startsWith("image/")) {
     throw new Error("Envie um arquivo de imagem valido.");
   }
 
+  const uploadFile = options.variant === "cover" ? await normalizeBlogCoverImage(file) : file;
+
   if (hasSupabaseConfig && supabase) {
-    const extension = file.type.split("/").pop()?.replace("jpeg", "jpg") || file.name.split(".").pop() || "png";
+    const extension = uploadFile.type.split("/").pop()?.replace("jpeg", "jpg") || uploadFile.name.split(".").pop() || "png";
     const path = `${crypto.randomUUID()}.${extension}`;
-    const { error } = await supabase.storage.from("blog-images").upload(path, file, {
+    const { error } = await supabase.storage.from("blog-images").upload(path, uploadFile, {
       cacheControl: "31536000",
-      contentType: file.type,
+      contentType: uploadFile.type,
       upsert: false,
     });
 
@@ -413,7 +419,7 @@ export async function uploadBlogImage(file: File) {
     return data.publicUrl;
   }
 
-  return compressImageToDataUrl(file);
+  return options.variant === "cover" ? fileToDataUrl(uploadFile) : compressImageToDataUrl(file);
 }
 
 function compressImageToDataUrl(file: File) {
@@ -445,4 +451,66 @@ function compressImageToDataUrl(file: File) {
     reader.onerror = () => reject(new Error("Nao foi possivel carregar a imagem."));
     reader.readAsDataURL(file);
   });
+}
+
+function normalizeBlogCoverImage(file: File) {
+  return new Promise<File>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const width = 1280;
+        const height = 720;
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          reject(new Error("Nao foi possivel processar a imagem."));
+          return;
+        }
+
+        const scale = Math.min(width / image.width, height / image.height);
+        const drawWidth = Math.round(image.width * scale);
+        const drawHeight = Math.round(image.height * scale);
+        const offsetX = Math.round((width - drawWidth) / 2);
+        const offsetY = Math.round((height - drawHeight) / 2);
+
+        canvas.width = width;
+        canvas.height = height;
+        context.fillStyle = "#f8fafc";
+        context.fillRect(0, 0, width, height);
+        context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error("Nao foi possivel processar a imagem."));
+              return;
+            }
+
+            resolve(new File([blob], replaceExtension(file.name, "jpg"), { type: "image/jpeg" }));
+          },
+          "image/jpeg",
+          0.86,
+        );
+      };
+      image.onerror = () => reject(new Error("Nao foi possivel processar a imagem."));
+      image.src = String(reader.result);
+    };
+    reader.onerror = () => reject(new Error("Nao foi possivel carregar a imagem."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function fileToDataUrl(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error("Nao foi possivel carregar a imagem."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function replaceExtension(fileName: string, extension: string) {
+  return fileName.replace(/\.[^.]+$/, "") + "." + extension;
 }

@@ -96,7 +96,7 @@ function getCategorySlug(category: string) {
 }
 
 function getReadingTime(content: string) {
-  const words = content.trim().split(/\s+/).filter(Boolean).length;
+  const words = content.replace(/<[^>]+>/g, " ").trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(words / 180));
 }
 
@@ -119,6 +119,21 @@ function getArticleDisplayTitle(post: BlogPost) {
 }
 
 function getReadableArticleLines(post: BlogPost) {
+  if (isHtmlContent(post.content)) {
+    const document = new DOMParser().parseFromString(post.content, "text/html");
+    return Array.from(document.body.querySelectorAll("h2, h3, p, li"))
+      .map((element) => {
+        const text = element.textContent?.replace(/\s+/g, " ").trim() ?? "";
+
+        if (!text) return "";
+        if (element.tagName === "H2") return `## ${text}`;
+        if (element.tagName === "H3") return `### ${text}`;
+        if (element.tagName === "LI") return `- ${text}`;
+        return text;
+      })
+      .filter(Boolean);
+  }
+
   const displayTitle = normalize(getArticleDisplayTitle(post));
   const subtitleParts = new Set(
     getArticleDisplayTitle(post)
@@ -223,16 +238,53 @@ function getPostKeywords(post: BlogPost) {
 }
 
 function renderInlineText(value: string) {
-  const linkMatch = value.match(/^\[(.+)\]\((https?:\/\/.+)\)$/);
-  if (linkMatch) {
+  const parts = value.split(/(\[[^\]]+\]\(https?:\/\/[^)]+\))/g);
+
+  return parts.map((part, index) => {
+    const linkMatch = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)]+)\)$/);
+
+    if (!linkMatch) {
+      return part;
+    }
+
     return (
-      <a href={linkMatch[2]} target="_blank" rel="noreferrer">
+      <a href={linkMatch[2]} target="_blank" rel="noreferrer" key={`${linkMatch[2]}-${index}`}>
         {linkMatch[1]}
       </a>
     );
-  }
+  });
+}
 
-  return value;
+function isHtmlContent(value: string) {
+  return /<\/?(?:p|h[1-6]|a|ul|ol|li|table|div|section|article|blockquote|img|iframe)\b/i.test(value);
+}
+
+function sanitizeHtmlContent(value: string) {
+  const template = document.createElement("template");
+  template.innerHTML = value;
+
+  template.content.querySelectorAll("script, object, embed").forEach((element) => element.remove());
+
+  template.content.querySelectorAll<HTMLElement>("*").forEach((element) => {
+    Array.from(element.attributes).forEach((attribute) => {
+      const name = attribute.name.toLowerCase();
+      const content = attribute.value.trim().toLowerCase();
+
+      if (name.startsWith("on") || content.startsWith("javascript:")) {
+        element.removeAttribute(attribute.name);
+      }
+    });
+
+    if (element.tagName === "A") {
+      const anchor = element as HTMLAnchorElement;
+      if (anchor.href) {
+        anchor.target = "_blank";
+        anchor.rel = "noreferrer";
+      }
+    }
+  });
+
+  return template.innerHTML;
 }
 
 function renderArticleBlocks(post: BlogPost) {
@@ -312,6 +364,19 @@ function renderArticleBlocks(post: BlogPost) {
   }
 
   return blocks;
+}
+
+function renderArticleContent(post: BlogPost) {
+  if (isHtmlContent(post.content)) {
+    return (
+      <div
+        className="blog-article-content blog-article-content-html"
+        dangerouslySetInnerHTML={{ __html: sanitizeHtmlContent(post.content) }}
+      />
+    );
+  }
+
+  return <div className="blog-article-content">{renderArticleBlocks(post)}</div>;
 }
 
 export default function BlogPage() {
@@ -486,10 +551,12 @@ export default function BlogPage() {
           </section>
         ) : activePost ? (
           <article className="blog-article">
-            <a className="blog-back-link" href="/blog">
-              <ArrowLeft size={15} /> Voltar para o blog
-            </a>
-            <span>{activePost.category}</span>
+            <div className="blog-article-kicker">
+              <a className="blog-back-link" href="/blog">
+                <ArrowLeft size={15} /> Voltar para o blog
+              </a>
+              <span>{activePost.category}</span>
+            </div>
             <h1>{getArticleDisplayTitle(activePost)}</h1>
             <p>{activePost.subtitle || activePost.excerpt}</p>
             <div className="blog-article-meta" aria-label="Informacoes do artigo">
@@ -502,9 +569,13 @@ export default function BlogPage() {
               {settings.showAuthor && <small>{activePost.authorName}</small>}
             </div>
             {activePost.coverImage && (
-              <img src={activePost.coverImage} alt={activePost.imageAlt || ""} className="blog-article-cover" />
+              <img
+                src={activePost.coverImage}
+                alt={activePost.imageAlt || ""}
+                className="blog-article-cover"
+              />
             )}
-            <div className="blog-article-content">{renderArticleBlocks(activePost)}</div>
+            {renderArticleContent(activePost)}
             {settings.showAuthor && (
               <aside className="blog-article-author">
                 {activePost.authorPhoto ? (

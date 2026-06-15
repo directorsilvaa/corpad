@@ -69,6 +69,7 @@ type EditorTab = "content" | "seo" | "author" | "cta";
 
 const whatsappUrl = "https://wa.me/5516996094649";
 const rememberedAdminEmailKey = "corpad_admin_remembered_email";
+const rememberedAdminPasswordKey = "corpad_admin_remembered_password";
 
 const emptyPost: BlogPostInput = {
   title: "",
@@ -170,6 +171,7 @@ export default function AdminPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberEmail, setRememberEmail] = useState(false);
+  const [rememberPassword, setRememberPassword] = useState(false);
   const [message, setMessage] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingAuthorPhoto, setUploadingAuthorPhoto] = useState(false);
@@ -201,6 +203,12 @@ export default function AdminPage() {
     if (rememberedEmail) {
       setEmail(rememberedEmail);
       setRememberEmail(true);
+    }
+
+    const rememberedPassword = localStorage.getItem(rememberedAdminPasswordKey);
+    if (rememberedPassword) {
+      setPassword(rememberedPassword);
+      setRememberPassword(true);
     }
 
     isAdminLoggedIn()
@@ -246,10 +254,36 @@ export default function AdminPage() {
       } else {
         localStorage.removeItem(rememberedAdminEmailKey);
       }
+      if (rememberPassword) {
+        localStorage.setItem(rememberedAdminEmailKey, email);
+        localStorage.setItem(rememberedAdminPasswordKey, password);
+      } else {
+        localStorage.removeItem(rememberedAdminPasswordKey);
+      }
       setLoggedIn(true);
       await refreshPosts();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Nao foi possivel entrar.");
+    }
+  }
+
+  function handleRememberPasswordToggle() {
+    const nextRememberPassword = !rememberPassword;
+    setRememberPassword(nextRememberPassword);
+
+    if (!nextRememberPassword) {
+      localStorage.removeItem(rememberedAdminPasswordKey);
+      return;
+    }
+
+    if (email) {
+      localStorage.setItem(rememberedAdminEmailKey, email);
+      setRememberEmail(true);
+    }
+
+    if (password) {
+      localStorage.setItem(rememberedAdminPasswordKey, password);
+      setMessage("Senha lembrada neste navegador.");
     }
   }
 
@@ -354,7 +388,7 @@ export default function AdminPage() {
     setMessage("");
 
     try {
-      const imageUrl = await uploadBlogImage(file);
+      const imageUrl = await uploadBlogImage(file, { variant: "cover" });
       setForm((current) => ({ ...current, coverImage: imageUrl }));
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Nao foi possivel enviar a imagem.");
@@ -434,9 +468,9 @@ export default function AdminPage() {
       );
       setEditorTab("content");
       setEditorOpen(true);
-      setMessage("Modelo TXT importado. Revise o artigo e salve como rascunho ou publicado.");
+      setMessage("Modelo importado. Revise os dados do blog e salve como rascunho ou publicado.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Nao foi possivel importar o modelo TXT.");
+      setMessage(error instanceof Error ? error.message : "Nao foi possivel importar o modelo.");
     }
   }
 
@@ -587,6 +621,14 @@ export default function AdminPage() {
                 required
               />
             </label>
+            <button
+              className={rememberPassword ? "admin-save-password active" : "admin-save-password"}
+              type="button"
+              onClick={handleRememberPasswordToggle}
+              aria-pressed={rememberPassword}
+            >
+              <Save size={14} /> Lembrar senha
+            </button>
             {message && <p className="admin-message">{message}</p>}
             <button className="admin-login-submit" type="submit">
               Entrar
@@ -715,10 +757,10 @@ export default function AdminPage() {
               <span>Gestao de artigos</span>
               <strong>Criar, editar, excluir, publicar e agendar</strong>
               <label className="admin-section-action admin-import-action">
-                <Upload size={17} /> Importar TXT
+                <Upload size={17} /> Importar TXT/HTML
                 <input
                   type="file"
-                  accept=".txt,text/plain"
+                  accept=".txt,.html,.htm,text/plain,text/html"
                   onChange={(event) => {
                     const file = event.currentTarget.files?.[0] ?? null;
                     event.currentTarget.value = "";
@@ -1051,7 +1093,8 @@ export default function AdminPage() {
               </div>
 
               <div className="admin-field-label">
-                <strong>Imagem principal</strong>
+                <strong>Imagem do blog</strong>
+                <small className="admin-field-hint">Usada como banner no preview e dentro do artigo. Ideal: 1280 x 720 px, proporcao 16:9. Ao enviar arquivo, a imagem e ajustada automaticamente para esse formato.</small>
                 <div className="admin-image-field">
                   {form.coverImage ? (
                     <img src={form.coverImage} alt="" />
