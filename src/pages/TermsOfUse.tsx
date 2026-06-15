@@ -8,54 +8,287 @@ const whatsappUrl =
 
 const sections = [
   {
-    title: "1. Aceite dos termos",
-    content:
-      "Ao acessar ou utilizar este site, voce declara estar de acordo com estes Termos de Uso. Caso nao concorde com alguma condicao, recomendamos que interrompa a navegacao.",
+    title: "1. Identificação e Aceitação",
+    content: (
+      <>
+        <p>
+          Estes Termos de Uso regem o acesso e a utilização do site <strong>corpad.com.br</strong> e de todos os seus
+          subdomínios e páginas relacionadas (doravante "Site"), de propriedade e operados por:
+        </p>
+        <blockquote>
+          <strong>CORPAD Soluções Digitais e Consultoria Empresarial</strong>
+          <br />
+          CNPJ: 01.434.659/0001-19
+          <br />
+          E-mail: contato@corpad.com.br
+          <br />
+          Site: https://corpad.com.br
+        </blockquote>
+        <p>
+          Ao acessar ou utilizar o Site, o usuário declara ter lido, compreendido e concordado integralmente com estes
+          Termos. Caso não concorde com qualquer disposição, solicitamos que se abstenha de utilizar o Site.
+        </p>
+      </>
+    ),
   },
   {
-    title: "2. Sobre o site",
-    content:
-      "O site da CORPAD apresenta informacoes institucionais, servicos digitais, consultoria empresarial, portfolio, conteudos e canais de contato. As informacoes podem ser atualizadas, removidas ou ajustadas a qualquer momento.",
+    title: "2. Definições",
+    content: (
+      <>
+        <p>Para fins destes Termos, considera-se:</p>
+        <ul>
+          <li>
+            <strong>CORPAD:</strong> a empresa titular do Site, conforme identificada na cláusula 1.
+          </li>
+          <li>
+            <strong>Usuário:</strong> qualquer pessoa física ou jurídica que acesse o Site, independentemente de
+            cadastro.
+          </li>
+          <li>
+            <strong>Serviços:</strong> todas as soluções e atividades disponibilizadas pela CORPAD, incluindo criação de
+            sites, hospedagem, e-commerce, marketing digital, gestão de redes sociais, banco de dados, consultoria em TI,
+            telefonia em nuvem e inteligência de dados.
+          </li>
+          <li>
+            <strong>Conteúdo:</strong> textos, imagens, vídeos, logotipos, marcas, layouts e demais elementos
+            disponíveis no Site.
+          </li>
+        </ul>
+      </>
+    ),
   },
   {
-    title: "3. Uso permitido",
-    content:
-      "Voce se compromete a utilizar o site de forma licita, respeitosa e sem tentar comprometer sua seguranca, disponibilidade, conteudo, sistemas, formularios ou canais de atendimento.",
+    title: "3. Descrição do Site e dos Serviços",
+    content: (
+      <>
+        <p>
+          O Site tem caráter institucional e comercial, destinado a apresentar os serviços da CORPAD, captar contatos e
+          fornecer informações sobre as soluções oferecidas, que incluem:
+        </p>
+        <p>
+          <strong>CORPAD Digital</strong>
+        </p>
+        <ul>
+          <li>Criação de sites e landing pages</li>
+          <li>Hospedagem de sites com alta performance</li>
+          <li>Desenvolvimento de e-commerce (WooCommerce, Magento e outras plataformas)</li>
+          <li>Marketing digital e gestão de tráfego pago</li>
+          <li>Gestão de redes sociais</li>
+          <li>Monitoramento, otimização e manutenção de banco de dados</li>
+        </ul>
+        <p>
+          <strong>CORPAD Consultoria</strong>
+        </p>
+        <ul>
+          <li>Consultoria e assessoria em Tecnologia da Informação (TI)</li>
+          <li>Inteligência de dados e análise estratégica</li>
+          <li>Telefonia em nuvem com PABX, URA e transferências externas</li>
+          <li>Estratégia empresarial e transformação digital</li>
+        </ul>
+        <p>
+          As informações e cotações disponibilizadas no Site são meramente ilustrativas e não constituem proposta
+          vinculante. A contratação efetiva de qualquer serviço depende de proposta formal e assinatura de contrato
+          específico entre as partes.
+        </p>
+      </>
+    ),
   },
   {
-    title: "4. Propriedade intelectual",
-    content:
-      "Textos, imagens, marcas, logotipos, interfaces, codigos, materiais e demais elementos presentes neste site pertencem a CORPAD ou a terceiros autorizados. A reproducao, copia ou uso comercial sem autorizacao previa nao e permitido.",
+    title: "4. Uso Permitido",
+    content: (
+      <>
+        <p>O usuário pode utilizar o Site para:</p>
+        <ul>
+          <li>Obter informações sobre os serviços oferecidos pela CORPAD;</li>
+          <li>Entrar em contato para solicitar orçamentos, reuniões ou suporte;</li>
+          <li>Navegar pelo conteúdo institucional e portfólio disponíveis;</li>
+          <li>Compartilhar links do Site em redes sociais e canais digitais.</li>
+        </ul>
+      </>
+    ),
   },
   {
-    title: "5. Links externos",
-    content:
-      "Este site pode conter links para plataformas externas, como WhatsApp, redes sociais, ferramentas de atendimento ou sites de terceiros. A CORPAD nao se responsabiliza por conteudos, politicas ou praticas desses ambientes externos.",
+    title: "5. Uso Proibido",
+    content: (
+      <>
+        <p>É vedado ao usuário:</p>
+        <ul>
+          <li>Utilizar o Site para fins ilícitos, fraudulentos ou que violem direitos de terceiros;</li>
+          <li>
+            Reproduzir, copiar, distribuir, modificar ou explorar comercialmente qualquer conteúdo do Site sem
+            autorização prévia e por escrito da CORPAD;
+          </li>
+          <li>
+            Submeter ao Site vírus, malware, scripts maliciosos ou qualquer código que possa comprometer a segurança ou
+            o funcionamento do sistema;
+          </li>
+          <li>Realizar tentativas de acesso não autorizado a sistemas, servidores ou bases de dados da CORPAD;</li>
+          <li>Usar mecanismos automatizados (bots, scrapers, crawlers) para extração de dados sem consentimento expresso;</li>
+          <li>
+            Publicar ou transmitir conteúdo difamatório, ofensivo, discriminatório ou que viole a legislação brasileira
+            vigente.
+          </li>
+        </ul>
+        <p>
+          O descumprimento dessas proibições poderá ensejar as medidas legais cabíveis, incluindo ação civil e
+          comunicação às autoridades competentes.
+        </p>
+      </>
+    ),
   },
   {
-    title: "6. Informacoes enviadas pelo usuario",
-    content:
-      "Ao entrar em contato com a CORPAD por e-mail, WhatsApp, formularios ou outros canais, voce declara que as informacoes fornecidas sao verdadeiras e autoriza seu uso para retorno comercial, atendimento e continuidade da comunicacao solicitada.",
+    title: "6. Propriedade Intelectual",
+    content: (
+      <>
+        <p>
+          Todo o conteúdo disponível no Site - incluindo, mas não se limitando a textos, imagens, ilustrações,
+          logotipos, marcas, identidade visual, layouts, código-fonte e demais elementos - é de propriedade exclusiva da
+          CORPAD ou de seus licenciantes, protegido pela Lei nº 9.610/1998 (Lei de Direitos Autorais) e pela Lei nº
+          9.279/1996 (Lei de Propriedade Industrial).
+        </p>
+        <p>A marca <strong>CORPAD®</strong> é registrada e seu uso não autorizado constitui infração legal.</p>
+        <p>
+          Nenhuma disposição destes Termos deve ser interpretada como concessão de licença, cessão ou transferência de
+          qualquer direito de propriedade intelectual ao usuário.
+        </p>
+      </>
+    ),
   },
   {
-    title: "7. Disponibilidade e alteracoes",
-    content:
-      "A CORPAD busca manter o site disponivel e atualizado, mas nao garante funcionamento ininterrupto, ausencia de falhas ou compatibilidade permanente com todos os dispositivos, navegadores e redes.",
+    title: "7. Privacidade e Proteção de Dados",
+    content: (
+      <>
+        <p>
+          O tratamento de dados pessoais coletados neste Site é realizado em conformidade com a{" "}
+          <strong>Lei Geral de Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018)</strong>.
+        </p>
+        <p>
+          As informações fornecidas voluntariamente pelo usuário (nome, e-mail, telefone, empresa) por meio de
+          formulários de contato são utilizadas exclusivamente para:
+        </p>
+        <ul>
+          <li>Responder às solicitações e dúvidas enviadas;</li>
+          <li>Encaminhar propostas comerciais e orçamentos solicitados;</li>
+          <li>Enviar comunicações sobre serviços da CORPAD, mediante consentimento.</li>
+        </ul>
+        <p>
+          A CORPAD não comercializa dados pessoais de usuários a terceiros. Para mais detalhes sobre coleta,
+          armazenamento, uso e direitos do titular, consulte nossa <strong>Política de Privacidade</strong> disponível em:{" "}
+          <a href="https://corpad.com.br/privacidade">https://corpad.com.br/privacidade</a>.
+        </p>
+      </>
+    ),
   },
   {
-    title: "8. Limitacao de responsabilidade",
-    content:
-      "A CORPAD nao se responsabiliza por danos decorrentes de mau uso do site, indisponibilidades temporarias, interpretacao inadequada das informacoes publicadas ou problemas causados por terceiros.",
+    title: "8. Cookies",
+    content: (
+      <>
+        <p>
+          O Site utiliza cookies e tecnologias similares para melhorar a experiência de navegação, analisar o desempenho
+          do Site e viabilizar funcionalidades. Ao continuar navegando, o usuário consente com o uso de cookies não
+          essenciais.
+        </p>
+        <p>
+          O usuário pode gerenciar ou desativar cookies a qualquer momento pelas configurações do seu navegador, o que
+          poderá impactar algumas funcionalidades do Site.
+        </p>
+      </>
+    ),
   },
   {
-    title: "9. Atualizacao destes termos",
-    content:
-      "Estes Termos de Uso podem ser atualizados a qualquer momento para refletir mudancas nos servicos, no site ou em exigencias legais. A versao publicada nesta pagina sera sempre a versao vigente.",
+    title: "9. Links para Sites de Terceiros",
+    content: (
+      <>
+        <p>
+          O Site pode conter links para sites externos. Esses links são fornecidos apenas por conveniência e não implicam
+          endosso, aprovação ou responsabilidade da CORPAD sobre o conteúdo, serviços ou práticas de privacidade de sites
+          de terceiros.
+        </p>
+        <p>O usuário acessa esses sites por conta própria e sob sua inteira responsabilidade.</p>
+      </>
+    ),
   },
   {
-    title: "10. Contato",
-    content:
-      "Em caso de duvidas sobre estes Termos de Uso, entre em contato pelo e-mail contato@corpad.com.br ou pelos canais oficiais informados no site.",
+    title: "10. Limitação de Responsabilidade",
+    content: (
+      <>
+        <p>A CORPAD envida esforços para manter o Site disponível, atualizado e seguro, porém não garante:</p>
+        <ul>
+          <li>Disponibilidade ininterrupta ou livre de erros;</li>
+          <li>Exatidão absoluta das informações publicadas;</li>
+          <li>Ausência de vírus ou outros elementos nocivos no Site ou em arquivos disponibilizados.</li>
+        </ul>
+        <p>
+          A CORPAD não se responsabiliza por danos diretos, indiretos, incidentais ou consequentes decorrentes do uso ou
+          da impossibilidade de uso do Site, exceto nos casos em que a legislação brasileira exija responsabilidade.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "11. Isenção de Garantias Sobre Resultados",
+    content: (
+      <p>
+        As informações, estimativas e cases apresentados no Site têm caráter meramente ilustrativo. A CORPAD não garante
+        resultados específicos decorrentes da contratação de seus serviços, pois os resultados dependem de fatores
+        externos e variáveis inerentes a cada projeto e mercado.
+      </p>
+    ),
+  },
+  {
+    title: "12. Alterações nos Termos",
+    content: (
+      <>
+        <p>
+          A CORPAD reserva-se o direito de modificar estes Termos a qualquer momento, publicando a versão atualizada
+          nesta página com a indicação da data de revisão. O uso continuado do Site após a publicação de alterações
+          constitui aceitação das novas condições.
+        </p>
+        <p>Recomendamos que o usuário consulte periodicamente esta página.</p>
+      </>
+    ),
+  },
+  {
+    title: "13. Rescisão e Suspensão de Acesso",
+    content: (
+      <p>
+        A CORPAD pode, a seu exclusivo critério e sem aviso prévio, suspender ou encerrar o acesso de qualquer usuário
+        ao Site que viole estes Termos ou que utilize o Site de forma inadequada, sem que isso gere qualquer direito a
+        indenização.
+      </p>
+    ),
+  },
+  {
+    title: "14. Lei Aplicável e Foro",
+    content: (
+      <p>
+        Estes Termos são regidos pelas leis da <strong>República Federativa do Brasil</strong>. Fica eleito o foro da{" "}
+        <strong>Comarca de Ribeirão Preto - SP</strong> para dirimir quaisquer controvérsias decorrentes destes Termos,
+        com renúncia expressa a qualquer outro, por mais privilegiado que seja.
+      </p>
+    ),
+  },
+  {
+    title: "15. Contato",
+    content: (
+      <>
+        <p>Para dúvidas, solicitações ou reclamações relacionadas a estes Termos:</p>
+        <ul>
+          <li>
+            <strong>E-mail:</strong> contato@corpad.com.br
+          </li>
+          <li>
+            <strong>Site:</strong> https://corpad.com.br
+          </li>
+          <li>
+            <strong>CNPJ:</strong> 01.434.659/0001-19
+          </li>
+        </ul>
+        <p>
+          <em>CORPAD® | Todos os direitos reservados desde 1996.</em>
+        </p>
+      </>
+    ),
   },
 ];
 
@@ -126,14 +359,14 @@ export default function TermsOfUsePage() {
           Regras gerais para acesso, navegacao e uso das informacoes,
           conteudos e canais disponiveis no site da CORPAD.
         </p>
-        <small>Ultima atualizacao: 09 de junho de 2026</small>
+        <small>Última atualização: junho de 2026</small>
       </section>
 
       <section className="legal-content" aria-label="Conteudo dos Termos de Uso">
         {sections.map((section) => (
           <article key={section.title}>
             <h2>{section.title}</h2>
-            <p>{section.content}</p>
+            {section.content}
           </article>
         ))}
       </section>

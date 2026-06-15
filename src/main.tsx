@@ -136,7 +136,7 @@ function App({ pathname }: { pathname: string }) {
   }
 
   if (pathname === "/blog" || pathname.startsWith("/blog/")) {
-    return <BlogPage />;
+    return <BlogPage key={pathname} />;
   }
 
   if (pathname === "/admin" || pathname.startsWith("/admin/")) {

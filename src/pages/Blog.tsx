@@ -25,7 +25,7 @@ import {
   registerBlogLead,
   registerBlogView,
 } from "../lib/blogPosts";
-import { organizationJsonLd, usePageSeo } from "../lib/seo";
+import { faqJsonLd, organizationJsonLd, usePageSeo } from "../lib/seo";
 
 const whatsappUrl =
   `https://wa.me/5516996094649?text=${encodeURIComponent("Ola, tudo bem? Acessei o blog da CORPAD e gostaria de conversar sobre uma solucao para minha empresa.")}`;
@@ -110,6 +110,118 @@ function formatPostDate(value: string | null) {
   }).format(new Date(value));
 }
 
+function getArticleDisplayTitle(post: BlogPost) {
+  if (post.title.includes("|") && post.subtitle) {
+    return post.subtitle;
+  }
+
+  return post.title;
+}
+
+function getReadableArticleLines(post: BlogPost) {
+  const displayTitle = normalize(getArticleDisplayTitle(post));
+  const subtitleParts = new Set(
+    getArticleDisplayTitle(post)
+      .split(/\s{2,}|\n/)
+      .map((part) => normalize(part.trim()))
+      .filter(Boolean),
+  );
+  const lines = post.content
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !/^[-=]{6,}$/.test(line));
+  const output: string[] = [];
+  let paragraph: string[] = [];
+
+  const flushParagraph = () => {
+    if (paragraph.length === 0) return;
+
+    const text = paragraph.join(" ").replace(/\s+/g, " ").trim();
+    const normalizedText = normalize(text);
+
+    if (text && normalizedText !== displayTitle && !subtitleParts.has(normalizedText)) {
+      output.push(text);
+    }
+
+    paragraph = [];
+  };
+
+  lines.forEach((line) => {
+    const normalizedLine = normalize(line);
+
+    if (normalizedLine === displayTitle || subtitleParts.has(normalizedLine)) {
+      return;
+    }
+
+    if (line.startsWith("## ") || line.startsWith("### ") || line.startsWith("- ") || line.startsWith("> ")) {
+      flushParagraph();
+      output.push(line);
+      return;
+    }
+
+    if (/^!\[(.*)\]\((https?:\/\/.+)\)$/.test(line) || /^\[video:(https?:\/\/.+)\]$/.test(line) || /^\[cta\](.+)\[\/cta\]$/.test(line)) {
+      flushParagraph();
+      output.push(line);
+      return;
+    }
+
+    paragraph.push(line);
+  });
+
+  flushParagraph();
+  return output;
+}
+
+function extractFaqsFromContent(post: BlogPost) {
+  const lines = getReadableArticleLines(post);
+  const faqStart = lines.findIndex((line) => normalize(line).includes("perguntas frequentes"));
+
+  if (faqStart === -1) {
+    return [];
+  }
+
+  const faqs: Array<{ question: string; answer: string }> = [];
+  let question = "";
+  let answerLines: string[] = [];
+
+  const flush = () => {
+    const answer = answerLines.join(" ").replace(/\s+/g, " ").trim();
+
+    if (question && answer) {
+      faqs.push({ question, answer });
+    }
+
+    question = "";
+    answerLines = [];
+  };
+
+  for (const line of lines.slice(faqStart + 1)) {
+    if (line.startsWith("## ") && !normalize(line).includes("perguntas frequentes")) {
+      break;
+    }
+
+    if (line.endsWith("?")) {
+      flush();
+      question = line.replace(/^#+\s*/, "");
+      continue;
+    }
+
+    if (question && !line.startsWith("#")) {
+      answerLines.push(line.replace(/^- /, ""));
+    }
+  }
+
+  flush();
+  return faqs.slice(0, 10);
+}
+
+function getPostKeywords(post: BlogPost) {
+  return post.keyword
+    .split(",")
+    .map((keyword) => keyword.trim())
+    .filter(Boolean);
+}
+
 function renderInlineText(value: string) {
   const linkMatch = value.match(/^\[(.+)\]\((https?:\/\/.+)\)$/);
   if (linkMatch) {
@@ -124,33 +236,55 @@ function renderInlineText(value: string) {
 }
 
 function renderArticleBlocks(post: BlogPost) {
-  const lines = post.content.split("\n").map((line) => line.trim()).filter(Boolean);
+  const lines = getReadableArticleLines(post);
+  const blocks = [];
 
-  return lines.map((line, index) => {
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+
     if (line.startsWith("## ")) {
-      return <h2 key={`${line}-${index}`}>{line.replace("## ", "")}</h2>;
+      blocks.push(<h2 key={`${line}-${index}`}>{line.replace("## ", "")}</h2>);
+      continue;
     }
 
     if (line.startsWith("### ")) {
-      return <h3 key={`${line}-${index}`}>{line.replace("### ", "")}</h3>;
+      blocks.push(<h3 key={`${line}-${index}`}>{line.replace("### ", "")}</h3>);
+      continue;
     }
 
     if (line.startsWith("- ")) {
-      return <li key={`${line}-${index}`}>{line.replace("- ", "")}</li>;
+      const items = [];
+
+      while (lines[index]?.startsWith("- ")) {
+        items.push(lines[index].replace("- ", ""));
+        index += 1;
+      }
+
+      index -= 1;
+      blocks.push(
+        <ul key={`${line}-${index}`}>
+          {items.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>,
+      );
+      continue;
     }
 
     if (line.startsWith("> ")) {
-      return <blockquote key={`${line}-${index}`}>{line.replace("> ", "")}</blockquote>;
+      blocks.push(<blockquote key={`${line}-${index}`}>{line.replace("> ", "")}</blockquote>);
+      continue;
     }
 
     const imageMatch = line.match(/^!\[(.*)\]\((https?:\/\/.+)\)$/);
     if (imageMatch) {
-      return <img key={`${line}-${index}`} src={imageMatch[2]} alt={imageMatch[1]} />;
+      blocks.push(<img key={`${line}-${index}`} src={imageMatch[2]} alt={imageMatch[1]} />);
+      continue;
     }
 
     const videoMatch = line.match(/^\[video:(https?:\/\/.+)\]$/);
     if (videoMatch) {
-      return (
+      blocks.push(
         <iframe
           key={`${line}-${index}`}
           src={videoMatch[1]}
@@ -160,20 +294,24 @@ function renderArticleBlocks(post: BlogPost) {
           allowFullScreen
         />
       );
+      continue;
     }
 
     const ctaMatch = line.match(/^\[cta\](.+)\[\/cta\]$/);
     if (ctaMatch) {
-      return (
+      blocks.push(
         <a className="blog-inline-cta" href={post.ctaUrl || whatsappUrl} target="_blank" rel="noreferrer" key={`${line}-${index}`}>
           <strong>{ctaMatch[1]}</strong>
           <span>{post.ctaLabel || "Falar com um consultor"}</span>
         </a>
       );
+      continue;
     }
 
-    return <p key={`${line}-${index}`}>{renderInlineText(line)}</p>;
-  });
+    blocks.push(<p key={`${line}-${index}`}>{renderInlineText(line)}</p>);
+  }
+
+  return blocks;
 }
 
 export default function BlogPage() {
@@ -190,11 +328,59 @@ export default function BlogPage() {
     const params = new URLSearchParams(window.location.search);
     return params.get("categoria") || allCategorySlug;
   }, []);
-  const seoTitle = activePost ? `${activePost.title} | Blog CORPAD` : `${settings.title} | CORPAD`;
+  const seoTitle = activePost ? `${activePost.metaTitle || getArticleDisplayTitle(activePost)} | Blog CORPAD` : `${settings.title} | CORPAD`;
   const seoDescription = activePost
     ? activePost.metaDescription || activePost.excerpt
     : settings.description;
   const seoPath = activePost ? `/blog/${activePost.slug}` : "/blog";
+  const activePostFaqs = useMemo(() => (activePost ? extractFaqsFromContent(activePost) : []), [activePost]);
+  const activePostKeywords = activePost ? getPostKeywords(activePost) : [];
+  const pageJsonLd = activePost
+    ? [
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: activePost.metaTitle || getArticleDisplayTitle(activePost),
+          description: seoDescription,
+          url: `https://corpad.com.br${seoPath}`,
+          image: activePost.coverImage || "https://corpad.com.br/logo.png",
+          author: {
+            "@type": "Organization",
+            name: activePost.authorName || "CORPAD Digital",
+          },
+          publisher: organizationJsonLd(),
+          datePublished: activePost.publishedAt ?? activePost.createdAt,
+          dateModified: activePost.updatedAt,
+          inLanguage: "pt-BR",
+          keywords: activePostKeywords,
+          about: activePostKeywords.map((keyword) => ({
+            "@type": "Thing",
+            name: keyword,
+          })),
+          mentions: [
+            {
+              "@type": "Organization",
+              name: "CORPAD Digital",
+              url: "https://corpad.com.br",
+            },
+          ],
+          isPartOf: {
+            "@type": "Blog",
+            name: "Blog CORPAD",
+            url: "https://corpad.com.br/blog",
+          },
+          mainEntityOfPage: `https://corpad.com.br${seoPath}`,
+        },
+        ...(activePostFaqs.length > 0 ? [faqJsonLd(activePostFaqs)] : []),
+      ]
+    : {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        headline: settings.title,
+        description: seoDescription,
+        url: "https://corpad.com.br/blog",
+        publisher: organizationJsonLd(),
+      };
 
   usePageSeo({
     title: seoTitle,
@@ -202,15 +388,7 @@ export default function BlogPage() {
     path: seoPath,
     image: activePost?.coverImage || undefined,
     type: activePost ? "article" : "website",
-    jsonLd: {
-      "@context": "https://schema.org",
-      "@type": activePost ? "Article" : "Blog",
-      headline: activePost?.title ?? settings.title,
-      description: seoDescription,
-      url: `https://corpad.com.br${seoPath}`,
-      image: activePost?.coverImage || "https://corpad.com.br/logo.png",
-      publisher: organizationJsonLd(),
-    },
+    jsonLd: pageJsonLd,
   });
 
   useEffect(() => {
@@ -312,7 +490,7 @@ export default function BlogPage() {
               <ArrowLeft size={15} /> Voltar para o blog
             </a>
             <span>{activePost.category}</span>
-            <h1>{activePost.title}</h1>
+            <h1>{getArticleDisplayTitle(activePost)}</h1>
             <p>{activePost.subtitle || activePost.excerpt}</p>
             <div className="blog-article-meta" aria-label="Informacoes do artigo">
               <small>{formatPostDate(activePost.publishedAt)}</small>
@@ -329,7 +507,13 @@ export default function BlogPage() {
             <div className="blog-article-content">{renderArticleBlocks(activePost)}</div>
             {settings.showAuthor && (
               <aside className="blog-article-author">
-                {activePost.authorPhoto && <img src={activePost.authorPhoto} alt="" />}
+                {activePost.authorPhoto ? (
+                  <img src={activePost.authorPhoto} alt="" />
+                ) : (
+                  <span className="blog-author-fallback" aria-hidden="true">
+                    {activePost.authorName.slice(0, 1)}
+                  </span>
+                )}
                 <div>
                   <strong>{activePost.authorName}</strong>
                   <span>{activePost.authorRole}</span>

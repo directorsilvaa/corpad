@@ -214,7 +214,17 @@ function readLocalPosts(): BlogPost[] {
 }
 
 function writeLocalPosts(posts: BlogPost[]) {
-  localStorage.setItem(localStorageKey, JSON.stringify(posts));
+  try {
+    localStorage.setItem(localStorageKey, JSON.stringify(posts));
+  } catch (error) {
+    if (error instanceof DOMException && (error.name === "QuotaExceededError" || error.name === "NS_ERROR_DOM_QUOTA_REACHED")) {
+      throw new Error(
+        "Nao foi possivel salvar porque o armazenamento local ficou cheio. Remova imagens muito grandes ou use uma URL de imagem/Supabase.",
+      );
+    }
+
+    throw error;
+  }
 }
 
 export function listBlogCategories() {
@@ -403,9 +413,35 @@ export async function uploadBlogImage(file: File) {
     return data.publicUrl;
   }
 
+  return compressImageToDataUrl(file);
+}
+
+function compressImageToDataUrl(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const maxWidth = 1280;
+        const scale = Math.min(1, maxWidth / image.width);
+        const width = Math.round(image.width * scale);
+        const height = Math.round(image.height * scale);
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          reject(new Error("Nao foi possivel processar a imagem."));
+          return;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        context.drawImage(image, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", 0.78));
+      };
+      image.onerror = () => reject(new Error("Nao foi possivel processar a imagem."));
+      image.src = String(reader.result);
+    };
     reader.onerror = () => reject(new Error("Nao foi possivel carregar a imagem."));
     reader.readAsDataURL(file);
   });

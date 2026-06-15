@@ -31,6 +31,7 @@ import {
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { adminLogin, adminLogout, isAdminLoggedIn } from "../lib/adminAuth";
+import { importBlogArticleModel } from "../lib/blogArticleImporter";
 import {
   BlogPost,
   BlogPostInput,
@@ -124,6 +125,33 @@ function formatDate(value: string | null | undefined) {
   );
 }
 
+function toDatetimeLocalValue(value: string | null | undefined) {
+  if (!value) return "";
+
+  const date = new Date(value);
+  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return offsetDate.toISOString().slice(0, 16);
+}
+
+function normalizeImportedPostForEditor(post: BlogPostInput): BlogPostInput {
+  if (!post.title.includes("|")) {
+    return post;
+  }
+
+  const visibleTitle = post.subtitle?.trim();
+
+  if (!visibleTitle) {
+    return post;
+  }
+
+  return {
+    ...post,
+    title: visibleTitle,
+    subtitle: post.metaDescription || post.excerpt || "",
+    metaTitle: post.metaTitle || post.title,
+  };
+}
+
 export default function AdminPage() {
   usePageSeo({
     title: "Admin | CORPAD",
@@ -147,6 +175,7 @@ export default function AdminPage() {
   const [uploadingAuthorPhoto, setUploadingAuthorPhoto] = useState(false);
   const [uploadingNewAuthorPhoto, setUploadingNewAuthorPhoto] = useState(false);
   const [uploadingAuthorPhotoId, setUploadingAuthorPhotoId] = useState<string | null>(null);
+  const [savingPost, setSavingPost] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
   const [editorTab, setEditorTab] = useState<EditorTab>("content");
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
@@ -226,15 +255,31 @@ export default function AdminPage() {
 
   async function handleSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (savingPost) return;
+
     setMessage("");
+    setSavingPost(true);
 
     try {
+      const normalizedTitle = form.title.trim();
+      const normalizedSlug = (form.slug || slugify(normalizedTitle)).trim();
+      const normalizedExcerpt = form.excerpt.trim();
+      const normalizedContent = form.content.trim();
+
+      if (!normalizedTitle || !normalizedSlug || !normalizedExcerpt || !normalizedContent) {
+        setEditorTab("content");
+        throw new Error("Preencha titulo, URL, resumo e conteudo antes de salvar.");
+      }
+
       await saveBlogPost(
         {
           ...form,
-          slug: form.slug || slugify(form.title),
-          metaTitle: form.metaTitle || form.title,
-          metaDescription: form.metaDescription || form.excerpt,
+          title: normalizedTitle,
+          slug: normalizedSlug,
+          excerpt: normalizedExcerpt,
+          content: normalizedContent,
+          metaTitle: form.metaTitle || normalizedTitle,
+          metaDescription: form.metaDescription || normalizedExcerpt,
         },
         editingId,
       );
@@ -246,6 +291,8 @@ export default function AdminPage() {
       setMessage("Artigo salvo com sucesso.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Nao foi possivel salvar.");
+    } finally {
+      setSavingPost(false);
     }
   }
 
@@ -371,30 +418,54 @@ export default function AdminPage() {
     setEditorOpen(true);
   }
 
+  async function handleArticleModelImport(file: File | null) {
+    if (!file) return;
+
+    setMessage("");
+
+    try {
+      const text = await file.text();
+      setEditingId(undefined);
+      setForm(
+        importBlogArticleModel(text, {
+          ...emptyPost,
+          category: categories.includes("Digital") ? "Digital" : categories[0] ?? blogCategories[0],
+        }),
+      );
+      setEditorTab("content");
+      setEditorOpen(true);
+      setMessage("Modelo TXT importado. Revise o artigo e salve como rascunho ou publicado.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Nao foi possivel importar o modelo TXT.");
+    }
+  }
+
   function editPost(post: BlogPost) {
     setEditingId(post.id);
-    setForm({
-      title: post.title,
-      subtitle: post.subtitle,
-      slug: post.slug,
-      category: post.category,
-      excerpt: post.excerpt,
-      coverImage: post.coverImage,
-      imageAlt: post.imageAlt,
-      content: post.content,
-      authorName: post.authorName,
-      authorPhoto: post.authorPhoto,
-      authorRole: post.authorRole,
-      authorBio: post.authorBio,
-      metaTitle: post.metaTitle,
-      metaDescription: post.metaDescription,
-      keyword: post.keyword,
-      ctaLabel: post.ctaLabel,
-      ctaUrl: post.ctaUrl,
-      ctaText: post.ctaText,
-      status: post.status,
-      publishedAt: post.publishedAt,
-    });
+    setForm(
+      normalizeImportedPostForEditor({
+        title: post.title,
+        subtitle: post.subtitle,
+        slug: post.slug,
+        category: post.category,
+        excerpt: post.excerpt,
+        coverImage: post.coverImage,
+        imageAlt: post.imageAlt,
+        content: post.content,
+        authorName: post.authorName,
+        authorPhoto: post.authorPhoto,
+        authorRole: post.authorRole,
+        authorBio: post.authorBio,
+        metaTitle: post.metaTitle,
+        metaDescription: post.metaDescription,
+        keyword: post.keyword,
+        ctaLabel: post.ctaLabel,
+        ctaUrl: post.ctaUrl,
+        ctaText: post.ctaText,
+        status: post.status,
+        publishedAt: post.publishedAt,
+      }),
+    );
     setEditorTab("content");
     setEditorOpen(true);
   }
@@ -643,6 +714,18 @@ export default function AdminPage() {
             <div className="admin-section-heading">
               <span>Gestao de artigos</span>
               <strong>Criar, editar, excluir, publicar e agendar</strong>
+              <label className="admin-section-action admin-import-action">
+                <Upload size={17} /> Importar TXT
+                <input
+                  type="file"
+                  accept=".txt,text/plain"
+                  onChange={(event) => {
+                    const file = event.currentTarget.files?.[0] ?? null;
+                    event.currentTarget.value = "";
+                    void handleArticleModelImport(file);
+                  }}
+                />
+              </label>
               <button className="admin-section-action" type="button" onClick={openNewPost}>
                 <Plus size={17} /> Criar artigo
               </button>
@@ -884,7 +967,7 @@ export default function AdminPage() {
       {editorOpen && (
         <div className="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-editor-title">
           <div className="admin-modal-backdrop" role="button" tabIndex={0} aria-label="Fechar editor" onClick={() => setEditorOpen(false)} />
-          <form className="admin-editor admin-editor-modal admin-blog-editor" onSubmit={handleSave}>
+          <form className="admin-editor admin-editor-modal admin-blog-editor" onSubmit={handleSave} noValidate>
             <div className="admin-editor-title">
               <div className="admin-editor-heading">
                 <span>{editingId ? "Edicao de artigo" : "Novo artigo"}</span>
@@ -895,11 +978,13 @@ export default function AdminPage() {
                 <button className="admin-modal-close" type="button" aria-label="Fechar" onClick={() => setEditorOpen(false)}>
                   <X size={18} />
                 </button>
-                <button type="submit">
-                  <Save size={18} /> Salvar artigo
+                <button type="button" disabled={savingPost} onClick={(event) => void handleSave(event as unknown as FormEvent<HTMLFormElement>)}>
+                  <Save size={18} /> {savingPost ? "Salvando..." : "Salvar artigo"}
                 </button>
               </div>
             </div>
+
+            {message && <p className="admin-message admin-editor-message">{message}</p>}
 
             <div className="admin-editor-tabs">
               {editorTabs.map(({ id, label, Icon }) => (
@@ -961,7 +1046,7 @@ export default function AdminPage() {
                 </label>
                 <label>
                   Data de publicacao
-                  <input type="datetime-local" value={form.publishedAt ? form.publishedAt.slice(0, 16) : ""} onChange={(event) => setForm((current) => ({ ...current, publishedAt: event.target.value ? new Date(event.target.value).toISOString() : null }))} />
+                  <input type="datetime-local" value={toDatetimeLocalValue(form.publishedAt)} onChange={(event) => setForm((current) => ({ ...current, publishedAt: event.target.value ? new Date(event.target.value).toISOString() : null }))} />
                 </label>
               </div>
 
@@ -977,7 +1062,16 @@ export default function AdminPage() {
                     </span>
                   )}
                   <div>
-                    <input value={form.coverImage} onChange={(event) => setForm((current) => ({ ...current, coverImage: event.target.value }))} placeholder="URL da imagem" />
+                    {form.coverImage.startsWith("data:") ? (
+                      <div className="admin-local-image-row">
+                        <input value="Imagem enviada localmente" readOnly />
+                        <button type="button" onClick={() => setForm((current) => ({ ...current, coverImage: "" }))}>
+                          Remover
+                        </button>
+                      </div>
+                    ) : (
+                      <input value={form.coverImage} onChange={(event) => setForm((current) => ({ ...current, coverImage: event.target.value }))} placeholder="URL da imagem" />
+                    )}
                     <input value={form.imageAlt} onChange={(event) => setForm((current) => ({ ...current, imageAlt: event.target.value }))} placeholder="Texto alternativo da imagem" />
                     <label className="admin-upload-button">
                       <Upload size={16} />
