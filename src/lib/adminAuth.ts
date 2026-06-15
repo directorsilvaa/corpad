@@ -48,7 +48,7 @@ export async function adminLogin(email: string, password: string) {
 
   if (!allowLocalAuth) {
     throw new Error(
-      "Supabase nao configurado neste build. Confira na Vercel: VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY, depois faca Redeploy.",
+      "Supabase nao configurado neste build. Confira na Vercel: VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY ou VITE_SUPABASE_ANON_KEY, depois faca Redeploy.",
     );
   }
 
