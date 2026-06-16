@@ -664,7 +664,7 @@ export default function BlogPage() {
                 </div>
               </>
             )}
-            {activePost.coverImage && !activePostHasEmbeddedHeader && (
+            {activePost.coverImage && (
               <img
                 src={activePost.coverImage}
                 alt={activePost.imageAlt || ""}
