@@ -290,11 +290,16 @@ function hasEmbeddedArticleHeader(value: string) {
   return Boolean(embeddedArticle?.querySelector("h1"));
 }
 
-function sanitizeHtmlContent(value: string) {
+function sanitizeHtmlContent(value: string, options: { removeEmbeddedTitle?: boolean } = {}) {
   const template = document.createElement("template");
   template.innerHTML = value;
 
   template.content.querySelectorAll("script, object, embed").forEach((element) => element.remove());
+
+  if (options.removeEmbeddedTitle) {
+    const embeddedArticle = template.content.querySelector(".corpad-article, .article-body, article");
+    embeddedArticle?.querySelector("h1")?.remove();
+  }
 
   template.content.querySelectorAll<HTMLElement>("*").forEach((element) => {
     Array.from(element.attributes).forEach((attribute) => {
@@ -397,12 +402,12 @@ function renderArticleBlocks(post: BlogPost) {
   return blocks;
 }
 
-function renderArticleContent(post: BlogPost) {
+function renderArticleContent(post: BlogPost, options: { removeEmbeddedTitle?: boolean } = {}) {
   if (isHtmlContent(post.content)) {
     return (
       <div
         className="blog-article-content blog-article-content-html"
-        dangerouslySetInnerHTML={{ __html: sanitizeHtmlContent(post.content) }}
+        dangerouslySetInnerHTML={{ __html: sanitizeHtmlContent(post.content, options) }}
       />
     );
   }
@@ -649,9 +654,16 @@ export default function BlogPage() {
               </a>
               <span>{activePost.category}</span>
             </div>
+            <h1>{getArticleDisplayTitle(activePost)}</h1>
+            {activePost.coverImage && (
+              <img
+                src={activePost.coverImage}
+                alt={activePost.imageAlt || ""}
+                className="blog-article-cover"
+              />
+            )}
             {!activePostHasEmbeddedHeader && (
               <>
-                <h1>{getArticleDisplayTitle(activePost)}</h1>
                 <p>{getCleanPostSummary(activePost)}</p>
                 <div className="blog-article-meta" aria-label="Informacoes do artigo">
                   <small>{formatPostDate(activePost.publishedAt)}</small>
@@ -664,14 +676,7 @@ export default function BlogPage() {
                 </div>
               </>
             )}
-            {activePost.coverImage && (
-              <img
-                src={activePost.coverImage}
-                alt={activePost.imageAlt || ""}
-                className="blog-article-cover"
-              />
-            )}
-            {renderArticleContent(activePost)}
+            {renderArticleContent(activePost, { removeEmbeddedTitle: activePostHasEmbeddedHeader })}
             {settings.showAuthor && (
               <aside className="blog-article-author">
                 {activePost.authorPhoto ? (
