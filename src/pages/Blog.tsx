@@ -96,7 +96,7 @@ function getCategorySlug(category: string) {
 }
 
 function getReadingTime(content: string) {
-  const words = content.replace(/<[^>]+>/g, " ").trim().split(/\s+/).filter(Boolean).length;
+  const words = stripHtmlForSummary(content).trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(words / 180));
 }
 
@@ -111,11 +111,33 @@ function formatPostDate(value: string | null) {
 }
 
 function getArticleDisplayTitle(post: BlogPost) {
-  if (post.title.includes("|") && post.subtitle) {
+  if (post.title.includes("|") && post.subtitle && !isCssLeak(post.subtitle)) {
     return post.subtitle;
   }
 
   return post.title;
+}
+
+function stripHtmlForSummary(value: string) {
+  return value
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function isCssLeak(value: string) {
+  return /\.corpad-article|--teal|--text-|--border|escopado em|\/\*|^\s*\}/i.test(value);
+}
+
+function getCleanPostSummary(post: BlogPost) {
+  const candidates = [post.subtitle, post.excerpt, stripHtmlForSummary(post.content)];
+  const summary = candidates
+    .map((candidate) => candidate.replace(/\s+/g, " ").trim())
+    .find((candidate) => candidate && !isCssLeak(candidate));
+
+  return summary || "";
 }
 
 function getReadableArticleLines(post: BlogPost) {
@@ -259,6 +281,15 @@ function isHtmlContent(value: string) {
   return /<\/?(?:p|h[1-6]|a|ul|ol|li|table|div|section|article|blockquote|img|iframe)\b/i.test(value);
 }
 
+function hasEmbeddedArticleHeader(value: string) {
+  if (!isHtmlContent(value)) return false;
+
+  const document = new DOMParser().parseFromString(value, "text/html");
+  const embeddedArticle = document.querySelector(".corpad-article, .article-body, article");
+
+  return Boolean(embeddedArticle?.querySelector("h1"));
+}
+
 function sanitizeHtmlContent(value: string) {
   const template = document.createElement("template");
   template.innerHTML = value;
@@ -379,6 +410,57 @@ function renderArticleContent(post: BlogPost) {
   return <div className="blog-article-content">{renderArticleBlocks(post)}</div>;
 }
 
+function initializeRichArticleContent(root: HTMLElement) {
+  const cleanups: Array<() => void> = [];
+
+  root.querySelectorAll<HTMLButtonElement>(".ca-faq-btn, .faq-btn").forEach((button) => {
+    const handleClick = () => {
+      const item = button.closest<HTMLElement>(".ca-faq-item, .faq-item");
+      const body = item?.querySelector<HTMLElement>(".ca-faq-body, .faq-body");
+      if (!item || !body) return;
+
+      const isOpen = item.classList.contains("is-open");
+      root.querySelectorAll<HTMLElement>(".ca-faq-item.is-open, .faq-item.is-open").forEach((openItem) => {
+        openItem.classList.remove("is-open");
+        openItem.querySelector<HTMLButtonElement>(".ca-faq-btn, .faq-btn")?.setAttribute("aria-expanded", "false");
+        const openBody = openItem.querySelector<HTMLElement>(".ca-faq-body, .faq-body");
+        if (openBody) openBody.style.maxHeight = "0";
+      });
+
+      if (!isOpen) {
+        item.classList.add("is-open");
+        button.setAttribute("aria-expanded", "true");
+        body.style.maxHeight = `${body.scrollHeight}px`;
+      }
+    };
+
+    button.addEventListener("click", handleClick);
+    cleanups.push(() => button.removeEventListener("click", handleClick));
+  });
+
+  const fadeElements = Array.from(root.querySelectorAll<HTMLElement>(".ca-fade, .fade-in"));
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    fadeElements.forEach((element) => observer.observe(element));
+    cleanups.push(() => observer.disconnect());
+  } else {
+    fadeElements.forEach((element) => element.classList.add("is-visible"));
+  }
+
+  return () => cleanups.forEach((cleanup) => cleanup());
+}
+
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [activePost, setActivePost] = useState<BlogPost | null>(null);
@@ -395,11 +477,12 @@ export default function BlogPage() {
   }, []);
   const seoTitle = activePost ? `${activePost.metaTitle || getArticleDisplayTitle(activePost)} | Blog CORPAD` : `${settings.title} | CORPAD`;
   const seoDescription = activePost
-    ? activePost.metaDescription || activePost.excerpt
+    ? activePost.metaDescription || getCleanPostSummary(activePost)
     : settings.description;
   const seoPath = activePost ? `/blog/${activePost.slug}` : "/blog";
   const activePostFaqs = useMemo(() => (activePost ? extractFaqsFromContent(activePost) : []), [activePost]);
   const activePostKeywords = activePost ? getPostKeywords(activePost) : [];
+  const activePostHasEmbeddedHeader = activePost ? hasEmbeddedArticleHeader(activePost.content) : false;
   const pageJsonLd = activePost
     ? [
         {
@@ -483,6 +566,15 @@ export default function BlogPage() {
     void loadPosts();
   }, [slug]);
 
+  useEffect(() => {
+    if (!activePost || !isHtmlContent(activePost.content)) return undefined;
+
+    const root = document.querySelector<HTMLElement>(".blog-article-content-html");
+    if (!root) return undefined;
+
+    return initializeRichArticleContent(root);
+  }, [activePost]);
+
   const categoryCounts = useMemo(() => {
     return posts.reduce<Record<string, number>>((counts, post) => {
       const categorySlug = getCategorySlug(post.category);
@@ -557,18 +649,22 @@ export default function BlogPage() {
               </a>
               <span>{activePost.category}</span>
             </div>
-            <h1>{getArticleDisplayTitle(activePost)}</h1>
-            <p>{activePost.subtitle || activePost.excerpt}</p>
-            <div className="blog-article-meta" aria-label="Informacoes do artigo">
-              <small>{formatPostDate(activePost.publishedAt)}</small>
-              {settings.showReadingTime && (
-                <small>
-                  <Clock3 size={14} /> {getReadingTime(activePost.content)} min de leitura
-                </small>
-              )}
-              {settings.showAuthor && <small>{activePost.authorName}</small>}
-            </div>
-            {activePost.coverImage && (
+            {!activePostHasEmbeddedHeader && (
+              <>
+                <h1>{getArticleDisplayTitle(activePost)}</h1>
+                <p>{getCleanPostSummary(activePost)}</p>
+                <div className="blog-article-meta" aria-label="Informacoes do artigo">
+                  <small>{formatPostDate(activePost.publishedAt)}</small>
+                  {settings.showReadingTime && (
+                    <small>
+                      <Clock3 size={14} /> {getReadingTime(activePost.content)} min de leitura
+                    </small>
+                  )}
+                  {settings.showAuthor && <small>{activePost.authorName}</small>}
+                </div>
+              </>
+            )}
+            {activePost.coverImage && !activePostHasEmbeddedHeader && (
               <img
                 src={activePost.coverImage}
                 alt={activePost.imageAlt || ""}
@@ -691,7 +787,7 @@ export default function BlogPage() {
                   <div>
                     <span>{featuredPost.category}</span>
                     <h2>{featuredPost.title}</h2>
-                    <p>{featuredPost.excerpt}</p>
+                    <p>{getCleanPostSummary(featuredPost)}</p>
                     <small>
                       {formatPostDate(featuredPost.publishedAt)}
                       <i />
@@ -712,7 +808,7 @@ export default function BlogPage() {
                       )}
                       <span>{post.category}</span>
                       <h2>{post.title}</h2>
-                      <p>{post.excerpt}</p>
+                      <p>{getCleanPostSummary(post)}</p>
                       <small>
                         {formatPostDate(post.publishedAt)}
                         <i />
