@@ -789,6 +789,9 @@ export default function AdminPage() {
                     <small>{formatDate(post.publishedAt)}</small>
                   </div>
                   <div className="admin-post-actions">
+                    <a href={`/blog/${post.slug}`} target="_blank" rel="noreferrer">
+                      <Eye size={16} /> Ver
+                    </a>
                     <button type="button" onClick={() => editPost(post)}>
                       <Edit3 size={16} /> Editar
                     </button>

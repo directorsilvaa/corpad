@@ -24307,7 +24307,8 @@ h1 em {
   margin-top: 2px;
 }
 
-.admin-post-row button {
+.admin-post-row button,
+.admin-post-actions a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -24323,7 +24324,8 @@ h1 em {
   font-weight: 850;
 }
 
-.admin-post-row button:hover {
+.admin-post-row button:hover,
+.admin-post-actions a:hover {
   border-color: #bfdbfe;
   color: #1267e8;
   background: #eef8ff;
@@ -28093,6 +28095,7 @@ h1 em {
 .admin-category-row button,
 .admin-editor-toolbar button,
 .admin-post-row button,
+.admin-post-actions a,
 .admin-upload-button {
   border: 1px solid rgba(43, 63, 92, 0.12);
   border-radius: 999px;
@@ -28105,6 +28108,7 @@ h1 em {
 .admin-category-row button:hover,
 .admin-editor-toolbar button:hover,
 .admin-post-row button:hover,
+.admin-post-actions a:hover,
 .admin-upload-button:hover {
   color: #0057d9;
   background: rgba(255, 255, 255, 0.96);
@@ -28541,7 +28545,8 @@ h1 em {
 .admin-dashboard-list button,
 .admin-category-row button,
 .admin-editor-toolbar button,
-.admin-post-row button {
+.admin-post-row button,
+.admin-post-actions a {
   border: 1px solid #d4e2f0;
   color: #344860;
   background: #ffffff;
@@ -28550,7 +28555,8 @@ h1 em {
 .admin-dashboard-list button:hover,
 .admin-category-row button:hover,
 .admin-editor-toolbar button:hover,
-.admin-post-row button:hover {
+.admin-post-row button:hover,
+.admin-post-actions a:hover {
   color: #1267e8;
   background: #eef8ff;
 }
