@@ -154,7 +154,7 @@ function extractCtaUrl(text: string) {
 }
 
 function isHtmlArticle(text: string) {
-  return /<(?:!doctype\s+html|html|head|body|article|main|h1|h2|p|a)\b/i.test(text);
+  return /<(?:!doctype\s+html|html|head|body|article|main|div|section|style|script|link|h1|h2|p|a)\b/i.test(text);
 }
 
 function extractShadowDomTemplate(text: string) {
@@ -270,13 +270,14 @@ function extractCanonicalSlug(document: Document, fallbackTitle: string) {
   }
 }
 
-function extractHtmlContent(document: Document, sourceText = "") {
+export function normalizeImportedHtmlArticleContent(sourceText: string) {
   const shadowTemplate = extractShadowDomTemplate(sourceText);
 
   if (shadowTemplate) {
     return buildScopedShadowContent(shadowTemplate);
   }
 
+  const document = new DOMParser().parseFromString(sourceText, "text/html");
   const headAssets = Array.from(document.head.querySelectorAll("style, link[rel='stylesheet'], link[rel='preconnect']"))
     .map((element) => element.outerHTML)
     .join("\n");
@@ -290,6 +291,10 @@ function extractHtmlContent(document: Document, sourceText = "") {
   const sourceHtml = embeddedArticle ? source.outerHTML : source.innerHTML;
 
   return [headAssets, sourceHtml.trim()].filter(Boolean).join("\n").trim();
+}
+
+function extractHtmlContent(document: Document, sourceText = "") {
+  return normalizeImportedHtmlArticleContent(sourceText || document.documentElement.outerHTML);
 }
 
 function extractFirstLink(document: Document) {

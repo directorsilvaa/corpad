@@ -25,6 +25,7 @@ import {
   registerBlogLead,
   registerBlogView,
 } from "../lib/blogPosts";
+import { normalizeImportedHtmlArticleContent } from "../lib/blogArticleImporter";
 import { faqJsonLd, organizationJsonLd, usePageSeo } from "../lib/seo";
 
 const whatsappUrl =
@@ -142,7 +143,7 @@ function getCleanPostSummary(post: BlogPost) {
 
 function getReadableArticleLines(post: BlogPost) {
   if (isHtmlContent(post.content)) {
-    const document = new DOMParser().parseFromString(post.content, "text/html");
+    const document = new DOMParser().parseFromString(normalizeImportedHtmlArticleContent(post.content), "text/html");
     return Array.from(document.body.querySelectorAll("h2, h3, p, li"))
       .map((element) => {
         const text = element.textContent?.replace(/\s+/g, " ").trim() ?? "";
@@ -284,7 +285,7 @@ function isHtmlContent(value: string) {
 function hasEmbeddedArticleHeader(value: string) {
   if (!isHtmlContent(value)) return false;
 
-  const document = new DOMParser().parseFromString(value, "text/html");
+  const document = new DOMParser().parseFromString(normalizeImportedHtmlArticleContent(value), "text/html");
   const embeddedArticle = document.querySelector(".corpad-shadow-article, .corpad-article, .article-body, article");
 
   return Boolean(embeddedArticle?.querySelector("h1"));
@@ -292,7 +293,7 @@ function hasEmbeddedArticleHeader(value: string) {
 
 function sanitizeHtmlContent(value: string, options: { removeEmbeddedTitle?: boolean } = {}) {
   const template = document.createElement("template");
-  template.innerHTML = value;
+  template.innerHTML = normalizeImportedHtmlArticleContent(value);
 
   template.content.querySelectorAll("script, object, embed").forEach((element) => element.remove());
 
