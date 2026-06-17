@@ -880,7 +880,9 @@ function BlogNavbar() {
       <a className="brand" href="/" aria-label="Pagina inicial">
         <Image
           className="brand-logo"
-          src="/logo.png"
+          src="/logo-light.png"
+          srcSet="/logo-light-180.png 180w, /logo-light-300.png 300w, /logo-light-600.png 600w, /logo-light.png 1500w"
+          sizes="(max-width: 620px) 142px, 249px"
           alt="Logo CORPAD"
           width={1500}
           height={390}
