@@ -237,12 +237,14 @@ export const servicePages: ServicePageContent[] = [
     heroTitle: "e-Mail Profissional para empresas",
     metaTitle: "e-Mail Profissional com Domínio Próprio | CORPAD Digital",
     metaDescription:
-      "e-Mail profissional Zimbra para empresas com domínio próprio, webmail, 2FA, antispam, LGPD, alta disponibilidade e planos Standard, Profissional e Business.",
+      "e-Mail profissional Zimbra para empresas com domínio próprio, webmail, 2FA, antispam, LGPD, 5 data centers TIER III, alta disponibilidade e planos Standard, Profissional e Business.",
     intro:
-      "O e-mail profissional fortalece a credibilidade da empresa em cada contato. Com contas no domínio da sua marca, plataforma Zimbra, webmail, segurança e configuração em dispositivos, sua comunicação fica mais organizada, confiável e preparada para o dia a dia corporativo.",
+      "O e-mail profissional fortalece a credibilidade da empresa em cada contato. Com contas no domínio da sua marca, plataforma Zimbra, webmail, segurança e estrutura nacional, sua comunicação fica mais organizada, confiável e preparada para o dia a dia corporativo.",
     highlights: [
       "Contas de e-mail com domínio da empresa",
       "Plataforma Zimbra de e-mail e colaboração",
+      "E-mail como ferramenta documental corporativa",
+      "Serviço nacional com 5 data centers TIER III",
       "Acesso por webmail, celular e programas de e-mail",
       "Compatibilidade com IMAP, POP e SMTP",
       "Antispam de borda para reduzir mensagens indesejadas",
@@ -259,6 +261,11 @@ export const servicePages: ServicePageContent[] = [
           "Usar um e-mail com domínio próprio transmite mais confiança do que endereços genéricos. Sua equipe se comunica com identidade, padronização e uma presença mais séria diante de clientes, fornecedores e parceiros.",
       },
       {
+        title: "Ferramenta documental do mundo corporativo",
+        body:
+          "O e-mail continua sendo uma das bases da comunicação formal entre empresas. Ele registra conversas, propostas, aprovações e históricos importantes, por isso precisa operar com estabilidade, segurança e domínio próprio.",
+      },
+      {
         title: "Acesso simples no dia a dia",
         body:
           "As contas podem ser acessadas pelo navegador, pelo celular ou por clientes de e-mail compatíveis. Isso facilita a rotina da equipe e mantém a comunicação disponível em diferentes dispositivos.",
@@ -273,6 +280,11 @@ export const servicePages: ServicePageContent[] = [
         body:
           "Recursos como antispam de borda, autenticação, 2FA, controle de acesso por horário, compliance com LGPD e certificação ISO 27001 ajudam a reduzir riscos e manter a caixa de entrada mais protegida.",
       },
+      {
+        title: "Infraestrutura nacional e alta disponibilidade",
+        body:
+          "A operação conta com serviço nacional, 5 data centers TIER III, suporte avançado e 99,9% de disponibilidade para reduzir interrupções e manter a comunicação da empresa funcionando com previsibilidade.",
+      },
     ],
     plans: [
       {
@@ -284,6 +296,7 @@ export const servicePages: ServicePageContent[] = [
           "E-mail com domínio próprio",
           "Webmail e configuração em dispositivos",
           "Antispam de borda",
+          "Estrutura nacional",
           "Suporte para configuração inicial",
         ],
       },
@@ -296,6 +309,7 @@ export const servicePages: ServicePageContent[] = [
           "Mais armazenamento por conta",
           "Acesso por webmail, IMAP, POP e SMTP",
           "Habilitação de 2FA",
+          "Plataforma baseada em Zimbra NE",
           "Organização para uso corporativo diário",
           "Orientação técnica para implantação",
         ],
@@ -309,6 +323,7 @@ export const servicePages: ServicePageContent[] = [
           "Maior capacidade de armazenamento",
           "Estrutura indicada para uso intenso",
           "99,9% de disponibilidade",
+          "Suporte avançado",
           "Controle de acesso por horário",
           "Configuração em múltiplos dispositivos",
           "Suporte técnico próximo para ajustes",
@@ -322,6 +337,7 @@ export const servicePages: ServicePageContent[] = [
       "Ativação de recursos de segurança, antispam e autenticação",
       "Orientação para acesso por webmail, celular ou cliente de e-mail",
       "Testes de envio, recebimento e ajustes finais",
+      "Orientação de operação e gerenciamento das contas",
       "Suporte para dúvidas após a implantação",
     ],
     faqs: [
@@ -354,6 +370,16 @@ export const servicePages: ServicePageContent[] = [
         question: "A estrutura tem recursos de segurança?",
         answer:
           "Sim. A solução contempla recursos como antispam de borda, autenticação, 2FA, controle de acesso e boas práticas de conformidade com LGPD.",
+      },
+      {
+        question: "A estrutura é nacional?",
+        answer:
+          "Sim. A operação trabalha com serviço nacional e 5 data centers TIER III, combinando disponibilidade, suporte e conformidade para uso corporativo.",
+      },
+      {
+        question: "Por que trocar o e-mail gratuito por profissional?",
+        answer:
+          "Porque o e-mail profissional usa o domínio da empresa, reforça credibilidade, organiza a comunicação e reduz riscos em um canal que registra negociações, propostas e histórico com clientes.",
       },
     ],
   },
