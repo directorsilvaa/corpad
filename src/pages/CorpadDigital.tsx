@@ -6,6 +6,7 @@ import {
   Code2,
   Layers3,
   Map,
+  Mail,
   Megaphone,
   MessageCircle,
   MousePointer2,
@@ -80,6 +81,14 @@ const services = [
     description:
       "Oferecemos hospedagem rápida, segura e estável para garantir que seu site esteja sempre disponível, protegido e preparado para entregar uma boa experiência ao usuário.",
     fit: "Para empresas que não querem perder vendas por lentidão, instabilidade ou falhas técnicas.",
+  },
+  {
+    title: "e-Mail Profissional",
+    icon: Mail,
+    href: "/servicos/e-mail-profissional",
+    description:
+      "E-mails com domínio da sua empresa, acesso por webmail, configuração em dispositivos e planos com armazenamento para uma comunicação mais profissional e segura.",
+    fit: "Para empresas que querem mais credibilidade, organização e confiança na comunicação corporativa.",
   },
   {
     title: "Automação de processos",

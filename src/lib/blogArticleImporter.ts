@@ -157,6 +157,101 @@ function isHtmlArticle(text: string) {
   return /<(?:!doctype\s+html|html|head|body|article|main|h1|h2|p|a)\b/i.test(text);
 }
 
+function extractShadowDomTemplate(text: string) {
+  const match = text.match(/\broot\.innerHTML\s*=\s*`([\s\S]*?)`\s*;/);
+
+  return match?.[1]?.trim() ?? "";
+}
+
+function findMatchingBrace(value: string, openIndex: number) {
+  let depth = 0;
+
+  for (let index = openIndex; index < value.length; index += 1) {
+    const char = value[index];
+
+    if (char === "{") depth += 1;
+    if (char === "}") {
+      depth -= 1;
+      if (depth === 0) return index;
+    }
+  }
+
+  return -1;
+}
+
+function scopeSelector(selector: string, scope: string) {
+  return selector
+    .split(",")
+    .map((part) => {
+      const trimmed = part.trim();
+
+      if (!trimmed || trimmed.startsWith(scope)) {
+        return trimmed;
+      }
+
+      if (trimmed.startsWith(":host")) {
+        return `${scope}${trimmed.slice(":host".length)}`;
+      }
+
+      return `${scope} ${trimmed}`;
+    })
+    .join(", ");
+}
+
+function scopeCss(css: string, scope: string): string {
+  let output = "";
+  let index = 0;
+
+  while (index < css.length) {
+    const openIndex = css.indexOf("{", index);
+
+    if (openIndex === -1) {
+      output += css.slice(index);
+      break;
+    }
+
+    const selector = css.slice(index, openIndex).trim();
+    const closeIndex = findMatchingBrace(css, openIndex);
+
+    if (closeIndex === -1) {
+      output += css.slice(index);
+      break;
+    }
+
+    const body = css.slice(openIndex + 1, closeIndex);
+
+    if (selector.startsWith("@media") || selector.startsWith("@supports")) {
+      output += `${selector} {${scopeCss(body, scope)}}`;
+    } else if (selector.startsWith("@")) {
+      output += `${selector} {${body}}`;
+    } else {
+      output += `${scopeSelector(selector, scope)} {${body}}`;
+    }
+
+    index = closeIndex + 1;
+  }
+
+  return output;
+}
+
+function buildScopedShadowContent(templateHtml: string) {
+  const scope = "corpad-shadow-article";
+  const document = new DOMParser().parseFromString(templateHtml, "text/html");
+  const assets = Array.from(document.querySelectorAll("link[rel='stylesheet'], link[rel='preconnect']"))
+    .map((element) => {
+      element.remove();
+      return element.outerHTML;
+    });
+  const styles = Array.from(document.querySelectorAll("style")).map((style) => {
+    const scopedStyle = `<style>${scopeCss(style.textContent ?? "", `.${scope}`)}</style>`;
+    style.remove();
+    return scopedStyle;
+  });
+  const bodyHtml = document.body.innerHTML.trim();
+
+  return [...assets, ...styles, `<div class="${scope}">${bodyHtml}</div>`].filter(Boolean).join("\n").trim();
+}
+
 function extractMetaContent(document: Document, selector: string) {
   return document.querySelector(selector)?.getAttribute("content")?.trim() ?? "";
 }
@@ -175,7 +270,13 @@ function extractCanonicalSlug(document: Document, fallbackTitle: string) {
   }
 }
 
-function extractHtmlContent(document: Document) {
+function extractHtmlContent(document: Document, sourceText = "") {
+  const shadowTemplate = extractShadowDomTemplate(sourceText);
+
+  if (shadowTemplate) {
+    return buildScopedShadowContent(shadowTemplate);
+  }
+
   const headAssets = Array.from(document.head.querySelectorAll("style, link[rel='stylesheet'], link[rel='preconnect']"))
     .map((element) => element.outerHTML)
     .join("\n");
@@ -201,16 +302,21 @@ function extractFirstLink(document: Document) {
 
 function importHtmlArticleModel(text: string, basePost: BlogPostInput): BlogPostInput {
   const document = new DOMParser().parseFromString(text, "text/html");
+  const shadowTemplate = extractShadowDomTemplate(text);
+  const contentDocument = shadowTemplate
+    ? new DOMParser().parseFromString(shadowTemplate, "text/html")
+    : document;
   const metaTitle = document.querySelector("title")?.textContent?.trim() || basePost.metaTitle;
-  const title = document.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim() || metaTitle || basePost.title;
+  const title = contentDocument.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim() || metaTitle || basePost.title;
   const metaDescription =
     extractMetaContent(document, 'meta[name="description"]') ||
     extractMetaContent(document, 'meta[property="og:description"]') ||
+    contentDocument.querySelector(".subtitle")?.textContent?.replace(/\s+/g, " ").trim() ||
     basePost.metaDescription;
-  const content = extractHtmlContent(document);
+  const content = extractHtmlContent(document, text);
   const keyword =
     extractMetaContent(document, 'meta[name="keywords"]') ||
-    document.querySelector(".article-tag")?.textContent?.replace(/\s+/g, " ").trim() ||
+    contentDocument.querySelector(".article-tag, .tag")?.textContent?.replace(/\s+/g, " ").trim() ||
     basePost.keyword;
 
   return {

@@ -285,7 +285,7 @@ function hasEmbeddedArticleHeader(value: string) {
   if (!isHtmlContent(value)) return false;
 
   const document = new DOMParser().parseFromString(value, "text/html");
-  const embeddedArticle = document.querySelector(".corpad-article, .article-body, article");
+  const embeddedArticle = document.querySelector(".corpad-shadow-article, .corpad-article, .article-body, article");
 
   return Boolean(embeddedArticle?.querySelector("h1"));
 }
@@ -297,7 +297,7 @@ function sanitizeHtmlContent(value: string, options: { removeEmbeddedTitle?: boo
   template.content.querySelectorAll("script, object, embed").forEach((element) => element.remove());
 
   if (options.removeEmbeddedTitle) {
-    const embeddedArticle = template.content.querySelector(".corpad-article, .article-body, article");
+    const embeddedArticle = template.content.querySelector(".corpad-shadow-article, .corpad-article, .article-body, article");
     embeddedArticle?.querySelector("h1")?.remove();
   }
 
@@ -424,9 +424,10 @@ function initializeRichArticleContent(root: HTMLElement) {
       const body = item?.querySelector<HTMLElement>(".ca-faq-body, .faq-body");
       if (!item || !body) return;
 
-      const isOpen = item.classList.contains("is-open");
-      root.querySelectorAll<HTMLElement>(".ca-faq-item.is-open, .faq-item.is-open").forEach((openItem) => {
+      const isOpen = item.classList.contains("is-open") || item.classList.contains("open");
+      root.querySelectorAll<HTMLElement>(".ca-faq-item.is-open, .faq-item.is-open, .faq-item.open").forEach((openItem) => {
         openItem.classList.remove("is-open");
+        openItem.classList.remove("open");
         openItem.querySelector<HTMLButtonElement>(".ca-faq-btn, .faq-btn")?.setAttribute("aria-expanded", "false");
         const openBody = openItem.querySelector<HTMLElement>(".ca-faq-body, .faq-body");
         if (openBody) openBody.style.maxHeight = "0";
@@ -434,6 +435,7 @@ function initializeRichArticleContent(root: HTMLElement) {
 
       if (!isOpen) {
         item.classList.add("is-open");
+        item.classList.add("open");
         button.setAttribute("aria-expanded", "true");
         body.style.maxHeight = `${body.scrollHeight}px`;
       }
@@ -443,13 +445,14 @@ function initializeRichArticleContent(root: HTMLElement) {
     cleanups.push(() => button.removeEventListener("click", handleClick));
   });
 
-  const fadeElements = Array.from(root.querySelectorAll<HTMLElement>(".ca-fade, .fade-in"));
+  const fadeElements = Array.from(root.querySelectorAll<HTMLElement>(".ca-fade, .fade-in, .fade"));
   if ("IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
+            entry.target.classList.add("vis");
             observer.unobserve(entry.target);
           }
         });
@@ -460,7 +463,10 @@ function initializeRichArticleContent(root: HTMLElement) {
     fadeElements.forEach((element) => observer.observe(element));
     cleanups.push(() => observer.disconnect());
   } else {
-    fadeElements.forEach((element) => element.classList.add("is-visible"));
+    fadeElements.forEach((element) => {
+      element.classList.add("is-visible");
+      element.classList.add("vis");
+    });
   }
 
   return () => cleanups.forEach((cleanup) => cleanup());

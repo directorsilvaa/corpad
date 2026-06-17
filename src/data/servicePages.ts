@@ -11,6 +11,12 @@ export type ServicePageContent = {
     title: string;
     body: string;
   }>;
+  plans?: Array<{
+    name: string;
+    storage: string;
+    description: string;
+    features: string[];
+  }>;
   process: string[];
   faqs: Array<{
     question: string;
@@ -221,6 +227,112 @@ export const servicePages: ServicePageContent[] = [
         question: "A hospedagem tem suporte?",
         answer:
           "Sim. O serviço conta com orientação técnica para manter a estrutura funcionando com mais segurança.",
+      },
+    ],
+  },
+  {
+    slug: "e-mail-profissional",
+    navLabel: "e-Mail Profissional",
+    cardTitle: "e-Mail Profissional",
+    heroTitle: "e-Mail Profissional para empresas",
+    metaTitle: "e-Mail Profissional com Domínio Próprio | CORPAD Digital",
+    metaDescription:
+      "e-Mail profissional para empresas com domínio próprio, webmail, acesso em dispositivos, segurança, suporte e planos Standard, Profissional e Business.",
+    intro:
+      "O e-mail profissional fortalece a credibilidade da empresa em cada contato. Com contas no domínio da sua marca, acesso por webmail e configuração em dispositivos, sua comunicação fica mais organizada, confiável e preparada para o dia a dia corporativo.",
+    highlights: [
+      "Contas de e-mail com domínio da empresa",
+      "Acesso por webmail, celular e programas de e-mail",
+      "Compatibilidade com IMAP, POP e SMTP",
+      "Proteção antispam para reduzir mensagens indesejadas",
+      "Mais credibilidade em propostas, atendimento e relacionamento",
+      "Planos com armazenamento conforme a necessidade da equipe",
+      "Configuração orientada para uma implantação mais tranquila",
+      "Suporte técnico próximo para dúvidas e ajustes",
+    ],
+    sections: [
+      {
+        title: "Mais profissionalismo em cada mensagem",
+        body:
+          "Usar um e-mail com domínio próprio transmite mais confiança do que endereços genéricos. Sua equipe se comunica com identidade, padronização e uma presença mais séria diante de clientes, fornecedores e parceiros.",
+      },
+      {
+        title: "Acesso simples no dia a dia",
+        body:
+          "As contas podem ser acessadas pelo navegador, pelo celular ou por clientes de e-mail compatíveis. Isso facilita a rotina da equipe e mantém a comunicação disponível em diferentes dispositivos.",
+      },
+      {
+        title: "Segurança e organização",
+        body:
+          "Recursos como antispam, autenticação e configuração adequada ajudam a reduzir riscos, melhorar a entrega das mensagens e manter a caixa de entrada mais limpa para o trabalho diário.",
+      },
+    ],
+    plans: [
+      {
+        name: "Standard",
+        storage: "5GB",
+        description:
+          "Para contas essenciais de atendimento, contato institucional e equipes com uso moderado.",
+        features: [
+          "E-mail com domínio próprio",
+          "Webmail e configuração em dispositivos",
+          "Proteção antispam",
+          "Suporte para configuração inicial",
+        ],
+      },
+      {
+        name: "Profissional",
+        storage: "25GB",
+        description:
+          "Para equipes que trocam mais mensagens, recebem anexos com frequência e precisam de mais espaço.",
+        features: [
+          "Mais armazenamento por conta",
+          "Acesso por webmail, IMAP, POP e SMTP",
+          "Organização para uso corporativo diário",
+          "Orientação técnica para implantação",
+        ],
+      },
+      {
+        name: "Business",
+        storage: "50GB",
+        description:
+          "Para operações com alto volume de comunicação e necessidade de maior capacidade por caixa.",
+        features: [
+          "Maior capacidade de armazenamento",
+          "Estrutura indicada para uso intenso",
+          "Configuração em múltiplos dispositivos",
+          "Suporte técnico próximo para ajustes",
+        ],
+      },
+    ],
+    process: [
+      "Levantamento do domínio, contas necessárias e perfil de uso",
+      "Escolha dos planos Standard, Profissional ou Business",
+      "Configuração técnica das contas e registros necessários",
+      "Orientação para acesso por webmail, celular ou cliente de e-mail",
+      "Testes de envio, recebimento e ajustes finais",
+      "Suporte para dúvidas após a implantação",
+    ],
+    faqs: [
+      {
+        question: "O e-mail usa o domínio da minha empresa?",
+        answer:
+          "Sim. As contas são configuradas com o domínio da empresa, como contato@suaempresa.com.br.",
+      },
+      {
+        question: "Quais são os planos disponíveis?",
+        answer:
+          "Os planos são Standard com 5GB, Profissional com 25GB e Business com 50GB, nessa ordem.",
+      },
+      {
+        question: "Posso acessar pelo celular?",
+        answer:
+          "Sim. O e-mail pode ser configurado em celulares, webmail e clientes compatíveis com protocolos como IMAP, POP e SMTP.",
+      },
+      {
+        question: "O serviço inclui suporte?",
+        answer:
+          "Sim. A CORPAD Digital oferece orientação técnica para configuração, testes e ajustes necessários na implantação.",
       },
     ],
   },

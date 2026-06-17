@@ -37,6 +37,7 @@ const serviceWhatsappMessages: Record<string, string> = {
   "criacao-de-sites": "Ola, tudo bem? Acessei a pagina de Criacao de Sites da CORPAD Digital e gostaria de conversar sobre um site profissional para minha empresa.",
   "e-commerce": "Ola, tudo bem? Acessei a pagina de E-commerce da CORPAD Digital e gostaria de entender como criar uma loja virtual para minha empresa.",
   "hospedagem-de-sites": "Ola, tudo bem? Acessei a pagina de Hospedagem de Sites da CORPAD Digital e gostaria de saber mais sobre hospedagem segura e de alta performance.",
+  "e-mail-profissional": "Ola, tudo bem? Acessei a pagina de e-Mail Profissional da CORPAD Digital e gostaria de conhecer os planos para minha empresa.",
   "marketing-digital": "Ola, tudo bem? Acessei a pagina de Marketing Digital da CORPAD Digital e gostaria de conhecer estrategias para fortalecer minha empresa.",
   "trafego-pago": "Ola, tudo bem? Acessei a pagina de Trafego Pago da CORPAD Digital e gostaria de conversar sobre campanhas para atrair mais clientes.",
   automacao: "Ola, tudo bem? Acessei a pagina de Automacao da CORPAD Digital e gostaria de entender como automatizar processos na minha empresa.",
@@ -278,6 +279,37 @@ export default function ServicePage({ service }: ServicePageProps) {
         </section>
       ) : null}
 
+      {service.plans ? (
+        <section className="service-page-plans" aria-labelledby="service-plans-title">
+          <div className="section-copy centered-copy">
+            <span className="section-kicker">Planos</span>
+            <h2 id="service-plans-title">Escolha o plano ideal para sua equipe</h2>
+            <p>
+              Comece com a capacidade certa para sua rotina e evolua conforme o
+              volume de mensagens da empresa crescer.
+            </p>
+          </div>
+
+          <div className="service-plan-grid">
+            {service.plans.map((plan) => (
+              <article className="service-plan-card" key={plan.name}>
+                <span>{plan.name}</span>
+                <strong>{plan.storage}</strong>
+                <p>{plan.description}</p>
+                <ul>
+                  {plan.features.map((feature) => (
+                    <li key={feature}>
+                      <Check size={15} strokeWidth={3} />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       {isWebsiteCreation ? <WebsiteCreationShowcase /> : null}
 
       {isWebsiteCreation ? (
@@ -321,10 +353,15 @@ export default function ServicePage({ service }: ServicePageProps) {
       <section className="service-page-process">
         <div className="section-copy">
           <span className="section-kicker">Como funciona</span>
-          <h2>Como tiramos seu site do papel?</h2>
+          <h2>
+            {service.slug === "e-mail-profissional"
+              ? "Como implantamos seu e-mail profissional?"
+              : "Como tiramos seu site do papel?"}
+          </h2>
           <p>
-            Um processo simples, com direção clara do planejamento até a
-            publicação.
+            {service.slug === "e-mail-profissional"
+              ? "Um processo simples para configurar as contas, orientar acessos e deixar sua comunicação pronta para operar."
+              : "Um processo simples, com direção clara do planejamento até a publicação."}
           </p>
           <a className="process-cta" href={serviceWhatsappUrl} target="_blank" rel="noreferrer">
             Começar agora <ArrowUpRight size={15} />
