@@ -237,17 +237,19 @@ export const servicePages: ServicePageContent[] = [
     heroTitle: "e-Mail Profissional para empresas",
     metaTitle: "e-Mail Profissional com Domínio Próprio | CORPAD Digital",
     metaDescription:
-      "e-Mail profissional para empresas com domínio próprio, webmail, acesso em dispositivos, segurança, suporte e planos Standard, Profissional e Business.",
+      "e-Mail profissional Zimbra para empresas com domínio próprio, webmail, 2FA, antispam, LGPD, alta disponibilidade e planos Standard, Profissional e Business.",
     intro:
-      "O e-mail profissional fortalece a credibilidade da empresa em cada contato. Com contas no domínio da sua marca, acesso por webmail e configuração em dispositivos, sua comunicação fica mais organizada, confiável e preparada para o dia a dia corporativo.",
+      "O e-mail profissional fortalece a credibilidade da empresa em cada contato. Com contas no domínio da sua marca, plataforma Zimbra, webmail, segurança e configuração em dispositivos, sua comunicação fica mais organizada, confiável e preparada para o dia a dia corporativo.",
     highlights: [
       "Contas de e-mail com domínio da empresa",
+      "Plataforma Zimbra de e-mail e colaboração",
       "Acesso por webmail, celular e programas de e-mail",
       "Compatibilidade com IMAP, POP e SMTP",
-      "Proteção antispam para reduzir mensagens indesejadas",
+      "Antispam de borda para reduzir mensagens indesejadas",
+      "Habilitação de 2FA para reforçar o acesso",
+      "99,9% de disponibilidade para a operação",
+      "Compliance com LGPD e certificação ISO 27001",
       "Mais credibilidade em propostas, atendimento e relacionamento",
-      "Planos com armazenamento conforme a necessidade da equipe",
-      "Configuração orientada para uma implantação mais tranquila",
       "Suporte técnico próximo para dúvidas e ajustes",
     ],
     sections: [
@@ -262,9 +264,14 @@ export const servicePages: ServicePageContent[] = [
           "As contas podem ser acessadas pelo navegador, pelo celular ou por clientes de e-mail compatíveis. Isso facilita a rotina da equipe e mantém a comunicação disponível em diferentes dispositivos.",
       },
       {
+        title: "Plataforma Zimbra para empresas",
+        body:
+          "A solução usa estrutura licenciada Zimbra NE, uma plataforma global de e-mail e colaboração usada por milhões de pessoas. Isso entrega uma experiência corporativa mais estável, familiar e preparada para equipes que dependem do e-mail todos os dias.",
+      },
+      {
         title: "Segurança e organização",
         body:
-          "Recursos como antispam, autenticação e configuração adequada ajudam a reduzir riscos, melhorar a entrega das mensagens e manter a caixa de entrada mais limpa para o trabalho diário.",
+          "Recursos como antispam de borda, autenticação, 2FA, controle de acesso por horário, compliance com LGPD e certificação ISO 27001 ajudam a reduzir riscos e manter a caixa de entrada mais protegida.",
       },
     ],
     plans: [
@@ -276,7 +283,7 @@ export const servicePages: ServicePageContent[] = [
         features: [
           "E-mail com domínio próprio",
           "Webmail e configuração em dispositivos",
-          "Proteção antispam",
+          "Antispam de borda",
           "Suporte para configuração inicial",
         ],
       },
@@ -288,6 +295,7 @@ export const servicePages: ServicePageContent[] = [
         features: [
           "Mais armazenamento por conta",
           "Acesso por webmail, IMAP, POP e SMTP",
+          "Habilitação de 2FA",
           "Organização para uso corporativo diário",
           "Orientação técnica para implantação",
         ],
@@ -300,6 +308,8 @@ export const servicePages: ServicePageContent[] = [
         features: [
           "Maior capacidade de armazenamento",
           "Estrutura indicada para uso intenso",
+          "99,9% de disponibilidade",
+          "Controle de acesso por horário",
           "Configuração em múltiplos dispositivos",
           "Suporte técnico próximo para ajustes",
         ],
@@ -309,6 +319,7 @@ export const servicePages: ServicePageContent[] = [
       "Levantamento do domínio, contas necessárias e perfil de uso",
       "Escolha dos planos Standard, Profissional ou Business",
       "Configuração técnica das contas e registros necessários",
+      "Ativação de recursos de segurança, antispam e autenticação",
       "Orientação para acesso por webmail, celular ou cliente de e-mail",
       "Testes de envio, recebimento e ajustes finais",
       "Suporte para dúvidas após a implantação",
@@ -333,6 +344,16 @@ export const servicePages: ServicePageContent[] = [
         question: "O serviço inclui suporte?",
         answer:
           "Sim. A CORPAD Digital oferece orientação técnica para configuração, testes e ajustes necessários na implantação.",
+      },
+      {
+        question: "O e-mail profissional usa Zimbra?",
+        answer:
+          "Sim. A estrutura pode operar com Zimbra NE, oferecendo webmail, recursos corporativos, estabilidade e acesso por dispositivos compatíveis.",
+      },
+      {
+        question: "A estrutura tem recursos de segurança?",
+        answer:
+          "Sim. A solução contempla recursos como antispam de borda, autenticação, 2FA, controle de acesso e boas práticas de conformidade com LGPD.",
       },
     ],
   },
