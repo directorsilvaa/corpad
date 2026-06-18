@@ -29390,36 +29390,28 @@ h1 em {
   max-width: 100%;
 }
 
-.blog-clean-page .blog-article-content-html .corpad-shadow-article .faq-item,
-.blog-clean-page .blog-article-content-html .corpad-article .faq-item,
-.blog-clean-page .blog-article-content-html .article-body .faq-item {
-  position: relative;
-  display: block;
-  grid-template-columns: none;
-  min-height: 0;
-  padding: 0;
-  overflow: hidden;
+.blog-clean-page .blog-article-content-html .faq-item {
+  position: relative !important;
+  display: block !important;
+  grid-template-columns: none !important;
+  gap: 0 !important;
+  align-items: stretch !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
 }
 
-.blog-clean-page .blog-article-content-html .corpad-shadow-article .faq-item::before,
-.blog-clean-page .blog-article-content-html .corpad-shadow-article .faq-item::after,
-.blog-clean-page .blog-article-content-html .corpad-article .faq-item::before,
-.blog-clean-page .blog-article-content-html .corpad-article .faq-item::after,
-.blog-clean-page .blog-article-content-html .article-body .faq-item::before,
-.blog-clean-page .blog-article-content-html .article-body .faq-item::after {
-  display: none;
+.blog-clean-page .blog-article-content-html .faq-item::before,
+.blog-clean-page .blog-article-content-html .faq-item::after {
+  display: none !important;
 }
 
-.blog-clean-page .blog-article-content-html .corpad-shadow-article .faq-btn,
-.blog-clean-page .blog-article-content-html .corpad-article .faq-btn,
-.blog-clean-page .blog-article-content-html .article-body .faq-btn {
-  width: 100%;
+.blog-clean-page .blog-article-content-html .faq-btn {
+  width: 100% !important;
 }
 
-.blog-clean-page .blog-article-content-html .corpad-shadow-article .faq-body,
-.blog-clean-page .blog-article-content-html .corpad-article .faq-body,
-.blog-clean-page .blog-article-content-html .article-body .faq-body {
-  display: block;
+.blog-clean-page .blog-article-content-html .faq-body {
+  display: block !important;
   max-height: 0;
 }
 
