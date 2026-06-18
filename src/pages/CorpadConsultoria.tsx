@@ -204,7 +204,7 @@ export default function CorpadConsultoria() {
         <a className="consulting-topbar-brand" href="#top" aria-label="Pagina inicial">
           <Image
             className="consulting-topbar-logo"
-            src="/logo.png"
+            src="/logo.png?v=20260618"
             alt="CORPAD"
             width={1500}
             height={390}

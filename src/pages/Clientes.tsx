@@ -28,7 +28,7 @@ export default function ClientesPage() {
         <a className="brand" href="/corpad-digital" aria-label="Página inicial">
           <Image
             className="brand-logo"
-            src="/logo.png"
+            src="/logo.png?v=20260618"
             alt="Logo CORPAD"
             width={1500}
             height={390}
@@ -76,7 +76,7 @@ export default function ClientesPage() {
         <div className="clients-proof-card" aria-label="Resumo de clientes">
           <Image
             className="clients-proof-logo"
-            src="/logo.png"
+            src="/logo.png?v=20260618"
             alt="Logo CORPAD"
             width={1500}
             height={390}

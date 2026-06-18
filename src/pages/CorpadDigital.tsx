@@ -255,7 +255,7 @@ export default function CorpadPage() {
         <a className="brand" href="#" aria-label="Página inicial">
           <Image
             className="brand-logo"
-            src="/logo.png"
+            src="/logo.png?v=20260618"
             alt="Logo"
             width={300}
             height={78}

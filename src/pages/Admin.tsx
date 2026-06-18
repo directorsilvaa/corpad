@@ -599,7 +599,7 @@ export default function AdminPage() {
       <main className="admin-page admin-login-page">
         <section className="admin-login-panel">
           <span className="admin-login-logo" aria-label="CORPAD">
-            <img src="/logo-admin.png" alt="" />
+            <img src="/logo-admin.png?v=20260618" alt="" />
           </span>
 
           <form onSubmit={handleLogin}>
@@ -648,7 +648,7 @@ export default function AdminPage() {
           <span />
         </div>
         <a className="admin-brand" href="/">
-          <img src="/logo-admin.png" alt="CORPAD" />
+          <img src="/logo-admin.png?v=20260618" alt="CORPAD" />
         </a>
         <span className="admin-nav-label">Painel</span>
         <nav>

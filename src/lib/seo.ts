@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 export const SITE_URL = "https://corpad.com.br";
 export const SITE_NAME = "CORPAD";
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.png`;
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.png?v=20260618`;
 
 type JsonLd = Record<string, unknown> | Array<Record<string, unknown>>;
 

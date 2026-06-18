@@ -36,7 +36,7 @@ export default function Home() {
 
       <a className="gateway-home-brand" href="/" aria-label="Pagina inicial">
         <Image
-          src="/logo.png"
+          src="/logo.png?v=20260618"
           alt="CORPAD"
           width={300}
           height={78}

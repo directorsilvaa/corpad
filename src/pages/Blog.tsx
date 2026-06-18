@@ -503,7 +503,7 @@ export default function BlogPage() {
           headline: activePost.metaTitle || getArticleDisplayTitle(activePost),
           description: seoDescription,
           url: `https://corpad.com.br${seoPath}`,
-          image: activePost.coverImage || "https://corpad.com.br/logo.png",
+          image: activePost.coverImage || "https://corpad.com.br/logo.png?v=20260618",
           author: {
             "@type": "Organization",
             name: activePost.authorName || "CORPAD Digital",
@@ -881,8 +881,8 @@ function BlogNavbar() {
       <a className="brand" href="/" aria-label="Pagina inicial">
         <Image
           className="brand-logo"
-          src="/logo-light.png"
-          srcSet="/logo-light-180.png 180w, /logo-light-300.png 300w, /logo-light-600.png 600w, /logo-light.png 1500w"
+          src="/logo-light.png?v=20260618"
+          srcSet="/logo-light-180.png?v=20260618 180w, /logo-light-300.png?v=20260618 300w, /logo-light-600.png?v=20260618 600w, /logo-light.png?v=20260618 1500w"
           sizes="(max-width: 620px) 142px, 249px"
           alt="Logo CORPAD"
           width={1500}

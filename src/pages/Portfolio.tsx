@@ -52,7 +52,7 @@ export default function PortfolioPage() {
         <a className="brand" href="/corpad-digital" aria-label="Página inicial">
           <Image
             className="brand-logo"
-            src="/logo.png"
+            src="/logo.png?v=20260618"
             alt="Logo CORPAD"
             width={1500}
             height={390}

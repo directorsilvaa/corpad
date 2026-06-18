@@ -313,7 +313,7 @@ export default function TermsOfUsePage() {
         <a className="brand" href="/" aria-label="Pagina inicial">
           <Image
             className="brand-logo"
-            src="/logo.png"
+            src="/logo.png?v=20260618"
             alt="Logo CORPAD"
             width={1500}
             height={390}
