@@ -419,6 +419,16 @@ function renderArticleContent(post: BlogPost, options: { removeEmbeddedTitle?: b
 function initializeRichArticleContent(root: HTMLElement) {
   const cleanups: Array<() => void> = [];
 
+  root.querySelectorAll<HTMLElement>(".ca-faq-item, .faq-item").forEach((item) => {
+    const button = item.querySelector<HTMLButtonElement>(".ca-faq-btn, .faq-btn");
+    const body = item.querySelector<HTMLElement>(".ca-faq-body, .faq-body");
+
+    item.classList.remove("is-open");
+    item.classList.remove("open");
+    button?.setAttribute("aria-expanded", "false");
+    if (body) body.style.maxHeight = "0";
+  });
+
   root.querySelectorAll<HTMLButtonElement>(".ca-faq-btn, .faq-btn").forEach((button) => {
     const handleClick = () => {
       const item = button.closest<HTMLElement>(".ca-faq-item, .faq-item");

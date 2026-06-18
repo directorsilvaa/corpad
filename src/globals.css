@@ -29390,6 +29390,39 @@ h1 em {
   max-width: 100%;
 }
 
+.blog-clean-page .blog-article-content-html .corpad-shadow-article .faq-item,
+.blog-clean-page .blog-article-content-html .corpad-article .faq-item,
+.blog-clean-page .blog-article-content-html .article-body .faq-item {
+  position: relative;
+  display: block;
+  grid-template-columns: none;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.blog-clean-page .blog-article-content-html .corpad-shadow-article .faq-item::before,
+.blog-clean-page .blog-article-content-html .corpad-shadow-article .faq-item::after,
+.blog-clean-page .blog-article-content-html .corpad-article .faq-item::before,
+.blog-clean-page .blog-article-content-html .corpad-article .faq-item::after,
+.blog-clean-page .blog-article-content-html .article-body .faq-item::before,
+.blog-clean-page .blog-article-content-html .article-body .faq-item::after {
+  display: none;
+}
+
+.blog-clean-page .blog-article-content-html .corpad-shadow-article .faq-btn,
+.blog-clean-page .blog-article-content-html .corpad-article .faq-btn,
+.blog-clean-page .blog-article-content-html .article-body .faq-btn {
+  width: 100%;
+}
+
+.blog-clean-page .blog-article-content-html .corpad-shadow-article .faq-body,
+.blog-clean-page .blog-article-content-html .corpad-article .faq-body,
+.blog-clean-page .blog-article-content-html .article-body .faq-body {
+  display: block;
+  max-height: 0;
+}
+
 .blog-clean-page .blog-article-author {
   grid-template-columns: 74px minmax(0, 1fr);
   width: min(740px, 100%);
