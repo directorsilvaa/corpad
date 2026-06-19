@@ -6,6 +6,14 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap.xml"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/api/blog/:slug"
+    },
+    {
       "source": "/(.*)",
       "destination": "/"
     }

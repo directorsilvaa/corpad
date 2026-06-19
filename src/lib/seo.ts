@@ -12,6 +12,14 @@ type SeoOptions = {
   path?: string;
   image?: string;
   type?: "website" | "article";
+  keywords?: string[];
+  article?: {
+    author?: string;
+    section?: string;
+    publishedTime?: string | null;
+    modifiedTime?: string | null;
+    tags?: string[];
+  };
   jsonLd?: JsonLd;
   noindex?: boolean;
 };
@@ -62,6 +70,10 @@ function upsertJsonLd(id: string, data: JsonLd) {
   element.textContent = JSON.stringify(data);
 }
 
+function removeMeta(selector: string) {
+  document.head.querySelectorAll(selector).forEach((element) => element.remove());
+}
+
 export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
@@ -77,6 +89,32 @@ export function organizationJsonLd() {
       contactType: "customer service",
       availableLanguage: "Portuguese",
     },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Monte Alto",
+      addressRegion: "SP",
+      addressCountry: "BR",
+    },
+    areaServed: [
+      {
+        "@type": "Country",
+        name: "Brasil",
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Sao Paulo",
+      },
+    ],
+    knowsAbout: [
+      "criacao de sites",
+      "marketing digital",
+      "trafego pago",
+      "automacao de processos",
+      "consultoria empresarial",
+      "infraestrutura em nuvem",
+      "e-mail profissional",
+      "SEO",
+    ],
   };
 }
 
@@ -101,6 +139,8 @@ export function usePageSeo({
   path = window.location.pathname,
   image = DEFAULT_OG_IMAGE,
   type = "website",
+  keywords = [],
+  article,
   jsonLd,
   noindex,
 }: SeoOptions) {
@@ -120,8 +160,51 @@ export function usePageSeo({
     upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: title });
     upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: description });
     upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: imageUrl });
+    upsertMeta('meta[name="geo.region"]', { name: "geo.region", content: "BR-SP" });
+    upsertMeta('meta[name="geo.placename"]', { name: "geo.placename", content: "Monte Alto, Sao Paulo, Brasil" });
+    upsertMeta('meta[name="geo.position"]', { name: "geo.position", content: "-21.2616;-48.4969" });
+    upsertMeta('meta[name="ICBM"]', { name: "ICBM", content: "-21.2616, -48.4969" });
     upsertLink("canonical", url);
     upsertJsonLd("corpad-organization-jsonld", organizationJsonLd());
+
+    if (keywords.length > 0) {
+      upsertMeta('meta[name="keywords"]', { name: "keywords", content: keywords.join(", ") });
+    } else {
+      removeMeta('meta[name="keywords"]');
+    }
+
+    removeMeta('meta[property^="article:"]');
+
+    if (type === "article" && article) {
+      if (article.publishedTime) {
+        upsertMeta('meta[property="article:published_time"]', {
+          property: "article:published_time",
+          content: article.publishedTime,
+        });
+      }
+
+      if (article.modifiedTime) {
+        upsertMeta('meta[property="article:modified_time"]', {
+          property: "article:modified_time",
+          content: article.modifiedTime,
+        });
+      }
+
+      if (article.author) {
+        upsertMeta('meta[property="article:author"]', { property: "article:author", content: article.author });
+      }
+
+      if (article.section) {
+        upsertMeta('meta[property="article:section"]', { property: "article:section", content: article.section });
+      }
+
+      (article.tags ?? []).forEach((tag) => {
+        const element = document.createElement("meta");
+        element.setAttribute("property", "article:tag");
+        element.setAttribute("content", tag);
+        document.head.appendChild(element);
+      });
+    }
 
     if (jsonLd) {
       upsertJsonLd("corpad-page-jsonld", jsonLd);
@@ -138,5 +221,5 @@ export function usePageSeo({
       const robots = document.head.querySelector('meta[name="robots"]');
       robots?.remove();
     }
-  }, [description, image, jsonLd, noindex, path, title, type]);
+  }, [article, description, image, jsonLd, keywords, noindex, path, title, type]);
 }

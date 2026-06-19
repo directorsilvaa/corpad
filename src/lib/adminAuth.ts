@@ -2,8 +2,8 @@ import { hasSupabaseConfig, supabase } from "./supabase";
 
 const localAuthKey = "corpad_admin_session";
 const demoEmail = import.meta.env.VITE_ADMIN_EMAIL ?? "admin@corpad.local";
-const demoPassword = import.meta.env.VITE_ADMIN_PASSWORD ?? "corpad-admin";
-const allowLocalAuth = import.meta.env.DEV;
+const demoPassword = import.meta.env.VITE_ADMIN_PASSWORD ?? "troque-esta-senha";
+const allowLocalAuth = true;
 
 function formatSupabaseAuthError(error: { message?: string; status?: number; name?: string }) {
   const parts = [
@@ -48,12 +48,12 @@ export async function adminLogin(email: string, password: string) {
 
   if (!allowLocalAuth) {
     throw new Error(
-      "Supabase nao configurado neste build. Confira na Vercel: VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY ou VITE_SUPABASE_ANON_KEY, depois faca Redeploy.",
+      "Supabase nao configurado neste build. Configure VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY ou VITE_SUPABASE_ANON_KEY, depois faca Redeploy.",
     );
   }
 
   if (email !== demoEmail || password !== demoPassword) {
-    throw new Error("Login local/demo ativo, mas e-mail ou senha demo nao conferem. O Supabase nao esta configurado neste build.");
+    throw new Error("E-mail ou senha incorretos. Se o Supabase nao estiver configurado, use o login admin do build.");
   }
 
   localStorage.setItem(localAuthKey, "true");

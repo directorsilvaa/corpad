@@ -350,6 +350,9 @@ export default function ServicePage({ service }: ServicePageProps) {
       {isMarketingDigital ? <MarketingProcessSection process={service.process} /> : null}
 
       {!isMarketingDigital ? (
+        service.slug === "e-mail-profissional" ? (
+          <EmailImplementationTimeline process={service.process} whatsappUrl={serviceWhatsappUrl} />
+        ) : (
       <section className="service-page-process">
         <div className="section-copy">
           <span className="section-kicker">Como funciona</span>
@@ -377,6 +380,7 @@ export default function ServicePage({ service }: ServicePageProps) {
           ))}
         </ol>
       </section>
+        )
       ) : null}
 
       <section className="service-page-faq">
@@ -412,6 +416,37 @@ export default function ServicePage({ service }: ServicePageProps) {
         links={footerServiceLinks}
       />
     </main>
+  );
+}
+
+function EmailImplementationTimeline({ process, whatsappUrl }: { process: string[]; whatsappUrl: string }) {
+  return (
+    <section className="email-implementation-section" aria-labelledby="email-implementation-title">
+      <div className="email-implementation-copy">
+        <span className="section-kicker">Como funciona</span>
+        <h2 id="email-implementation-title">Como implantamos seu e-mail profissional?</h2>
+        <p>
+          Um percurso claro para mapear contas, configurar registros, validar acessos e deixar a comunicacao pronta para operar.
+        </p>
+        <a className="process-cta" href={whatsappUrl} target="_blank" rel="noreferrer">
+          Comecar agora <ArrowUpRight size={15} />
+        </a>
+      </div>
+
+      <ol className="email-implementation-timeline">
+        {process.map((step, index) => (
+          <li
+            className="email-implementation-step"
+            key={step}
+            style={{ "--step-index": index } as CSSProperties}
+          >
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <strong>{step}</strong>
+            <MoveUpRight size={18} strokeWidth={2.8} aria-hidden="true" />
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }
 

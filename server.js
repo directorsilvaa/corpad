@@ -2,6 +2,8 @@ import fs from "fs";
 import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import { getBlogPostForHead, injectBlogArticlePage } from "./lib/blogHead.js";
+import { generateSitemapXml } from "./lib/sitemap.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,7 +61,7 @@ function getStaticPath(urlPathname) {
   return requestedPath;
 }
 
-const server = http.createServer((request, response) => {
+const server = http.createServer(async (request, response) => {
   const host = request.headers.host || "";
   const requestUrl = new URL(request.url || "/", `http://${host}`);
 
@@ -68,6 +70,42 @@ const server = http.createServer((request, response) => {
       Location: `https://corpad.com.br${requestUrl.pathname}${requestUrl.search}`,
     });
     response.end();
+    return;
+  }
+
+  if (requestUrl.pathname === "/sitemap.xml") {
+    try {
+      const xml = await generateSitemapXml();
+
+      response.writeHead(200, {
+        "Content-Type": "application/xml; charset=utf-8",
+        "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
+      });
+      response.end(xml);
+    } catch (error) {
+      console.error("Failed to generate sitemap.xml", error);
+      response.writeHead(500);
+      response.end("Internal Server Error");
+    }
+    return;
+  }
+
+  if (requestUrl.pathname.startsWith("/blog/")) {
+    try {
+      const slug = requestUrl.pathname.replace(/^\/blog\/|\/+$/g, "");
+      const post = await getBlogPostForHead(slug);
+      const html = post ? injectBlogArticlePage(fs.readFileSync(indexPath, "utf8"), post) : fs.readFileSync(indexPath, "utf8");
+
+      response.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
+      });
+      response.end(html);
+    } catch (error) {
+      console.error("Failed to render blog article head", error);
+      response.setHeader("Cache-Control", "no-store");
+      sendFile(response, indexPath, "no-store");
+    }
     return;
   }
 

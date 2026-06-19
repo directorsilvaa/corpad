@@ -158,9 +158,23 @@ function isHtmlArticle(text: string) {
 }
 
 function extractShadowDomTemplate(text: string) {
-  const match = text.match(/\broot\.innerHTML\s*=\s*`([\s\S]*?)`\s*;/);
+  const assignmentIndex = text.search(/\broot\.innerHTML\s*=\s*`/);
 
-  return match?.[1]?.trim() ?? "";
+  if (assignmentIndex === -1) {
+    return "";
+  }
+
+  const templateStart = text.indexOf("`", assignmentIndex);
+  if (templateStart === -1) {
+    return "";
+  }
+
+  const templateEnd = text.indexOf("`;", templateStart + 1);
+  if (templateEnd === -1) {
+    return "";
+  }
+
+  return text.slice(templateStart + 1, templateEnd).trim();
 }
 
 function findMatchingBrace(value: string, openIndex: number) {

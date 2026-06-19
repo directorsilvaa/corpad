@@ -101,6 +101,10 @@ function getReadingTime(content: string) {
   return Math.max(1, Math.ceil(words / 180));
 }
 
+function getWordCount(content: string) {
+  return stripHtmlForSummary(content).trim().split(/\s+/).filter(Boolean).length;
+}
+
 function formatPostDate(value: string | null) {
   if (!value) return "Novo artigo";
 
@@ -504,6 +508,7 @@ export default function BlogPage() {
   const seoPath = activePost ? `/blog/${activePost.slug}` : "/blog";
   const activePostFaqs = useMemo(() => (activePost ? extractFaqsFromContent(activePost) : []), [activePost]);
   const activePostKeywords = activePost ? getPostKeywords(activePost) : [];
+  const activePostTags = activePost ? [activePost.category, ...activePostKeywords].filter(Boolean) : [];
   const activePostHasEmbeddedHeader = activePost ? hasEmbeddedArticleHeader(activePost.content) : false;
   const pageJsonLd = activePost
     ? [
@@ -522,6 +527,9 @@ export default function BlogPage() {
           datePublished: activePost.publishedAt ?? activePost.createdAt,
           dateModified: activePost.updatedAt,
           inLanguage: "pt-BR",
+          articleSection: activePost.category,
+          wordCount: getWordCount(activePost.content),
+          timeRequired: `PT${getReadingTime(activePost.content)}M`,
           keywords: activePostKeywords,
           about: activePostKeywords.map((keyword) => ({
             "@type": "Thing",
@@ -534,6 +542,14 @@ export default function BlogPage() {
               url: "https://corpad.com.br",
             },
           ],
+          mainEntity: {
+            "@type": "Thing",
+            name: activePost.keyword || activePost.category || getArticleDisplayTitle(activePost),
+          },
+          speakable: {
+            "@type": "SpeakableSpecification",
+            cssSelector: [".blog-article h1", ".blog-article > p"],
+          },
           isPartOf: {
             "@type": "Blog",
             name: "Blog CORPAD",
@@ -558,6 +574,16 @@ export default function BlogPage() {
     path: seoPath,
     image: activePost?.coverImage || undefined,
     type: activePost ? "article" : "website",
+    keywords: activePost ? activePostKeywords : undefined,
+    article: activePost
+      ? {
+          author: activePost.authorName || "CORPAD Digital",
+          section: activePost.category,
+          publishedTime: activePost.publishedAt ?? activePost.createdAt,
+          modifiedTime: activePost.updatedAt,
+          tags: activePostTags,
+        }
+      : undefined,
     jsonLd: pageJsonLd,
   });
 

@@ -1,0 +1,485 @@
+<!-- ════════════════════════════════════════════════════════════
+     ARTIGO CORPAD — E-MAIL PROFISSIONAL
+     Renderizado dentro de Shadow DOM: o CSS do site NÃO atravessa
+     esta barreira, então não há mais ícones gigantes, caixas
+     escuras ou espaços vazios. Basta colar este bloco no editor.
+═════════════════════════════════════════════════════════════ -->
+
+<div id="corpad-email-article"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var host = document.getElementById('corpad-email-article');
+  if (!host) return;
+
+  // Shadow DOM isola o conteúdo do CSS externo
+  var root = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
+
+  root.innerHTML = `
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :host, * { box-sizing: border-box; }
+
+  .wrap {
+    --teal: #1AAFC0;
+    --teal-dark: #0E8A99;
+    --teal-light: #E6F7FA;
+    --teal-mid: #9DDDE7;
+    --dark: #1A2332;
+    --body: #374151;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --surface: #F8FAFC;
+    font-family: 'Inter', sans-serif;
+    font-size: 17px;
+    line-height: 1.78;
+    color: var(--body);
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .wrap p { margin: 0 0 22px; color: var(--body); }
+  .wrap strong { font-weight: 600; color: var(--dark); }
+  .wrap a { color: var(--teal-dark); text-decoration: underline; text-underline-offset: 3px; }
+  .wrap a:hover { color: var(--teal); }
+
+  h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(28px, 4vw, 38px);
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    margin: 0 0 16px;
+  }
+  h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    margin: 40px 0 16px;
+    padding-left: 16px;
+    border-left: 3px solid var(--teal);
+  }
+  h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--dark);
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-weight: 400;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--teal-light);
+  }
+  .meta-item { display: flex; align-items: center; gap: 6px; }
+  .meta-item svg { width: 15px; height: 15px; color: var(--teal); flex-shrink: 0; }
+
+  .intro {
+    background: var(--teal-light);
+    border-left: 4px solid var(--teal);
+    border-radius: 0 10px 10px 0;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+  }
+  .intro p { margin-bottom: 12px; }
+  .intro p:last-child { margin-bottom: 0; }
+
+  .checklist { list-style: none; padding: 0; margin: 16px 0 24px; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #FEE2E2;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .check-icon svg { width: 11px; height: 11px; }
+
+  .steps { margin: 24px 0 32px; }
+  .step {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .step-body h3 { margin: 0 0 6px; }
+  .step-body p { margin: 0; font-size: 15px; }
+
+  .table-wrap {
+    overflow-x: auto;
+    margin: 24px 0 32px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  thead th {
+    background: var(--dark);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600; font-size: 14px;
+    padding: 12px 16px;
+    text-align: left;
+  }
+  thead th.pro { background: var(--teal); }
+  tbody tr:nth-child(even) { background: var(--surface); }
+  tbody tr:nth-child(odd) { background: #fff; }
+  tbody td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tbody td:first-child {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600; font-size: 14px;
+    color: var(--dark);
+  }
+  .col-free { color: var(--muted); }
+  .col-pro { color: var(--teal-dark); font-weight: 500; }
+
+  .cards { margin: 24px 0; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .card h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h3 svg { width: 18px; height: 18px; color: var(--teal); flex-shrink: 0; }
+  .card p { margin: 0; font-size: 15px; }
+
+  .faq { margin: 24px 0 32px; }
+  .faq-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .faq-item.open { border-color: var(--teal-mid); }
+  .faq-btn {
+    width: 100%;
+    background: #fff;
+    border: none;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--dark);
+    text-align: left;
+    line-height: 1.4;
+    transition: background 0.15s;
+  }
+  .faq-btn:hover { background: var(--surface); }
+  .faq-item.open .faq-btn { background: var(--teal-light); color: var(--teal-dark); }
+  .faq-icon {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .faq-icon svg { width: 10px; height: 10px; transition: transform 0.3s; stroke: var(--dark); }
+  .faq-item.open .faq-icon { background: var(--teal); }
+  .faq-item.open .faq-icon svg { transform: rotate(45deg); stroke: #fff; }
+  .faq-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; background: #fff; }
+  .faq-inner { padding: 0 20px 18px; font-size: 15px; line-height: 1.72; color: var(--body); }
+
+  .fade { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .fade.vis { opacity: 1; transform: none; }
+
+  @media (max-width: 600px) {
+    h2 { font-size: 21px; }
+    table { font-size: 14px; }
+    thead th, tbody td { padding: 10px 12px; }
+  }
+</style>
+
+<div class="wrap">
+
+  <span class="tag fade">E-mail Profissional</span>
+
+  <h1 class="fade">E-mail Corporativo: por que o &#64;gmail Prejudica a Credibilidade da Sua Empresa</h1>
+
+  <p class="subtitle fade">Usar e-mail genérico nas comunicações empresariais mina sua reputação antes mesmo de o cliente abrir a mensagem. Entenda o que diferencia um e-mail profissional de verdade — e por que SPF, DKIM e DMARC importam tanto quanto o domínio próprio.</p>
+
+  <div class="meta fade">
+    <span class="meta-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      17 de junho de 2026
+    </span>
+    <span class="meta-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      7 min de leitura
+    </span>
+    <span class="meta-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      CORPAD Digital
+    </span>
+  </div>
+
+  <div class="intro fade">
+    <p>A CORPAD Digital é uma agência digital brasileira especializada em presença online para empresas. Entre os serviços que oferecemos está a Hospedagem de E-mail Profissional — a solução para empresas que querem se comunicar com credibilidade, segurança e alta taxa de entrega.</p>
+    <p>Neste artigo, nossa equipe explica por que usar um e-mail genérico como &#64;gmail ou &#64;outlook pode estar custando negócios para a sua empresa — e o que compõe um e-mail profissional de verdade, além do endereço com domínio próprio.</p>
+  </div>
+
+  <h2 class="fade">O que é um E-mail Profissional</h2>
+  <p class="fade">E-mail profissional é um endereço vinculado ao domínio próprio da empresa — como <strong>contato&#64;suaempresa.com.br</strong> — hospedado em servidor dedicado, com autenticação de domínio configurada, proteção antispam e controle centralizado das contas. É diferente de criar uma conta gratuita em provedores como Gmail ou Outlook, que não oferecem vínculo com o domínio da empresa nem as camadas de segurança necessárias para comunicações corporativas.</p>
+  <p class="fade">Para qualquer empresa que se comunica por e-mail com clientes, fornecedores ou parceiros, o endereço profissional é o primeiro elemento que constrói — ou destrói — a percepção de credibilidade antes mesmo de o destinatário abrir a mensagem.</p>
+
+  <h2 class="fade">Por que Usar &#64;gmail Prejudica a Imagem do Seu Negócio</h2>
+  <p class="fade">Parece inofensivo, mas usar um endereço genérico para comunicações empresariais mina silenciosamente a reputação da sua marca. Quando uma empresa envia propostas, contratos ou comunicados por um &#64;gmail, passa a impressão de que ainda está em fase inicial — ou que não investe na própria estrutura de comunicação.</p>
+  <p class="fade">Há três problemas concretos que afetam empresas que utilizam e-mail gratuito para fins corporativos:</p>
+
+  <ul class="checklist fade">
+    <li>
+      <span class="check-icon"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#E53E3E" stroke-width="2.5" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></span>
+      <span><strong>Perda de credibilidade imediata:</strong> clientes e parceiros associam o endereço ao nível de profissionalismo da empresa. Um &#64;gmail ou &#64;outlook sinaliza informalidade em um contexto que exige confiança.</span>
+    </li>
+    <li>
+      <span class="check-icon"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#E53E3E" stroke-width="2.5" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></span>
+      <span><strong>Alta taxa de queda no spam:</strong> provedores gratuitos têm reputação de domínio compartilhada com milhões de usuários. E-mails enviados por eles são mais suscetíveis a cair na caixa de spam do destinatário.</span>
+    </li>
+    <li>
+      <span class="check-icon"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#E53E3E" stroke-width="2.5" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></span>
+      <span><strong>Ausência de proteção contra fraudes:</strong> sem autenticação de domínio, terceiros podem enviar e-mails se passando pela sua empresa — expondo clientes a golpes e destruindo a reputação da marca.</span>
+    </li>
+  </ul>
+
+  <h2 class="fade">O que Compõe um E-mail Profissional de Verdade</h2>
+  <p class="fade">E-mail profissional vai muito além de ter o nome da empresa no endereço. Um sistema bem configurado envolve quatro camadas que juntas garantem credibilidade, segurança e entregabilidade.</p>
+
+  <div class="steps fade">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Domínio Próprio</h3>
+        <p>O endereço usa o domínio da empresa — por exemplo, <strong>contato&#64;suaempresa.com.br</strong> — em vez de um provedor gratuito. Isso transmite autoridade imediata e associa cada mensagem enviada diretamente à marca, reforçando o reconhecimento em toda comunicação.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>SPF — Sender Policy Framework</h3>
+        <p>O SPF é um registro DNS que informa quais servidores estão autorizados a enviar e-mails em nome do seu domínio. Ele impede que terceiros enviem mensagens se passando pela sua empresa e aumenta a taxa de entrega na caixa de entrada do destinatário.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>DKIM — DomainKeys Identified Mail</h3>
+        <p>O DKIM adiciona uma assinatura digital criptografada em cada e-mail enviado. O servidor do destinatário verifica essa assinatura e confirma que a mensagem não foi adulterada durante o envio — reduzindo drasticamente a chance de queda no spam.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>DMARC — Domain-based Message Authentication</h3>
+        <p>O DMARC une SPF e DKIM em uma política de autenticação que define o que acontece quando um e-mail falha na verificação. Ele protege o domínio contra uso não autorizado, melhora sua reputação e gera relatórios sobre tentativas de fraude.</p>
+      </div>
+    </div>
+  </div>
+  <p class="fade">Essas quatro camadas configuram o que o mercado chama de <strong>e-mail com alta entregabilidade</strong> — a garantia de que suas mensagens chegam à caixa de entrada, não à lixeira ou ao spam.</p>
+
+  <h2 class="fade">E-mail Profissional vs. E-mail Gratuito — Comparativo</h2>
+  <p class="fade">A diferença entre os dois vai além da aparência do endereço. Veja como cada um se comporta nos aspectos que impactam diretamente a operação da empresa:</p>
+
+  <div class="table-wrap fade">
+    <table>
+      <thead>
+        <tr>
+          <th>Critério</th>
+          <th>E-mail gratuito (&#64;gmail)</th>
+          <th class="pro">E-mail profissional</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Credibilidade</td>
+          <td class="col-free">Passa imagem de negócio informal ou em estágio inicial</td>
+          <td class="col-pro">Endereço com domínio da empresa transmite autoridade imediata</td>
+        </tr>
+        <tr>
+          <td>Entregabilidade</td>
+          <td class="col-free">Maior chance de cair em spam por domínio compartilhado</td>
+          <td class="col-pro">SPF, DKIM e DMARC garantem alta taxa de entrega na caixa de entrada</td>
+        </tr>
+        <tr>
+          <td>Segurança</td>
+          <td class="col-free">Sem autenticação de domínio — vulnerável a spoofing e fraudes</td>
+          <td class="col-pro">Domínio autenticado blinda contra uso não autorizado do endereço</td>
+        </tr>
+        <tr>
+          <td>Controle</td>
+          <td class="col-free">Conta individual sem gestão centralizada de equipe</td>
+          <td class="col-pro">Painel centralizado para criar, gerenciar e desativar contas</td>
+        </tr>
+        <tr>
+          <td>Antispam</td>
+          <td class="col-free">Filtro básico, sem configuração específica para o domínio</td>
+          <td class="col-pro">Proteção antispam configurada para o domínio da empresa</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="fade">O que Considerar ao Configurar E-mail Profissional para Sua Empresa</h2>
+  <p class="fade">Antes de contratar qualquer serviço de hospedagem de e-mail, vale avaliar alguns pontos que fazem diferença na operação do dia a dia.</p>
+
+  <div class="cards fade">
+    <div class="card">
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1AAFC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>SPF, DKIM e DMARC estão inclusos e configurados?</h3>
+      <p>Ter um e-mail com domínio próprio não é suficiente se a autenticação não estiver configurada. Confirme se o serviço inclui a configuração de SPF, DKIM e DMARC e se a equipe responsável acompanha a implementação. Sem isso, a entregabilidade pode ser igual à de um e-mail gratuito.</p>
+    </div>
+    <div class="card">
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1AAFC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Quantas contas a empresa precisa?</h3>
+      <p>Defina quantos colaboradores precisarão de e-mail corporativo. Além das contas individuais, é comum precisar de endereços de função — contato&#64;, financeiro&#64;, suporte&#64; — que não estão vinculados a uma pessoa específica, mas à área da empresa.</p>
+    </div>
+    <div class="card">
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1AAFC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>O e-mail funciona no celular e no cliente que já uso?</h3>
+      <p>Um bom serviço deve ser compatível com os principais clientes de e-mail — Outlook, Gmail como cliente, iOS e Android — via IMAP e SMTP, para que a equipe mantenha sua rotina sem mudanças.</p>
+    </div>
+    <div class="card">
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1AAFC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Há backup e recuperação de mensagens?</h3>
+      <p>E-mails corporativos podem conter contratos, propostas e registros importantes. Certifique-se de que o serviço inclui backup periódico das mensagens e um processo de recuperação em caso de perda acidental ou problema técnico.</p>
+    </div>
+    <div class="card">
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1AAFC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>A migração dos e-mails existentes está inclusa?</h3>
+      <p>Se a empresa já usa um endereço há algum tempo, o histórico de mensagens precisa ser migrado para o novo serviço. Confirme se a equipe realiza essa migração e qual é o prazo esperado para a transição sem interrupção das comunicações.</p>
+    </div>
+  </div>
+
+  <h2 class="fade">Perguntas Frequentes sobre E-mail Profissional</h2>
+  <div class="faq fade">
+    <div class="faq-item">
+      <button class="faq-btn" type="button"><span>Qual a diferença entre e-mail profissional e e-mail corporativo?</span><span class="faq-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="2" x2="5" y2="8"/><line x1="2" y1="5" x2="8" y2="5"/></svg></span></button>
+      <div class="faq-body"><div class="faq-inner">Os termos são usados como sinônimos no mercado. Ambos se referem a endereços de e-mail vinculados ao domínio próprio da empresa — como contato&#64;suaempresa.com.br —, hospedados em servidor dedicado com autenticação de domínio, proteção antispam e painel de gestão centralizado.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" type="button"><span>O que é SPF, DKIM e DMARC e por que são importantes?</span><span class="faq-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="2" x2="5" y2="8"/><line x1="2" y1="5" x2="8" y2="5"/></svg></span></button>
+      <div class="faq-body"><div class="faq-inner">SPF, DKIM e DMARC são protocolos de autenticação de e-mail. O SPF define quais servidores podem enviar e-mails pelo seu domínio. O DKIM assina digitalmente cada mensagem enviada, garantindo que não foi adulterada. O DMARC une os dois e define como tratar e-mails que falham na verificação. Juntos, aumentam a taxa de entrega na caixa de entrada e protegem o domínio contra fraudes e spoofing.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" type="button"><span>Posso usar meu e-mail profissional no Gmail ou Outlook?</span><span class="faq-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="2" x2="5" y2="8"/><line x1="2" y1="5" x2="8" y2="5"/></svg></span></button>
+      <div class="faq-body"><div class="faq-inner">Sim. E-mails profissionais hospedados com suporte a IMAP e SMTP podem ser configurados como conta adicional no Gmail, no Outlook ou em qualquer aplicativo de e-mail para celular. Isso permite usar a interface que você já conhece, mantendo o endereço com domínio próprio da empresa.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" type="button"><span>E-mail profissional precisa de domínio próprio?</span><span class="faq-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="2" x2="5" y2="8"/><line x1="2" y1="5" x2="8" y2="5"/></svg></span></button>
+      <div class="faq-body"><div class="faq-inner">Sim. O domínio próprio é o que diferencia o e-mail profissional do genérico. O endereço &#64;suaempresa.com.br só é possível se a empresa tiver um domínio registrado. Caso ainda não tenha, ele pode ser adquirido antes da configuração do e-mail profissional.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" type="button"><span>Meus e-mails atuais serão perdidos na migração?</span><span class="faq-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="2" x2="5" y2="8"/><line x1="2" y1="5" x2="8" y2="5"/></svg></span></button>
+      <div class="faq-body"><div class="faq-inner">Não, desde que a migração seja feita corretamente. Uma migração bem executada transfere o histórico completo de mensagens, pastas e contatos para o novo serviço sem interrupção das comunicações. É importante confirmar com o prestador se a migração está inclusa no serviço e qual é o prazo estimado.</div></div>
+    </div>
+  </div>
+
+  <h2 class="fade">Conclusão</h2>
+  <p class="fade">O e-mail ainda é o principal canal de comunicação formal entre empresas. Usar um endereço genérico em um ambiente onde credibilidade e segurança são determinantes para fechar negócios é um risco que não precisa existir. Um e-mail com domínio próprio, proteção antispam e autenticação completa — SPF, DKIM e DMARC — garante que suas mensagens cheguem onde precisam chegar e transmitam a imagem que sua empresa merece.</p>
+  <p class="fade">A CORPAD Digital é uma agência digital brasileira que configura Hospedagem de E-mail Profissional para empresas que precisam de comunicação segura, rastreável e com alta taxa de entrega. A configuração inclui domínio próprio, autenticação de domínio e suporte técnico especializado para garantir que a transição seja feita sem perda de histórico ou interrupção da operação.</p>
+
+</div>
+  `;
+
+  // FAQ accordion (dentro do shadow root)
+  root.querySelectorAll('.faq-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('.faq-item');
+      var body = item.querySelector('.faq-body');
+      var isOpen = item.classList.contains('open');
+      root.querySelectorAll('.faq-item.open').forEach(function (el) {
+        el.classList.remove('open');
+        el.querySelector('.faq-body').style.maxHeight = '0';
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // Fade-in
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('vis'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    root.querySelectorAll('.fade').forEach(function (el) { io.observe(el); });
+  } else {
+    root.querySelectorAll('.fade').forEach(function (el) { el.classList.add('vis'); });
+  }
+
+}());
+</script>

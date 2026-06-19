@@ -28,10 +28,10 @@ import {
   Video,
   X,
 } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { adminLogin, adminLogout, isAdminLoggedIn } from "../lib/adminAuth";
-import { importBlogArticleModel } from "../lib/blogArticleImporter";
+import { importBlogArticleModel, normalizeImportedHtmlArticleContent } from "../lib/blogArticleImporter";
 import {
   BlogPost,
   BlogPostInput,
@@ -119,6 +119,366 @@ function getReadingTime(content: string) {
   return Math.max(1, Math.ceil(words / 180));
 }
 
+function isHtmlArticleContent(value: string) {
+  return /<\/?(?:p|h[1-6]|a|ul|ol|li|table|div|section|article|blockquote|img|iframe|style)\b/i.test(value);
+}
+
+function sanitizeEditorHtml(value: string) {
+  const template = document.createElement("template");
+  template.innerHTML = value;
+
+  template.content.querySelectorAll("script, object, embed").forEach((element) => element.remove());
+  template.content.querySelectorAll<HTMLElement>("*").forEach((element) => {
+    Array.from(element.attributes).forEach((attribute) => {
+      const name = attribute.name.toLowerCase();
+      const content = attribute.value.trim().toLowerCase();
+
+      if (name.startsWith("on") || content.startsWith("javascript:")) {
+        element.removeAttribute(attribute.name);
+      }
+    });
+  });
+
+  return template.innerHTML;
+}
+
+function extractRootInnerHtml(value: string) {
+  const assignmentIndex = value.search(/\broot\.innerHTML\s*=\s*`/);
+
+  if (assignmentIndex === -1) {
+    return "";
+  }
+
+  const templateStart = value.indexOf("`", assignmentIndex);
+  if (templateStart === -1) {
+    return "";
+  }
+
+  const templateEnd = value.indexOf("`;", templateStart + 1);
+  if (templateEnd === -1) {
+    return "";
+  }
+
+  return value.slice(templateStart + 1, templateEnd).trim();
+}
+
+function getVisualEditorHtml(value: string) {
+  const shadowHtml = extractRootInnerHtml(value);
+
+  if (shadowHtml) {
+    return shadowHtml;
+  }
+
+  if (/attachShadow/i.test(value)) {
+    const normalized = normalizeImportedHtmlArticleContent(value);
+    return normalized || value;
+  }
+
+  return value;
+}
+
+function extractArticleTitleFromHtml(value: string) {
+  const template = document.createElement("template");
+  template.innerHTML = value;
+
+  return template.content.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim() ?? "";
+}
+
+function getTextFromHtml(value: string, selectors: string[]) {
+  const template = document.createElement("template");
+  template.innerHTML = value;
+
+  for (const selector of selectors) {
+    const text = template.content.querySelector(selector)?.textContent?.replace(/\s+/g, " ").trim();
+
+    if (text) {
+      return text;
+    }
+  }
+
+  return "";
+}
+
+function getFirstImageFromHtml(value: string) {
+  const template = document.createElement("template");
+  template.innerHTML = value;
+
+  return template.content.querySelector("img[src]")?.getAttribute("src")?.trim() ?? "";
+}
+
+function updateHtmlText(value: string, selectors: string[], text: string) {
+  if (!value || !text.trim()) {
+    return value;
+  }
+
+  const template = document.createElement("template");
+  template.innerHTML = value;
+
+  for (const selector of selectors) {
+    const element = template.content.querySelector(selector);
+
+    if (element) {
+      element.textContent = text;
+      return template.innerHTML;
+    }
+  }
+
+  return value;
+}
+
+function updateHtmlImage(value: string, src: string, alt = "") {
+  if (!value || (!src.trim() && !alt.trim())) {
+    return value;
+  }
+
+  const template = document.createElement("template");
+  template.innerHTML = value;
+  const image = template.content.querySelector("img[src]");
+
+  if (!image) {
+    return value;
+  }
+
+  if (src.trim()) {
+    image.setAttribute("src", src);
+  }
+  if (alt.trim()) {
+    image.setAttribute("alt", alt);
+  }
+
+  return template.innerHTML;
+}
+
+function syncPostFieldsFromArticleHtml(post: BlogPostInput, content: string) {
+  const title = extractArticleTitleFromHtml(content);
+  const subtitle = getTextFromHtml(content, [".subtitle", ".article-subtitle", ".ca-subtitle", ".hero-subtitle", "h1 + p"]);
+  const excerpt = getTextFromHtml(content, [".excerpt", ".article-excerpt", ".lead", ".intro", "h1 + p", "p"]);
+  const coverImage = getFirstImageFromHtml(content);
+  const nextPost = syncPostTitle(post, title, content);
+
+  return {
+    ...nextPost,
+    subtitle: subtitle || nextPost.subtitle,
+    excerpt: excerpt || nextPost.excerpt,
+    metaDescription: !nextPost.metaDescription || nextPost.metaDescription === post.subtitle || nextPost.metaDescription === post.excerpt
+      ? subtitle || excerpt || nextPost.metaDescription
+      : nextPost.metaDescription,
+    coverImage: coverImage || nextPost.coverImage,
+  };
+}
+
+function syncArticleHtmlField(content: string, field: "title" | "subtitle" | "excerpt" | "coverImage" | "imageAlt", value: string, alt = "") {
+  if (!isHtmlArticleContent(content)) {
+    return content;
+  }
+
+  if (field === "title") {
+    return updateHtmlText(content, ["h1"], value);
+  }
+
+  if (field === "subtitle") {
+    return updateHtmlText(content, [".subtitle", ".article-subtitle", ".ca-subtitle", ".hero-subtitle", "h1 + p"], value);
+  }
+
+  if (field === "excerpt") {
+    return updateHtmlText(content, [".excerpt", ".article-excerpt", ".lead", ".intro"], value);
+  }
+
+  if (field === "coverImage") {
+    return updateHtmlImage(content, value, alt);
+  }
+
+  return updateHtmlImage(content, "", value);
+}
+
+function syncPostTitle(post: BlogPostInput, articleTitle: string, content = post.content) {
+  if (!articleTitle || articleTitle === post.title.trim()) {
+    return { ...post, content };
+  }
+
+  const currentTitle = post.title.trim();
+  const currentMetaTitle = post.metaTitle.trim();
+  const shouldSyncSlug = !post.slug || post.slug === slugify(currentTitle);
+  let nextMetaTitle = post.metaTitle;
+
+  if (!currentMetaTitle || currentMetaTitle === currentTitle) {
+    nextMetaTitle = articleTitle;
+  } else if (currentTitle && currentMetaTitle.includes(currentTitle)) {
+    nextMetaTitle = currentMetaTitle.replace(currentTitle, articleTitle);
+  }
+
+  return {
+    ...post,
+    content,
+    title: articleTitle,
+    slug: shouldSyncSlug ? slugify(articleTitle) : post.slug,
+    metaTitle: nextMetaTitle,
+  };
+}
+
+function syncPostTitleFromArticleHtml(post: BlogPostInput, content: string) {
+  return syncPostFieldsFromArticleHtml(post, content);
+}
+
+function getPreviewVisibilityFixStyle() {
+  return `<style id="admin-preview-visibility-fix">
+      .fade,
+      .fade-in,
+      .ca-fade,
+      .is-hidden,
+      [data-animate],
+      [data-reveal] {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        filter: none !important;
+      }
+
+      .faq-body,
+      .ca-faq-body {
+        display: block !important;
+        max-height: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+
+      .faq-item,
+      .ca-faq-item {
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+    </style>`;
+}
+
+function buildVisualEditorDocument(content: string) {
+  const visualHtml = getVisualEditorHtml(content);
+  const sanitizedHtml = sanitizeEditorHtml(visualHtml);
+
+  return `<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      html { background: #f8fbff; }
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 28px;
+        color: #17213a;
+        background: #ffffff;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        line-height: 1.6;
+      }
+      body:focus { outline: none; }
+      img, video, iframe { max-width: 100%; }
+      img { height: auto; }
+      a { color: #1267e8; }
+      .admin-empty-preview {
+        display: grid;
+        place-items: center;
+        min-height: 420px;
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+        color: #64748b;
+        background: #f8fafc;
+        font-weight: 800;
+      }
+    </style>
+  </head>
+  <body>
+    ${sanitizedHtml || '<div class="admin-empty-preview">Nao foi possivel montar o preview visual desse HTML.</div>'}
+    ${getPreviewVisibilityFixStyle()}
+  </body>
+</html>`;
+}
+
+function VisualHtmlEditor({
+  value,
+  onChange,
+  onTitleChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  onTitleChange?: (value: string) => void;
+}) {
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const latestValueRef = useRef(value);
+  const isEditingRef = useRef(false);
+  const syncTimerRef = useRef<number | undefined>();
+  const initialDocument = useMemo(() => buildVisualEditorDocument(value), []);
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    const document = iframe?.contentDocument;
+
+    if (!document?.body || isEditingRef.current || value === latestValueRef.current) {
+      return;
+    }
+
+    document.body.innerHTML = `${sanitizeEditorHtml(value)}${getPreviewVisibilityFixStyle()}`;
+    latestValueRef.current = value;
+  }, [value]);
+
+  const handleLoad = () => {
+    const iframe = iframeRef.current;
+    const document = iframe?.contentDocument;
+
+    if (!document?.body) {
+      return;
+    }
+
+    document.designMode = "on";
+    document.body.setAttribute("contenteditable", "true");
+    document.body.spellcheck = true;
+
+    const readHtml = () => {
+      document.getElementById("admin-preview-visibility-fix")?.remove();
+      const nextHtml = sanitizeEditorHtml(document.body.innerHTML);
+      document.body.insertAdjacentHTML("beforeend", getPreviewVisibilityFixStyle());
+      latestValueRef.current = nextHtml;
+      onTitleChange?.(extractArticleTitleFromHtml(nextHtml));
+      return nextHtml;
+    };
+
+    const sync = () => {
+      const nextHtml = readHtml();
+      isEditingRef.current = false;
+      onChange(nextHtml);
+    };
+
+    const scheduleSync = () => {
+      isEditingRef.current = true;
+      const nextHtml = readHtml();
+
+      if (syncTimerRef.current) {
+        window.clearTimeout(syncTimerRef.current);
+      }
+
+      syncTimerRef.current = window.setTimeout(() => {
+        isEditingRef.current = false;
+        onChange(nextHtml);
+      }, 500);
+    };
+
+    document.body.addEventListener("focusin", () => {
+      isEditingRef.current = true;
+    });
+    document.body.addEventListener("input", scheduleSync);
+    document.body.addEventListener("blur", sync);
+  };
+
+  return (
+    <iframe
+      ref={iframeRef}
+      className="admin-article-visual-editor"
+      title="Preview visual do artigo"
+      srcDoc={initialDocument}
+      onLoad={handleLoad}
+    />
+  );
+}
+
 function formatDate(value: string | null | undefined) {
   if (!value) return "--";
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).format(
@@ -179,6 +539,7 @@ export default function AdminPage() {
   const [uploadingAuthorPhotoId, setUploadingAuthorPhotoId] = useState<string | null>(null);
   const [savingPost, setSavingPost] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
+  const [sourceEditorOpen, setSourceEditorOpen] = useState(false);
   const [editorTab, setEditorTab] = useState<EditorTab>("content");
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
   const [newCategory, setNewCategory] = useState("");
@@ -389,7 +750,11 @@ export default function AdminPage() {
 
     try {
       const imageUrl = await uploadBlogImage(file, { variant: "cover" });
-      setForm((current) => ({ ...current, coverImage: imageUrl }));
+      setForm((current) => ({
+        ...current,
+        coverImage: imageUrl,
+        content: syncArticleHtmlField(current.content, "coverImage", imageUrl, current.imageAlt),
+      }));
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Nao foi possivel enviar a imagem.");
     } finally {
@@ -509,6 +874,15 @@ export default function AdminPage() {
       ...current,
       content: current.content ? `${current.content}\n\n${token}` : token,
     }));
+  }
+
+  function handleVisualArticleChange(content: string) {
+    setForm((current) => syncPostTitleFromArticleHtml(current, content));
+  }
+
+  function handleVisualArticleTitleChange(title: string) {
+    if (!title) return;
+    setForm((current) => syncPostTitle(current, title));
   }
 
   function addCategory() {
@@ -1056,6 +1430,7 @@ export default function AdminPage() {
                         ...current,
                         title,
                         slug: current.slug ? current.slug : slugify(title),
+                        content: syncArticleHtmlField(current.content, "title", title),
                       }));
                     }}
                     required
@@ -1069,7 +1444,17 @@ export default function AdminPage() {
 
               <label>
                 Subtitulo
-                <input value={form.subtitle} onChange={(event) => setForm((current) => ({ ...current, subtitle: event.target.value }))} />
+                <input
+                  value={form.subtitle}
+                  onChange={(event) => {
+                    const subtitle = event.target.value;
+                    setForm((current) => ({
+                      ...current,
+                      subtitle,
+                      content: syncArticleHtmlField(current.content, "subtitle", subtitle),
+                    }));
+                  }}
+                />
               </label>
 
               <div className="admin-editor-split">
@@ -1116,9 +1501,31 @@ export default function AdminPage() {
                         </button>
                       </div>
                     ) : (
-                      <input value={form.coverImage} onChange={(event) => setForm((current) => ({ ...current, coverImage: event.target.value }))} placeholder="URL da imagem" />
+                      <input
+                        value={form.coverImage}
+                        onChange={(event) => {
+                          const coverImage = event.target.value;
+                          setForm((current) => ({
+                            ...current,
+                            coverImage,
+                            content: syncArticleHtmlField(current.content, "coverImage", coverImage, current.imageAlt),
+                          }));
+                        }}
+                        placeholder="URL da imagem"
+                      />
                     )}
-                    <input value={form.imageAlt} onChange={(event) => setForm((current) => ({ ...current, imageAlt: event.target.value }))} placeholder="Texto alternativo da imagem" />
+                    <input
+                      value={form.imageAlt}
+                      onChange={(event) => {
+                        const imageAlt = event.target.value;
+                        setForm((current) => ({
+                          ...current,
+                          imageAlt,
+                          content: syncArticleHtmlField(current.content, "imageAlt", imageAlt),
+                        }));
+                      }}
+                      placeholder="Texto alternativo da imagem"
+                    />
                     <label className="admin-upload-button">
                       <Upload size={16} />
                       {uploadingImage ? "Enviando..." : "Enviar imagem"}
@@ -1139,21 +1546,52 @@ export default function AdminPage() {
 
               <label>
                 Resumo
-                <textarea value={form.excerpt} onChange={(event) => setForm((current) => ({ ...current, excerpt: event.target.value }))} rows={3} required />
+                <textarea
+                  value={form.excerpt}
+                  onChange={(event) => {
+                    const excerpt = event.target.value;
+                    setForm((current) => ({
+                      ...current,
+                      excerpt,
+                      content: syncArticleHtmlField(current.content, "excerpt", excerpt),
+                    }));
+                  }}
+                  rows={3}
+                  required
+                />
               </label>
 
-              <div className="admin-editor-toolbar">
-                {editorActions.map(({ label, token, Icon }) => (
-                  <button type="button" onClick={() => insertEditorToken(token)} key={label} title={label}>
-                    <Icon size={16} /> {label}
+              {isHtmlArticleContent(form.content) ? (
+                <div className="admin-field-label admin-visual-article-field">
+                  <strong>Conteudo visual</strong>
+                  <small className="admin-field-hint">
+                    Edite os textos diretamente no preview importado. As alteracoes sao salvas no HTML do artigo.
+                  </small>
+                  <VisualHtmlEditor
+                    value={getVisualEditorHtml(form.content)}
+                    onChange={handleVisualArticleChange}
+                    onTitleChange={handleVisualArticleTitleChange}
+                  />
+                  <button className="admin-source-open-button" type="button" onClick={() => setSourceEditorOpen(true)}>
+                    <FileText size={16} /> Editar HTML bruto
                   </button>
-                ))}
-              </div>
+                </div>
+              ) : (
+                <>
+                  <div className="admin-editor-toolbar">
+                    {editorActions.map(({ label, token, Icon }) => (
+                      <button type="button" onClick={() => insertEditorToken(token)} key={label} title={label}>
+                        <Icon size={16} /> {label}
+                      </button>
+                    ))}
+                  </div>
 
-              <label>
-                Conteudo
-                <textarea value={form.content} onChange={(event) => setForm((current) => ({ ...current, content: event.target.value }))} rows={14} required />
-              </label>
+                  <label>
+                    Conteudo
+                    <textarea value={form.content} onChange={(event) => setForm((current) => ({ ...current, content: event.target.value }))} rows={14} required />
+                  </label>
+                </>
+              )}
               <p className="admin-read-time">Tempo estimado: {getReadingTime(form.content)} min de leitura</p>
             </section>
 
@@ -1249,6 +1687,38 @@ export default function AdminPage() {
                 <textarea value={form.ctaText} onChange={(event) => setForm((current) => ({ ...current, ctaText: event.target.value }))} rows={3} />
               </label>
             </section>
+
+            {sourceEditorOpen && (
+              <div className="admin-source-modal" role="dialog" aria-modal="true" aria-labelledby="admin-source-editor-title">
+                <div className="admin-source-modal-backdrop" role="button" tabIndex={0} aria-label="Fechar editor de HTML" onClick={() => setSourceEditorOpen(false)} />
+                <section className="admin-source-modal-panel">
+                  <div className="admin-source-modal-heading">
+                    <div>
+                      <span>Codigo do artigo</span>
+                      <strong id="admin-source-editor-title">Editar HTML bruto</strong>
+                    </div>
+                    <button type="button" aria-label="Fechar editor de HTML" onClick={() => setSourceEditorOpen(false)}>
+                      <X size={18} />
+                    </button>
+                  </div>
+                  <textarea
+                    value={form.content}
+                    onChange={(event) => handleVisualArticleChange(event.target.value)}
+                    spellCheck={false}
+                    rows={22}
+                    required
+                  />
+                  <div className="admin-source-modal-actions">
+                    <button type="button" onClick={() => setSourceEditorOpen(false)}>
+                      Voltar ao preview
+                    </button>
+                    <button type="button" onClick={() => setSourceEditorOpen(false)}>
+                      Aplicar HTML
+                    </button>
+                  </div>
+                </section>
+              </div>
+            )}
           </form>
         </div>
       )}
