@@ -77,12 +77,17 @@ function removeMeta(selector: string) {
 export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": ["Organization", "LocalBusiness", "ProfessionalService"],
+    "@id": `${SITE_URL}/#organization`,
     name: "CORPAD",
+    legalName: "CORPAD Soluções Digitais e Consultoria Empresarial",
     url: SITE_URL,
     logo: DEFAULT_OG_IMAGE,
+    image: DEFAULT_OG_IMAGE,
     foundingDate: "1996",
     email: "contato@corpad.com.br",
+    telephone: "+55-16-99609-4649",
+    priceRange: "$$",
     contactPoint: {
       "@type": "ContactPoint",
       telephone: "+55-16-99609-4649",
@@ -94,6 +99,11 @@ export function organizationJsonLd() {
       addressLocality: "Monte Alto",
       addressRegion: "SP",
       addressCountry: "BR",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: -21.2616,
+      longitude: -48.4969,
     },
     areaServed: [
       {
@@ -114,6 +124,26 @@ export function organizationJsonLd() {
       "infraestrutura em nuvem",
       "e-mail profissional",
       "SEO",
+      "GEO",
+      "AEO",
+    ],
+    makesOffer: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Criação de sites profissionais",
+          areaServed: "Brasil",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Consultoria empresarial e tecnologia",
+          areaServed: "Brasil",
+        },
+      },
     ],
   };
 }
