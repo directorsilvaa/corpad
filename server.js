@@ -2,7 +2,7 @@ import fs from "fs";
 import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
-import { getBlogPostForHead, injectBlogArticlePage } from "./lib/blogHead.js";
+import { getBlogPostForHead, injectBlogArticlePage, injectBlogIndexPage, listBlogPostsForHead } from "./lib/blogHead.js";
 import { getConsultingServiceForHead, injectConsultingServicePage } from "./lib/consultingHead.js";
 import { getStaticPageForHead, injectStaticPage } from "./lib/pageHead.js";
 import { generateSitemapXml } from "./lib/sitemap.js";
@@ -106,6 +106,23 @@ const server = http.createServer(async (request, response) => {
       response.end(html);
     } catch (error) {
       console.error("Failed to render blog article head", error);
+      response.setHeader("Cache-Control", "no-store");
+      sendFile(response, indexPath, "no-store");
+    }
+    return;
+  }
+
+  if (requestUrl.pathname === "/blog") {
+    try {
+      const html = injectBlogIndexPage(fs.readFileSync(indexPath, "utf8"), await listBlogPostsForHead());
+
+      response.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
+      });
+      response.end(html);
+    } catch (error) {
+      console.error("Failed to render blog index", error);
       response.setHeader("Cache-Control", "no-store");
       sendFile(response, indexPath, "no-store");
     }

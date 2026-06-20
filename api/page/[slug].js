@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { injectBlogIndexPage, listBlogPostsForHead } from "../../lib/blogHead.js";
 import { injectStaticPage } from "../../lib/pageHead.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,13 +15,17 @@ const pathBySlug = {
   portfolio: "/portfolio",
   clientes: "/clientes",
   blog: "/blog",
+  "termos-de-uso": "/termos-de-uso",
 };
 
-export default function handler(request, response) {
+export default async function handler(request, response) {
   try {
     const slug = String(request.query?.slug || "home").replace(/^\/+|\/+$/g, "");
     const pathname = pathBySlug[slug] || `/${slug}`;
-    const html = injectStaticPage(fs.readFileSync(indexPath, "utf8"), pathname);
+    const indexHtml = fs.readFileSync(indexPath, "utf8");
+    const html = pathname === "/blog"
+      ? injectBlogIndexPage(indexHtml, await listBlogPostsForHead())
+      : injectStaticPage(indexHtml, pathname);
 
     response.setHeader("Content-Type", "text/html; charset=utf-8");
     response.setHeader("Cache-Control", "public, max-age=300, stale-while-revalidate=3600");
