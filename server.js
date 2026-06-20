@@ -3,6 +3,8 @@ import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getBlogPostForHead, injectBlogArticlePage } from "./lib/blogHead.js";
+import { getConsultingServiceForHead, injectConsultingServicePage } from "./lib/consultingHead.js";
+import { getStaticPageForHead, injectStaticPage } from "./lib/pageHead.js";
 import { generateSitemapXml } from "./lib/sitemap.js";
 import { getServicePageForHead, injectServicePage } from "./lib/serviceHead.js";
 
@@ -110,6 +112,27 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (requestUrl.pathname.startsWith("/corpad-consultoria/servicos/")) {
+    try {
+      const slug = requestUrl.pathname.replace(/^\/corpad-consultoria\/servicos\/|\/+$/g, "");
+      const service = getConsultingServiceForHead(slug);
+      const html = service
+        ? injectConsultingServicePage(fs.readFileSync(indexPath, "utf8"), slug, service)
+        : fs.readFileSync(indexPath, "utf8");
+
+      response.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
+      });
+      response.end(html);
+    } catch (error) {
+      console.error("Failed to render consulting service head", error);
+      response.setHeader("Cache-Control", "no-store");
+      sendFile(response, indexPath, "no-store");
+    }
+    return;
+  }
+
   if (requestUrl.pathname.startsWith("/servicos/")) {
     try {
       const slug = requestUrl.pathname.replace(/^\/servicos\/|\/+$/g, "");
@@ -123,6 +146,23 @@ const server = http.createServer(async (request, response) => {
       response.end(html);
     } catch (error) {
       console.error("Failed to render service page head", error);
+      response.setHeader("Cache-Control", "no-store");
+      sendFile(response, indexPath, "no-store");
+    }
+    return;
+  }
+
+  if (getStaticPageForHead(requestUrl.pathname)) {
+    try {
+      const html = injectStaticPage(fs.readFileSync(indexPath, "utf8"), requestUrl.pathname);
+
+      response.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
+      });
+      response.end(html);
+    } catch (error) {
+      console.error("Failed to render static page head", error);
       response.setHeader("Cache-Control", "no-store");
       sendFile(response, indexPath, "no-store");
     }

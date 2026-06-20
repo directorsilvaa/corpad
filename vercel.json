@@ -10,8 +10,36 @@
       "destination": "/api/sitemap.xml"
     },
     {
+      "source": "/",
+      "destination": "/api/page/home"
+    },
+    {
+      "source": "/corpad-digital",
+      "destination": "/api/page/corpad-digital"
+    },
+    {
+      "source": "/corpad-consultoria",
+      "destination": "/api/page/corpad-consultoria"
+    },
+    {
+      "source": "/portfolio",
+      "destination": "/api/page/portfolio"
+    },
+    {
+      "source": "/clientes",
+      "destination": "/api/page/clientes"
+    },
+    {
+      "source": "/blog",
+      "destination": "/api/page/blog"
+    },
+    {
       "source": "/blog/:slug",
       "destination": "/api/blog/:slug"
+    },
+    {
+      "source": "/corpad-consultoria/servicos/:slug",
+      "destination": "/api/consulting-service/:slug"
     },
     {
       "source": "/servicos/:slug",

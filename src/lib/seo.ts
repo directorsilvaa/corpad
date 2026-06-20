@@ -96,8 +96,10 @@ export function organizationJsonLd() {
     },
     address: {
       "@type": "PostalAddress",
+      streetAddress: "Atendimento digital e consultivo para empresas",
       addressLocality: "Monte Alto",
       addressRegion: "SP",
+      postalCode: "15910-000",
       addressCountry: "BR",
     },
     geo: {
@@ -114,6 +116,14 @@ export function organizationJsonLd() {
         "@type": "AdministrativeArea",
         name: "Sao Paulo",
       },
+      {
+        "@type": "City",
+        name: "Monte Alto",
+      },
+      {
+        "@type": "City",
+        name: "Ribeirao Preto",
+      },
     ],
     knowsAbout: [
       "criacao de sites",
@@ -126,6 +136,9 @@ export function organizationJsonLd() {
       "SEO",
       "GEO",
       "AEO",
+      "otimizacao para mecanismos de resposta",
+      "otimizacao para mecanismos generativos",
+      "sites para empresas locais",
     ],
     makesOffer: [
       {

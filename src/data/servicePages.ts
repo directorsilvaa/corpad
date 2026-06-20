@@ -88,6 +88,26 @@ export const servicePages: ServicePageContent[] = [
     ],
     faqs: [
       {
+        question: "O que é criação de sites profissionais?",
+        answer:
+          "É o planejamento, design, desenvolvimento e publicação de um site criado para representar uma empresa com clareza, velocidade, responsividade, SEO inicial e foco em conversão.",
+      },
+      {
+        question: "A CORPAD cria sites otimizados para Google e IA?",
+        answer:
+          "Sim. A estrutura considera títulos claros, conteúdo rastreável, dados estruturados, perguntas frequentes, informações locais, performance e respostas objetivas para SEO, GEO e AEO.",
+      },
+      {
+        question: "Quais tipos de páginas podem fazer parte do site?",
+        answer:
+          "O projeto pode incluir página inicial, sobre a empresa, serviços, páginas específicas para cada solução, portfólio, blog, contato, landing pages e páginas de campanha.",
+      },
+      {
+        question: "Como o site ajuda a gerar oportunidades?",
+        answer:
+          "O site organiza a mensagem, reduz dúvidas, mostra diferenciais, apresenta provas de confiança e posiciona chamadas para WhatsApp ou formulário nos pontos em que o visitante está mais pronto para agir.",
+      },
+      {
         question: "A criação do site é personalizada?",
         answer:
           "Sim. O site é planejado de acordo com a identidade, os serviços e os objetivos comerciais da empresa.",

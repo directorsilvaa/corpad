@@ -50,26 +50,112 @@ function buildWhatsappUrl(message: string) {
 const portfolioPreviewProjects = portfolioProjects.slice(0, 6);
 
 export default function ServicePage({ service }: ServicePageProps) {
+  const isWebsiteCreation = service.slug === "criacao-de-sites";
+
   usePageSeo({
     title: service.metaTitle,
     description: service.metaDescription,
     path: `/servicos/${service.slug}`,
+    keywords: isWebsiteCreation
+      ? [
+          "criação de sites",
+          "criação de sites profissionais",
+          "desenvolvimento de sites",
+          "site institucional",
+          "landing page",
+          "sites responsivos",
+          "SEO para sites",
+          "GEO",
+          "AEO",
+          "CORPAD Digital",
+          "Monte Alto",
+          "Ribeirão Preto",
+          "São Paulo",
+        ]
+      : [],
     jsonLd: [
       organizationJsonLd(),
       {
         "@context": "https://schema.org",
         "@type": "Service",
+        "@id": `https://corpad.com.br/servicos/${service.slug}#service`,
         name: service.navLabel,
+        alternateName: service.heroTitle,
         description: service.metaDescription,
-        provider: organizationJsonLd(),
+        provider: { "@id": "https://corpad.com.br/#organization" },
         areaServed: "Brasil",
+        serviceType: service.navLabel,
+        ...(isWebsiteCreation
+          ? {
+              category: "Desenvolvimento de sites, SEO, GEO e AEO",
+              audience: {
+                "@type": "BusinessAudience",
+                audienceType:
+                  "Empresas que precisam de site profissional, landing page, páginas de serviço, portfólio ou presença digital com foco em conversão",
+              },
+              hasOfferCatalog: {
+                "@type": "OfferCatalog",
+                name: "Soluções para criação de sites",
+                itemListElement: [
+                  "Site institucional",
+                  "Landing page",
+                  "Páginas de serviço",
+                  "Portfólio profissional",
+                  "Blog e estrutura para conteúdo",
+                  "Integração com WhatsApp",
+                  "SEO técnico inicial",
+                  "Estrutura para GEO e AEO",
+                ].map((name) => ({
+                  "@type": "Offer",
+                  itemOffered: {
+                    "@type": "Service",
+                    name,
+                  },
+                })),
+              },
+            }
+          : {}),
         url: `https://corpad.com.br/servicos/${service.slug}`,
       },
+      ...(isWebsiteCreation
+        ? [
+            {
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              "@id": `https://corpad.com.br/servicos/${service.slug}#webpage`,
+              url: `https://corpad.com.br/servicos/${service.slug}`,
+              name: service.metaTitle,
+              description: service.metaDescription,
+              inLanguage: "pt-BR",
+              about: [
+                { "@type": "Thing", name: "criação de sites profissionais" },
+                { "@type": "Thing", name: "desenvolvimento de sites responsivos" },
+                { "@type": "Thing", name: "SEO para sites empresariais" },
+                { "@type": "Thing", name: "GEO para mecanismos generativos" },
+                { "@type": "Thing", name: "AEO para respostas diretas" },
+              ],
+              mainEntity: { "@id": `https://corpad.com.br/servicos/${service.slug}#service` },
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "HowTo",
+              "@id": `https://corpad.com.br/servicos/${service.slug}#processo`,
+              name: "Como a CORPAD cria um site profissional",
+              description:
+                "Processo de criação de site profissional com diagnóstico, planejamento, design, desenvolvimento, SEO inicial e publicação.",
+              step: service.process.map((step, index) => ({
+                "@type": "HowToStep",
+                position: index + 1,
+                name: step,
+                text: step,
+              })),
+            },
+          ]
+        : []),
       faqJsonLd(service.faqs),
     ],
   });
 
-  const isWebsiteCreation = service.slug === "criacao-de-sites";
   const isEcommerce = service.slug === "e-commerce";
   const isHosting = service.slug === "hospedagem-de-sites";
   const isMarketingDigital = service.slug === "marketing-digital";
