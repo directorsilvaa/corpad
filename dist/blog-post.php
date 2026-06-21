@@ -4,16 +4,50 @@ declare(strict_types=1);
 $siteUrl = 'https://corpad.com.br';
 $defaultImage = $siteUrl . '/logo.png?v=20260618';
 $postsFile = __DIR__ . '/data/blog-posts.json';
-$slug = trim((string)($_GET['slug'] ?? ''), '/');
-
-if ($slug === '') {
-  $path = parse_url((string)($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH) ?: '';
-  $slug = trim(preg_replace('#^/blog/?#', '', $path), '/');
-}
 
 function e($value): string {
   return htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
+
+function normalize_slug(string $value): string {
+  $value = html_entity_decode(rawurldecode($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  $converted = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+  $value = $converted !== false ? $converted : $value;
+  $value = strtolower($value);
+  $value = preg_replace('/[^a-z0-9]+/', '-', $value) ?: '';
+  return trim($value, '-');
+}
+
+function slug_from_path(string $path): string {
+  $path = parse_url($path, PHP_URL_PATH) ?: '';
+  $path = trim($path, '/');
+
+  if (preg_match('#^blog/(.+)$#', $path, $matches)) {
+    return trim($matches[1], '/');
+  }
+
+  return '';
+}
+
+function request_slug(): string {
+  $direct = trim((string)($_GET['slug'] ?? ''), '/');
+
+  if ($direct !== '') {
+    return normalize_slug($direct);
+  }
+
+  foreach (['REQUEST_URI', 'REDIRECT_URL', 'REDIRECT_URI', 'SCRIPT_URL', 'ORIG_PATH_INFO', 'PATH_INFO', 'HTTP_X_ORIGINAL_URL', 'UNENCODED_URL'] as $key) {
+    $candidate = slug_from_path((string)($_SERVER[$key] ?? ''));
+
+    if ($candidate !== '') {
+      return normalize_slug($candidate);
+    }
+  }
+
+  return '';
+}
+
+$slug = request_slug();
 
 function render_asset_links(): string {
   $links = [];
@@ -111,8 +145,19 @@ function render_content($content): string {
 }
 
 $post = null;
-foreach (read_posts($postsFile) as $item) {
-  if (($item['slug'] ?? '') === $slug && is_published($item)) {
+$posts = read_posts($postsFile);
+
+foreach ($posts as $item) {
+  $candidateSlugs = [
+    (string)($item['slug'] ?? ''),
+    (string)($item['title'] ?? ''),
+    (string)($item['metaTitle'] ?? ''),
+    (string)($item['meta_title'] ?? ''),
+  ];
+
+  $matchesSlug = in_array($slug, array_map('normalize_slug', $candidateSlugs), true);
+
+  if ($matchesSlug && is_published($item)) {
     $post = $item;
     break;
   }
@@ -121,7 +166,15 @@ foreach (read_posts($postsFile) as $item) {
 if (!$post) {
   http_response_code(404);
   $title = 'Artigo nao encontrado | Blog CORPAD';
+  $availableSlugs = array_slice(array_map(fn($item) => (string)($item['slug'] ?? ''), $posts), 0, 20);
+  $debug = e(json_encode([
+    'receivedSlug' => $slug,
+    'postsFileExists' => file_exists($postsFile),
+    'postsCount' => count($posts),
+    'availableSlugs' => $availableSlugs,
+  ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
   echo "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta name=\"robots\" content=\"noindex\"><title>{$title}</title></head><body><main><h1>Artigo nao encontrado</h1><p>O artigo solicitado nao esta publicado.</p><p><a href=\"/blog/\">Voltar para o blog</a></p></main></body></html>";
+  echo "\n<!-- corpad-blog-debug {$debug} -->";
   exit;
 }
 
