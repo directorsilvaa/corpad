@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 session_start();
 
-const CORPAD_ADMIN_EMAIL = 'admin@corpad.local';
-const CORPAD_ADMIN_PASSWORD = 'troque-esta-senha';
+const CORPAD_ADMIN_EMAIL = 'viniciuspereira@gmail.com';
+const CORPAD_ADMIN_PASSWORD = 'VipSite2026$#@';
 
 $dataDir = __DIR__ . '/data';
 $postsFile = $dataDir . '/blog-posts.json';
