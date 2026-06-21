@@ -24,10 +24,41 @@ function read_json_body(): array {
   return is_array($data) ? $data : [];
 }
 
+function load_env_file(array $paths): void {
+  foreach ($paths as $path) {
+    if (!is_readable($path)) {
+      continue;
+    }
+
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if ($lines === false) {
+      continue;
+    }
+
+    foreach ($lines as $line) {
+      $line = trim($line);
+      if ($line === '' || strpos($line, '#') === 0 || strpos($line, '=') === false) {
+        continue;
+      }
+
+      [$name, $value] = array_map('trim', explode('=', $line, 2));
+      if ($name === '' || getenv($name) !== false) {
+        continue;
+      }
+
+      $value = trim($value, "\"'");
+      putenv($name . '=' . $value);
+      $_ENV[$name] = $value;
+    }
+  }
+}
+
 function env_or_default(string $name, string $default): string {
   $value = getenv($name);
   return is_string($value) && $value !== '' ? $value : $default;
 }
+
+load_env_file([__DIR__ . '/.env', dirname(__DIR__) . '/.env']);
 
 function ensure_storage(string $dataDir, string $uploadDir): void {
   if (!is_dir($dataDir)) {
