@@ -61,6 +61,41 @@ function strip_html_text($value): string {
   return trim(preg_replace('/\s+/', ' ', strip_tags((string)$value)));
 }
 
+function excerpt_text(string $text, int $length = 155): string {
+  if (function_exists('mb_substr')) {
+    return mb_substr($text, 0, $length);
+  }
+
+  return substr($text, 0, $length);
+}
+
+function post_field(array $post, string $camelKey, string $snakeKey = '', $default = '') {
+  $value = post_value($post, $camelKey, $snakeKey);
+  return $value !== null && $value !== '' ? $value : $default;
+}
+
+function split_keywords(string $value): array {
+  return array_values(array_filter(array_map('trim', explode(',', $value))));
+}
+
+function extract_faqs(string $content): array {
+  $plain = strip_html_text($content);
+  preg_match_all('/([^.!?]{12,120}\?)\s*([^?]{24,320})(?=(?:[^.!?]{12,120}\?)|$)/u', $plain, $matches, PREG_SET_ORDER);
+
+  return array_slice(array_map(fn($match) => [
+    'question' => trim($match[1]),
+    'answer' => trim($match[2]),
+  ], $matches), 0, 6);
+}
+
+function answer_points(string $content): array {
+  $plain = strip_html_text($content);
+  $sentences = preg_split('/(?<=[.!?])\s+/u', $plain) ?: [];
+  $points = array_values(array_filter(array_map('trim', $sentences), fn($sentence) => strlen($sentence) >= 48));
+
+  return array_slice($points, 0, 4);
+}
+
 function render_content($content): string {
   $content = (string)$content;
 
@@ -90,17 +125,24 @@ if (!$post) {
   exit;
 }
 
-$title = ($post['metaTitle'] ?? '') ?: ($post['title'] ?? 'Blog CORPAD');
-$description = ($post['metaDescription'] ?? '') ?: (($post['excerpt'] ?? '') ?: mb_substr(strip_html_text($post['content'] ?? ''), 0, 155));
-$url = $siteUrl . '/blog/' . rawurlencode($post['slug']) . '/';
-$image = ($post['coverImage'] ?? '') ?: $defaultImage;
-$published = $post['publishedAt'] ?? $post['createdAt'] ?? null;
-$modified = $post['updatedAt'] ?? $published;
-$keywords = array_values(array_filter(array_map('trim', explode(',', (string)($post['keyword'] ?? '')))));
+$postTitle = post_field($post, 'title', '', 'Blog CORPAD');
+$contentText = strip_html_text((string)post_field($post, 'content', '', ''));
+$title = post_field($post, 'metaTitle', 'meta_title', $postTitle);
+$description = post_field($post, 'metaDescription', 'meta_description', post_field($post, 'excerpt', '', excerpt_text($contentText)));
+$url = $siteUrl . '/blog/' . rawurlencode((string)post_field($post, 'slug')) . '/';
+$image = post_field($post, 'coverImage', 'cover_image', $defaultImage);
+$published = post_field($post, 'publishedAt', 'published_at', post_field($post, 'createdAt', 'created_at', null));
+$modified = post_field($post, 'updatedAt', 'updated_at', $published);
+$authorName = post_field($post, 'authorName', 'author_name', 'CORPAD Digital');
+$category = post_field($post, 'category', '', 'Blog');
+$keywords = split_keywords((string)post_field($post, 'keyword', '', $category));
+$faqs = extract_faqs((string)post_field($post, 'content', '', ''));
+$answerPoints = answer_points((string)post_field($post, 'content', '', ''));
 $jsonLd = [
   [
     '@context' => 'https://schema.org',
-    '@type' => 'Article',
+    '@type' => ['Article', 'BlogPosting'],
+    '@id' => $url . '#article',
     'headline' => $title,
     'description' => $description,
     'url' => $url,
@@ -109,10 +151,11 @@ $jsonLd = [
     'dateModified' => $modified,
     'author' => [
       '@type' => 'Organization',
-      'name' => ($post['authorName'] ?? '') ?: 'CORPAD Digital',
+      'name' => $authorName,
     ],
     'publisher' => [
       '@type' => 'Organization',
+      '@id' => $siteUrl . '/#organization',
       'name' => 'CORPAD',
       'logo' => [
         '@type' => 'ImageObject',
@@ -121,7 +164,35 @@ $jsonLd = [
     ],
     'mainEntityOfPage' => $url,
     'inLanguage' => 'pt-BR',
+    'articleSection' => $category,
     'keywords' => $keywords,
+    'about' => array_map(fn($keyword) => ['@type' => 'Thing', 'name' => $keyword], $keywords),
+    'mentions' => [
+      ['@type' => 'Place', 'name' => 'Monte Alto, Sao Paulo, Brasil'],
+      ['@type' => 'Organization', 'name' => 'CORPAD', 'url' => $siteUrl],
+    ],
+    'isPartOf' => [
+      '@type' => 'Blog',
+      'name' => 'Blog CORPAD',
+      'url' => $siteUrl . '/blog/',
+    ],
+    'speakable' => [
+      '@type' => 'SpeakableSpecification',
+      'cssSelector' => ['.blog-article h1', '.blog-article > p', '.blog-aeo-answer'],
+    ],
+  ],
+  [
+    '@context' => 'https://schema.org',
+    '@type' => 'WebPage',
+    '@id' => $url . '#webpage',
+    'name' => $title,
+    'headline' => $postTitle,
+    'description' => $description,
+    'url' => $url,
+    'inLanguage' => 'pt-BR',
+    'primaryImageOfPage' => $image,
+    'mainEntity' => ['@id' => $url . '#article'],
+    'publisher' => ['@id' => $siteUrl . '/#organization'],
   ],
   [
     '@context' => 'https://schema.org',
@@ -133,6 +204,22 @@ $jsonLd = [
     ],
   ],
 ];
+
+if (count($faqs) > 0) {
+  $jsonLd[] = [
+    '@context' => 'https://schema.org',
+    '@type' => 'FAQPage',
+    '@id' => $url . '#faq',
+    'mainEntity' => array_map(fn($faq) => [
+      '@type' => 'Question',
+      'name' => $faq['question'],
+      'acceptedAnswer' => [
+        '@type' => 'Answer',
+        'text' => $faq['answer'],
+      ],
+    ], $faqs),
+  ];
+}
 ?><!doctype html>
 <html lang="pt-BR" data-corpad-template="dynamic-blog-post">
   <head>
@@ -161,8 +248,8 @@ $jsonLd = [
     <?php if ($modified): ?>
       <meta property="article:modified_time" content="<?= e($modified) ?>" />
     <?php endif; ?>
-    <meta property="article:author" content="<?= e(($post['authorName'] ?? '') ?: 'CORPAD Digital') ?>" />
-    <meta property="article:section" content="<?= e($post['category'] ?? 'Blog') ?>" />
+    <meta property="article:author" content="<?= e($authorName) ?>" />
+    <meta property="article:section" content="<?= e($category) ?>" />
     <?php foreach ($keywords as $keyword): ?>
       <meta property="article:tag" content="<?= e($keyword) ?>" />
     <?php endforeach; ?>
@@ -189,16 +276,38 @@ $jsonLd = [
         <article class="blog-article">
           <nav class="blog-article-kicker" aria-label="Breadcrumb">
             <a class="blog-back-link" href="/blog/">Voltar para o blog</a>
-            <span><?= e($post['category'] ?? 'Blog') ?></span>
+            <span><?= e($category) ?></span>
           </nav>
-          <h1><?= e($post['title'] ?? $title) ?></h1>
+          <h1><?= e($postTitle) ?></h1>
           <p><?= e($description) ?></p>
           <?php if ($image): ?>
-            <img src="<?= e($image) ?>" alt="<?= e(($post['imageAlt'] ?? '') ?: ($post['title'] ?? $title)) ?>" class="blog-article-cover" />
+            <img src="<?= e($image) ?>" alt="<?= e(post_field($post, 'imageAlt', 'image_alt', $postTitle)) ?>" class="blog-article-cover" />
           <?php endif; ?>
+          <section class="blog-aeo-answer" aria-label="Resposta direta do artigo">
+            <h2>Resposta direta</h2>
+            <p><?= e($description) ?></p>
+            <?php if (count($answerPoints) > 0): ?>
+              <ul>
+                <?php foreach ($answerPoints as $point): ?>
+                  <li><?= e($point) ?></li>
+                <?php endforeach; ?>
+              </ul>
+            <?php endif; ?>
+          </section>
           <div class="blog-article-content">
-            <?= render_content($post['content'] ?? '') ?>
+            <?= render_content(post_field($post, 'content', '', '')) ?>
           </div>
+          <?php if (count($faqs) > 0): ?>
+            <section class="blog-article-faq" aria-label="Perguntas frequentes do artigo">
+              <h2>Perguntas frequentes</h2>
+              <?php foreach ($faqs as $faq): ?>
+                <article>
+                  <h3><?= e($faq['question']) ?></h3>
+                  <p><?= e($faq['answer']) ?></p>
+                </article>
+              <?php endforeach; ?>
+            </section>
+          <?php endif; ?>
         </article>
       </main>
     </div>
