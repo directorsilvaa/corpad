@@ -486,6 +486,10 @@ function formatDate(value: string | null | undefined) {
   );
 }
 
+function getAdminPostPreviewUrl(post: BlogPost) {
+  return `/blog-post.php?slug=${encodeURIComponent(post.slug)}&preview=1`;
+}
+
 function toDatetimeLocalValue(value: string | null | undefined) {
   if (!value) return "";
 
@@ -1163,7 +1167,7 @@ export default function AdminPage() {
                     <small>{formatDate(post.publishedAt)}</small>
                   </div>
                   <div className="admin-post-actions">
-                    <a href={`/blog/${post.slug}`} target="_blank" rel="noreferrer">
+                    <a href={getAdminPostPreviewUrl(post)} target="_blank" rel="noreferrer">
                       <Eye size={16} /> Ver
                     </a>
                     <button type="button" onClick={() => editPost(post)}>

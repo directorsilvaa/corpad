@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
 
+session_start();
+
 $siteUrl = 'https://corpad.com.br';
 $defaultImage = $siteUrl . '/logo.png?v=20260618';
 $postsFile = __DIR__ . '/data/blog-posts.json';
+$isAdminPreview = ($_GET['preview'] ?? '') === '1' && ($_SESSION['corpad_admin'] ?? false) === true;
 
 function e($value): string {
   return htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -157,7 +160,7 @@ foreach ($posts as $item) {
 
   $matchesSlug = in_array($slug, array_map('normalize_slug', $candidateSlugs), true);
 
-  if ($matchesSlug && is_published($item)) {
+  if ($matchesSlug && ($isAdminPreview || is_published($item))) {
     $post = $item;
     break;
   }
@@ -169,6 +172,8 @@ if (!$post) {
   $availableSlugs = array_slice(array_map(fn($item) => (string)($item['slug'] ?? ''), $posts), 0, 20);
   $debug = e(json_encode([
     'receivedSlug' => $slug,
+    'previewRequested' => ($_GET['preview'] ?? '') === '1',
+    'adminPreviewAllowed' => $isAdminPreview,
     'postsFileExists' => file_exists($postsFile),
     'postsCount' => count($posts),
     'availableSlugs' => $availableSlugs,
@@ -283,7 +288,7 @@ if (count($faqs) > 0) {
     <?php if (count($keywords) > 0): ?>
       <meta name="keywords" content="<?= e(implode(', ', $keywords)) ?>" />
     <?php endif; ?>
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="robots" content="<?= $isAdminPreview ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' ?>" />
     <link rel="canonical" href="<?= e($url) ?>" />
     <meta property="og:title" content="<?= e($title) ?> | Blog CORPAD" />
     <meta property="og:description" content="<?= e($description) ?>" />

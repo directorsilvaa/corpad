@@ -1,4 +1,4 @@
-import{c as r,u as k,o as h,j as s,I as S,A as j,a as C,H as y}from"./index-DsmG8jl7.js";import{R as z,C as P,T as A}from"./motion-footer-BhsKGcAL.js";import{c as D,N as v,P as w,D as d,g as R}from"./consultingServicePages-DxfCGF0M.js";import{C as M}from"./chevron-down-BQ0Tmf1d.js";import{C as g}from"./cloud-DqAL2nL0.js";import{Z as I}from"./zap-5hD2gUJ8.js";import{C as p}from"./circle-check-CGHBJ-EX.js";import{S as u}from"./server-DH6F0h1r.js";import{G as W}from"./gauge-C-DvOzXF.js";import"./ScrollTrigger-CiEuWA-R.js";/**
+import{c as r,u as k,o as h,j as s,I as S,A as j,a as C,H as y}from"./index-BhbwPsfx.js";import{R as z,C as P,T as A}from"./motion-footer-6_35OXUL.js";import{c as D,N as v,P as w,D as d,g as R}from"./consultingServicePages-CD82UBYO.js";import{C as M}from"./chevron-down-B6U-CSRD.js";import{C as g}from"./cloud-sCvgRdm-.js";import{Z as I}from"./zap-D8IdEJYc.js";import{C as p}from"./circle-check-BCbvzLmz.js";import{S as u}from"./server-BMuD3PC7.js";import{G as W}from"./gauge-Db2qzwMY.js";import"./ScrollTrigger-CiEuWA-R.js";/**
  * @license lucide-react v0.468.0 - ISC
  *
  * This source code is licensed under the ISC license.
