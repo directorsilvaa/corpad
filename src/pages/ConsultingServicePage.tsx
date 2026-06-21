@@ -94,7 +94,9 @@ export default function ConsultingServicePage({ service }: ConsultingServicePage
         <a className="consulting-topbar-brand" href="/corpad-consultoria" aria-label="Pagina inicial">
           <Image
             className="consulting-topbar-logo"
-            src="/logo.png?v=20260618"
+            src="/logo-light.png?v=20260618"
+            srcSet="/logo-light-180.png?v=20260618 180w, /logo-light-300.png?v=20260618 300w, /logo-light-600.png?v=20260618 600w, /logo-light.png?v=20260618 1500w"
+            sizes="(max-width: 620px) 142px, 210px"
             alt="CORPAD"
             width={1500}
             height={390}
