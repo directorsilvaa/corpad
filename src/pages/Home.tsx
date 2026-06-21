@@ -17,13 +17,47 @@ export default function Home() {
     description:
       "Portal da CORPAD para soluções digitais e consultoria empresarial: tecnologia, marketing, infraestrutura, gestão e estratégia para empresas.",
     path: "/",
-    jsonLd: {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "CORPAD",
-      url: "https://corpad.com.br/",
-      publisher: organizationJsonLd(),
-    },
+    jsonLd: [
+      organizationJsonLd(),
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://corpad.com.br/#website",
+        name: "CORPAD",
+        url: "https://corpad.com.br/",
+        publisher: { "@id": "https://corpad.com.br/#organization" },
+        about: [
+          { "@type": "Service", name: "CORPAD Digital", url: "https://corpad.com.br/corpad-digital/" },
+          { "@type": "Service", name: "CORPAD Consultoria", url: "https://corpad.com.br/corpad-consultoria/" },
+        ],
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Solucoes CORPAD",
+          itemListElement: [
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "CORPAD Digital",
+                description: "Criacao de sites, e-commerce, marketing digital, trafego pago, hospedagem, e-mail profissional e automacao.",
+                url: "https://corpad.com.br/corpad-digital/",
+                provider: { "@id": "https://corpad.com.br/#organization" },
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "CORPAD Consultoria",
+                description: "Consultoria empresarial, tecnologia, dados, infraestrutura, telefonia em nuvem, BPO financeiro e assessoria empresarial.",
+                url: "https://corpad.com.br/corpad-consultoria/",
+                provider: { "@id": "https://corpad.com.br/#organization" },
+              },
+            },
+          ],
+        },
+      },
+    ],
   });
 
   return (

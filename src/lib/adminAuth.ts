@@ -4,6 +4,23 @@ const localAuthKey = "corpad_admin_session";
 const demoEmail = import.meta.env.VITE_ADMIN_EMAIL ?? "admin@corpad.local";
 const demoPassword = import.meta.env.VITE_ADMIN_PASSWORD ?? "troque-esta-senha";
 const allowLocalAuth = true;
+const cpanelBlogApi = "/blog-api.php";
+
+async function cpanelAdminRequest(action: string, body?: Record<string, unknown>) {
+  const response = await fetch(`${cpanelBlogApi}?action=${encodeURIComponent(action)}`, {
+    method: body ? "POST" : "GET",
+    headers: body ? { "Content-Type": "application/json" } : undefined,
+    credentials: "same-origin",
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(typeof data.error === "string" ? data.error : "Nao foi possivel acessar o painel.");
+  }
+
+  return data;
+}
 
 function formatSupabaseAuthError(error: { message?: string; status?: number; name?: string }) {
   const parts = [
@@ -36,6 +53,13 @@ export async function isAdminLoggedIn() {
     return Boolean(data.session);
   }
 
+  try {
+    const data = await cpanelAdminRequest("session");
+    return Boolean(data.loggedIn);
+  } catch {
+    // Local fallback keeps the admin usable while developing without PHP.
+  }
+
   return localStorage.getItem(localAuthKey) === "true";
 }
 
@@ -44,6 +68,16 @@ export async function adminLogin(email: string, password: string) {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw new Error(formatSupabaseAuthError(error));
     return;
+  }
+
+  try {
+    await cpanelAdminRequest("login", { email, password });
+    localStorage.setItem(localAuthKey, "true");
+    return;
+  } catch (error) {
+    if (window.location.protocol !== "file:" && window.location.hostname !== "localhost") {
+      throw error;
+    }
   }
 
   if (!allowLocalAuth) {
@@ -62,6 +96,12 @@ export async function adminLogin(email: string, password: string) {
 export async function adminLogout() {
   if (hasSupabaseConfig && supabase) {
     await supabase.auth.signOut();
+  }
+
+  try {
+    await cpanelAdminRequest("logout");
+  } catch {
+    // Ignore PHP logout failures in local development.
   }
 
   localStorage.removeItem(localAuthKey);

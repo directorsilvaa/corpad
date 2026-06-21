@@ -4371,7 +4371,7 @@ h1 em {
   width: max-content;
   gap: clamp(14px, 2.4vw, 24px);
   padding: 8px 18px;
-  animation: service-client-marquee-left 34s linear infinite;
+  animation: service-client-marquee-left 60s linear infinite;
 }
 
 .service-clients-row:nth-child(2) .service-clients-track {

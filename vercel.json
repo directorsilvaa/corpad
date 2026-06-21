@@ -38,6 +38,30 @@
       "destination": "/api/page/termos-de-uso"
     },
     {
+      "source": "/criacao-de-sites-monte-alto",
+      "destination": "/api/local/criacao-de-sites-monte-alto"
+    },
+    {
+      "source": "/criacao-de-sites-ribeirao-preto",
+      "destination": "/api/local/criacao-de-sites-ribeirao-preto"
+    },
+    {
+      "source": "/marketing-digital-ribeirao-preto",
+      "destination": "/api/local/marketing-digital-ribeirao-preto"
+    },
+    {
+      "source": "/trafego-pago-ribeirao-preto",
+      "destination": "/api/local/trafego-pago-ribeirao-preto"
+    },
+    {
+      "source": "/consultoria-empresarial-monte-alto",
+      "destination": "/api/local/consultoria-empresarial-monte-alto"
+    },
+    {
+      "source": "/consultoria-empresarial-ribeirao-preto",
+      "destination": "/api/local/consultoria-empresarial-ribeirao-preto"
+    },
+    {
       "source": "/blog/:slug",
       "destination": "/api/blog/:slug"
     },

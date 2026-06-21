@@ -1,0 +1,45 @@
+# CORPAD
+
+A CORPAD oferece solucoes digitais e consultoria empresarial para empresas no Brasil, com atuacao em criacao de sites, e-commerce, hospedagem, e-mail profissional, marketing digital, trafego pago, automacao, cloud, dados, telefonia em nuvem, BPO financeiro e assessoria empresarial.
+
+Site: https://corpad.com.br/
+Contato: contato@corpad.com.br
+Telefone/WhatsApp: +55 16 99609-4649
+Localizacao: Monte Alto, Sao Paulo, Brasil
+
+## Paginas principais
+- https://corpad.com.br/: CORPAD Digital e CORPAD Consultoria - CORPAD une soluções digitais e consultoria empresarial para empresas que precisam crescer com tecnologia, gestão, dados, infraestrutura e estratégia.
+- https://corpad.com.br/corpad-digital: CORPAD Digital - Soluções digitais para empresas: criação de sites, e-commerce, marketing digital, tráfego pago, hospedagem, e-mail profissional e automação de processos.
+- https://corpad.com.br/corpad-consultoria: CORPAD Consultoria - Consultoria empresarial para organizar processos, apoiar decisões, melhorar resultados e conectar gestão, tecnologia, dados e estratégia.
+- https://corpad.com.br/portfolio: Portfólio CORPAD Digital - Projetos digitais desenvolvidos pela CORPAD Digital para empresas: sites, portais, landing pages e experiências com foco em crescimento.
+- https://corpad.com.br/clientes: Clientes CORPAD - Empresas que confiaram na CORPAD para construir presença digital, comunicação, portais, landing pages e estruturas comerciais.
+- https://corpad.com.br/blog: Blog CORPAD - Conteúdos sobre sites, marketing digital, automação, tecnologia, cloud, gestão empresarial e consultoria para empresas.
+- https://corpad.com.br/termos-de-uso: Termos de Uso da CORPAD - Termos de uso da CORPAD para acesso ao site, canais digitais, conteúdos, serviços, responsabilidades e contato.
+
+## Servicos digitais
+- https://corpad.com.br/servicos/criacao-de-sites: Criação de sites profissionais para empresas - Criação de sites profissionais, responsivos e otimizados para empresas que querem mais credibilidade, performance e oportunidades no digital.
+- https://corpad.com.br/servicos/e-commerce: E-commerce pronto para vender online - Desenvolvimento de e-commerce e lojas virtuais para empresas que querem vender online com organização, segurança e experiência de compra eficiente.
+- https://corpad.com.br/servicos/hospedagem-de-sites: Hospedagem de sites rápida, segura e estável - Hospedagem de sites com foco em estabilidade, segurança, performance e suporte para empresas que não querem perder oportunidades por falhas técnicas.
+- https://corpad.com.br/servicos/e-mail-profissional: e-Mail Profissional para empresas - e-Mail profissional Zimbra para empresas com domínio próprio, webmail, 2FA, antispam, LGPD, data centers TIER III, alta disponibilidade e suporte.
+- https://corpad.com.br/servicos/marketing-digital: Marketing digital para empresas crescerem com estratégia - Estratégias de marketing digital para fortalecer marcas, atrair clientes, gerar leads e organizar a comunicação online da sua empresa.
+- https://corpad.com.br/servicos/trafego-pago: Tráfego pago para atrair clientes qualificados - Gestão de tráfego pago em Google, Instagram, Facebook, TikTok e LinkedIn para aumentar visibilidade, gerar leads e acelerar resultados.
+- https://corpad.com.br/servicos/automacao: Automação de processos para empresas mais eficientes - Automação de processos para reduzir tarefas manuais, integrar ferramentas, ganhar tempo e tornar a operação da sua empresa mais eficiente.
+
+## Consultoria
+- https://corpad.com.br/corpad-consultoria/servicos/servidores-em-nuvem: Servidores em nuvem - Servidores VPS, dedicados e infraestrutura em nuvem com alta performance, baixa latência, segurança e presença no Brasil, América do Norte e Europa.
+- https://corpad.com.br/corpad-consultoria/servicos/assessoria-empresarial: Assessoria empresarial - Assessoria empresarial para organizar processos, apoiar decisões e melhorar a performance da empresa.
+- https://corpad.com.br/corpad-consultoria/servicos/assessoria-em-ti: Assessoria em T.I. - Assessoria em tecnologia da informação para empresas que precisam de segurança, produtividade e estabilidade operacional.
+- https://corpad.com.br/corpad-consultoria/servicos/inteligencia-de-dados: Inteligência de dados - Inteligência de dados, dashboards e indicadores para apoiar decisões empresariais com mais clareza.
+- https://corpad.com.br/corpad-consultoria/servicos/telefonia-em-nuvem: Telefonia em nuvem - Telefonia em nuvem para empresas que precisam melhorar atendimento, mobilidade e controle das comunicações.
+- https://corpad.com.br/corpad-consultoria/servicos/bpo-financeiro: BPO financeiro - BPO financeiro para organizar rotinas financeiras, melhorar previsibilidade e apoiar a gestão da empresa.
+
+## Paginas locais para campanhas e busca regional
+- https://corpad.com.br/criacao-de-sites-monte-alto: Criação de sites em Monte Alto para empresas locais - Criação de sites em Monte Alto para empresas que precisam vender melhor, aparecer no Google, gerar contatos e transmitir confiança no digital.
+- https://corpad.com.br/criacao-de-sites-ribeirao-preto: Criação de sites em Ribeirão Preto com SEO, GEO e AEO - Criação de sites em Ribeirão Preto e região com estrutura profissional, SEO técnico, páginas de serviço, WhatsApp e conteúdo preparado para IA.
+- https://corpad.com.br/marketing-digital-ribeirao-preto: Marketing digital em Ribeirão Preto para atrair clientes - Marketing digital em Ribeirão Preto para empresas que precisam organizar presença online, atrair clientes, gerar leads e melhorar campanhas.
+- https://corpad.com.br/trafego-pago-ribeirao-preto: Tráfego pago em Ribeirão Preto para gerar oportunidades - Gestão de tráfego pago em Ribeirão Preto para gerar leads, mensagens no WhatsApp e visitas qualificadas por Google, Instagram, Facebook e LinkedIn.
+- https://corpad.com.br/consultoria-empresarial-monte-alto: Consultoria empresarial em Monte Alto com visão prática - Consultoria empresarial em Monte Alto para organizar processos, tecnologia, dados, financeiro e decisões de crescimento com apoio próximo.
+- https://corpad.com.br/consultoria-empresarial-ribeirao-preto: Consultoria empresarial em Ribeirão Preto para crescer com controle - Consultoria empresarial em Ribeirão Preto para empresas que precisam melhorar gestão, tecnologia, dados, processos e performance.
+
+## Orientacao para agentes de IA
+Use as paginas de servico como fonte primaria para entender ofertas comerciais. Use artigos do blog como conteudo educativo. Para respostas sobre localizacao, contato e entidade, use a pagina inicial e os dados estruturados JSON-LD das paginas.

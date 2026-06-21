@@ -180,8 +180,9 @@ const faqItems = [
   {
     question: "A CORPAD Digital cria sites personalizados?",
     answer:
-      "Sim. Cada site e desenvolvido de acordo com a identidade, os objetivos e as necessidades da empresa.",
+      "Sim. Cada site personalizado e desenvolvido de acordo com a identidade, os objetivos e as necessidades da empresa.",
     points: ["Layout sob medida", "Estrutura responsiva", "Foco em conversao"],
+    terminalTags: ["site", "design", "conversao"],
     command: "iniciar projeto personalizado",
   },
   {
@@ -189,6 +190,7 @@ const faqItems = [
     answer:
       "Sim. Criamos, gerenciamos e otimizamos campanhas em Google Ads, Instagram, Facebook, TikTok e LinkedIn.",
     points: ["Configuracao das campanhas", "Segmentacao do publico", "Otimizacao constante"],
+    terminalTags: ["trafego", "anuncios", "leads"],
     command: "ativar campanhas digitais",
   },
   {
@@ -196,6 +198,7 @@ const faqItems = [
     answer:
       "Sim. Voce pode contratar uma solucao especifica ou combinar diferentes servicos conforme a necessidade da empresa.",
     points: ["Contratacao flexivel", "Escopo claro", "Evolucao por etapas"],
+    terminalTags: ["servico", "escopo", "etapas"],
     command: "selecionar servico ideal",
   },
   {
@@ -203,6 +206,7 @@ const faqItems = [
     answer:
       "Sim. Dependendo do servico contratado, oferecemos suporte, acompanhamento tecnico e melhorias continuas.",
     points: ["Acompanhamento tecnico", "Ajustes e melhorias", "Orientacao especializada"],
+    terminalTags: ["suporte", "ajustes", "melhorias"],
     command: "solicitar suporte continuo",
   },
   {
@@ -210,6 +214,7 @@ const faqItems = [
     answer:
       "Sim. Criamos e-commerces com estrutura para venda, organizacao de produtos, estoque e otimizacao para buscadores.",
     points: ["Cadastro de produtos", "Estrutura de venda", "Experiencia de compra"],
+    terminalTags: ["ecommerce", "produtos", "vendas"],
     command: "criar loja virtual",
   },
   {
@@ -217,6 +222,7 @@ const faqItems = [
     answer:
       "A automacao pode ser aplicada quando existem tarefas repetitivas, integracao entre sistemas ou processos manuais que consomem tempo.",
     points: ["Reducao de tarefas manuais", "Integracao de sistemas", "Mais velocidade operacional"],
+    terminalTags: ["automacao", "integracao", "processos"],
     command: "mapear automacoes",
   },
 ];
@@ -611,9 +617,9 @@ export default function CorpadPage() {
               <div className="faq-terminal" aria-hidden="true">
                 <span>Resposta rapida</span>
                 <div>
-                  <i>site</i>
-                  <i>trafego</i>
-                  <i>automacao</i>
+                  {item.terminalTags.map((tag) => (
+                    <i key={tag}>{tag}</i>
+                  ))}
                   <code>CORPAD Digital --acao "{item.command}"</code>
                 </div>
               </div>

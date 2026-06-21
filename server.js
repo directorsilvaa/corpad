@@ -4,9 +4,13 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { getBlogPostForHead, injectBlogArticlePage, injectBlogIndexPage, listBlogPostsForHead } from "./lib/blogHead.js";
 import { getConsultingServiceForHead, injectConsultingServicePage } from "./lib/consultingHead.js";
+import { loadDotEnv } from "./lib/env.js";
+import { getLocalPageForHead, injectLocalPage } from "./lib/localHead.js";
 import { getStaticPageForHead, injectStaticPage } from "./lib/pageHead.js";
 import { generateSitemapXml } from "./lib/sitemap.js";
 import { getServicePageForHead, injectServicePage } from "./lib/serviceHead.js";
+
+loadDotEnv();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -180,6 +184,26 @@ const server = http.createServer(async (request, response) => {
       response.end(html);
     } catch (error) {
       console.error("Failed to render static page head", error);
+      response.setHeader("Cache-Control", "no-store");
+      sendFile(response, indexPath, "no-store");
+    }
+    return;
+  }
+
+  const localSlug = requestUrl.pathname.replace(/^\/+|\/+$/g, "");
+  const localPage = getLocalPageForHead(localSlug);
+
+  if (localPage) {
+    try {
+      const html = injectLocalPage(fs.readFileSync(indexPath, "utf8"), localPage);
+
+      response.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
+      });
+      response.end(html);
+    } catch (error) {
+      console.error("Failed to render local landing page", error);
       response.setHeader("Cache-Control", "no-store");
       sendFile(response, indexPath, "no-store");
     }

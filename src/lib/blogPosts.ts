@@ -63,6 +63,7 @@ const localCategoriesKey = "corpad_blog_categories";
 const localAuthorsKey = "corpad_blog_authors";
 const localSettingsKey = "corpad_blog_settings";
 const localAnalyticsKey = "corpad_blog_analytics";
+const cpanelBlogApi = "/blog-api.php";
 
 export type BlogSettings = {
   title: string;
@@ -203,6 +204,27 @@ function toRow(input: BlogPostInput) {
   };
 }
 
+async function cpanelBlogRequest<T>(action: string, options: { method?: "GET" | "POST"; body?: unknown; query?: Record<string, string> } = {}) {
+  const params = new URLSearchParams({ action, ...(options.query ?? {}) });
+  const response = await fetch(`${cpanelBlogApi}?${params.toString()}`, {
+    method: options.method ?? (options.body ? "POST" : "GET"),
+    headers: options.body ? { "Content-Type": "application/json" } : undefined,
+    credentials: "same-origin",
+    body: options.body ? JSON.stringify(options.body) : undefined,
+  });
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(typeof data.error === "string" ? data.error : "Nao foi possivel acessar o blog no servidor.");
+  }
+
+  return data as T;
+}
+
+function canUseCpanelBlogApi() {
+  return typeof window !== "undefined" && window.location.protocol !== "file:";
+}
+
 function readLocalPosts(): BlogPost[] {
   try {
     return (JSON.parse(localStorage.getItem(localStorageKey) ?? "[]") as BlogPost[]).map((post) =>
@@ -312,6 +334,17 @@ export async function listBlogPosts(options: { publishedOnly?: boolean } = {}) {
     return (data ?? []).map((row) => mapRow(row as BlogPostRow));
   }
 
+  if (canUseCpanelBlogApi()) {
+    try {
+      const data = await cpanelBlogRequest<{ posts: BlogPost[] }>("list", {
+        query: options.publishedOnly ? { publishedOnly: "true" } : undefined,
+      });
+      return (data.posts ?? []).map((post) => withDefaults(post));
+    } catch {
+      // Local fallback keeps previews usable when PHP is not running.
+    }
+  }
+
   return readLocalPosts()
     .filter(
       (post) =>
@@ -335,6 +368,15 @@ export async function getBlogPostBySlug(slug: string) {
 
     if (error) throw error;
     return data ? mapRow(data as BlogPostRow) : null;
+  }
+
+  if (canUseCpanelBlogApi()) {
+    try {
+      const data = await cpanelBlogRequest<{ post: BlogPost | null }>("get", { query: { slug } });
+      return data.post ? withDefaults(data.post) : null;
+    } catch {
+      // Local fallback keeps previews usable when PHP is not running.
+    }
   }
 
   return (
@@ -368,6 +410,11 @@ export async function saveBlogPost(input: BlogPostInput, id?: string) {
     return;
   }
 
+  if (canUseCpanelBlogApi()) {
+    await cpanelBlogRequest("save", { method: "POST", body: { post: normalizedInput, id } });
+    return;
+  }
+
   const posts = readLocalPosts();
   const nextPost = withDefaults({
     ...normalizedInput,
@@ -387,6 +434,11 @@ export async function deleteBlogPost(id: string) {
   if (hasSupabaseConfig && supabase) {
     const { error } = await supabase.from("blog_posts").delete().eq("id", id);
     if (error) throw error;
+    return;
+  }
+
+  if (canUseCpanelBlogApi()) {
+    await cpanelBlogRequest("delete", { method: "POST", body: { id } });
     return;
   }
 
@@ -417,6 +469,12 @@ export async function uploadBlogImage(file: File, options: BlogImageUploadOption
 
     const { data } = supabase.storage.from("blog-images").getPublicUrl(path);
     return data.publicUrl;
+  }
+
+  if (canUseCpanelBlogApi()) {
+    const dataUrl = await fileToDataUrl(uploadFile);
+    const data = await cpanelBlogRequest<{ url: string }>("upload", { method: "POST", body: { dataUrl } });
+    return data.url;
   }
 
   return options.variant === "cover" ? fileToDataUrl(uploadFile) : compressImageToDataUrl(file);

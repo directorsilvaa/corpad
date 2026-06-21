@@ -1,4 +1,5 @@
 Options -Indexes
+DirectoryIndex index.html
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -6,8 +7,18 @@ Options -Indexes
   RewriteCond %{HTTP_HOST} ^www\.corpad\.com\.br$ [NC]
   RewriteRule ^ https://corpad.com.br%{REQUEST_URI} [R=301,L]
 
+  RewriteRule ^sitemap\.xml$ sitemap.php [L]
+  RewriteRule ^blog/?$ blog-index.php [L]
+  RewriteRule ^blog/([^/]+)/?$ blog-post.php?slug=$1 [L,QSA]
+
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
+
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
+  RewriteRule ^(.+?)/?$ $1/index.html [L]
 
   RewriteRule ^ index.html [L]
 </IfModule>
