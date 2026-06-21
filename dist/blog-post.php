@@ -6,6 +6,11 @@ $defaultImage = $siteUrl . '/logo.png?v=20260618';
 $postsFile = __DIR__ . '/data/blog-posts.json';
 $slug = trim((string)($_GET['slug'] ?? ''), '/');
 
+if ($slug === '') {
+  $path = parse_url((string)($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH) ?: '';
+  $slug = trim(preg_replace('#^/blog/?#', '', $path), '/');
+}
+
 function e($value): string {
   return htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
@@ -29,9 +34,21 @@ function read_posts(string $postsFile): array {
   return is_array($posts) ? $posts : [];
 }
 
+function post_value(array $post, string $camelKey, string $snakeKey = '') {
+  if (array_key_exists($camelKey, $post)) {
+    return $post[$camelKey];
+  }
+
+  if ($snakeKey !== '' && array_key_exists($snakeKey, $post)) {
+    return $post[$snakeKey];
+  }
+
+  return null;
+}
+
 function is_published(array $post): bool {
   $status = $post['status'] ?? 'draft';
-  $publishedAt = $post['publishedAt'] ?? null;
+  $publishedAt = post_value($post, 'publishedAt', 'published_at');
 
   if ($status === 'published') {
     return true;
