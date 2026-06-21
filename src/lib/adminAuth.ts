@@ -1,8 +1,8 @@
 import { hasSupabaseConfig, supabase } from "./supabase";
 
 const localAuthKey = "corpad_admin_session";
-const demoEmail = import.meta.env.VITE_ADMIN_EMAIL ?? "admin@corpad.local";
-const demoPassword = import.meta.env.VITE_ADMIN_PASSWORD ?? "troque-esta-senha";
+const demoEmail = import.meta.env.VITE_ADMIN_EMAIL ?? "";
+const demoPassword = import.meta.env.VITE_ADMIN_PASSWORD ?? "";
 const allowLocalAuth = true;
 const cpanelBlogApi = "/blog-api.php";
 

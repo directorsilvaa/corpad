@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 session_start();
 
-const CORPAD_ADMIN_EMAIL = 'viniciuspereira@gmail.com';
-const CORPAD_ADMIN_PASSWORD = 'VipSite2026$#@';
+const CORPAD_FALLBACK_ADMIN_EMAIL = '';
+const CORPAD_FALLBACK_ADMIN_PASSWORD = '';
 
 $dataDir = __DIR__ . '/data';
 $postsFile = $dataDir . '/blog-posts.json';
@@ -22,6 +22,11 @@ function read_json_body(): array {
   $raw = file_get_contents('php://input') ?: '';
   $data = json_decode($raw, true);
   return is_array($data) ? $data : [];
+}
+
+function env_or_default(string $name, string $default): string {
+  $value = getenv($name);
+  return is_string($value) && $value !== '' ? $value : $default;
 }
 
 function ensure_storage(string $dataDir, string $uploadDir): void {
@@ -119,10 +124,12 @@ if ($action === 'session') {
 
 if ($action === 'login') {
   $body = read_json_body();
-  $email = (string)($body['email'] ?? '');
-  $password = (string)($body['password'] ?? '');
+  $email = trim((string)($body['email'] ?? ''));
+  $password = trim((string)($body['password'] ?? ''));
+  $adminEmail = env_or_default('CORPAD_ADMIN_EMAIL', CORPAD_FALLBACK_ADMIN_EMAIL);
+  $adminPassword = env_or_default('CORPAD_ADMIN_PASSWORD', CORPAD_FALLBACK_ADMIN_PASSWORD);
 
-  if ($email === CORPAD_ADMIN_EMAIL && $password === CORPAD_ADMIN_PASSWORD) {
+  if (hash_equals($adminEmail, $email) && hash_equals($adminPassword, $password)) {
     $_SESSION['corpad_admin'] = true;
     send_json(['loggedIn' => true]);
   }
