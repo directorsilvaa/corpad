@@ -212,7 +212,18 @@ async function cpanelBlogRequest<T>(action: string, options: { method?: "GET" | 
     credentials: "same-origin",
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
-  const data = await response.json().catch(() => ({}));
+  const responseText = await response.text();
+  let data: Record<string, unknown> = {};
+
+  try {
+    data = responseText ? JSON.parse(responseText) as Record<string, unknown> : {};
+  } catch {
+    if (!response.ok) {
+      throw new Error("O servidor nao conseguiu processar a imagem. Tente uma foto menor ou verifique o limite de upload do PHP.");
+    }
+
+    throw new Error("O servidor retornou uma resposta invalida.");
+  }
 
   if (!response.ok) {
     throw new Error(typeof data.error === "string" ? data.error : "Nao foi possivel acessar o blog no servidor.");
@@ -454,7 +465,7 @@ export async function uploadBlogImage(file: File, options: BlogImageUploadOption
     throw new Error("Envie um arquivo de imagem valido.");
   }
 
-  const uploadFile = options.variant === "cover" ? await normalizeBlogCoverImage(file) : file;
+  const uploadFile = options.variant === "cover" ? await normalizeBlogCoverImage(file) : await compressImageFile(file);
 
   if (hasSupabaseConfig && supabase) {
     const extension = uploadFile.type.split("/").pop()?.replace("jpeg", "jpg") || uploadFile.name.split(".").pop() || "png";
@@ -477,11 +488,11 @@ export async function uploadBlogImage(file: File, options: BlogImageUploadOption
     return data.url;
   }
 
-  return options.variant === "cover" ? fileToDataUrl(uploadFile) : compressImageToDataUrl(file);
+  return fileToDataUrl(uploadFile);
 }
 
-function compressImageToDataUrl(file: File) {
-  return new Promise<string>((resolve, reject) => {
+function compressImageFile(file: File) {
+  return new Promise<File>((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
       const image = new Image();
@@ -501,7 +512,18 @@ function compressImageToDataUrl(file: File) {
         canvas.width = width;
         canvas.height = height;
         context.drawImage(image, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/jpeg", 0.78));
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error("Nao foi possivel processar a imagem."));
+              return;
+            }
+
+            resolve(new File([blob], replaceExtension(file.name, "jpg"), { type: "image/jpeg" }));
+          },
+          "image/jpeg",
+          0.78,
+        );
       };
       image.onerror = () => reject(new Error("Nao foi possivel processar a imagem."));
       image.src = String(reader.result);

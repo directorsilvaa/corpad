@@ -34,6 +34,10 @@
       "destination": "/api/page/blog"
     },
     {
+      "source": "/blog/",
+      "destination": "/api/page/blog"
+    },
+    {
       "source": "/termos-de-uso",
       "destination": "/api/page/termos-de-uso"
     },

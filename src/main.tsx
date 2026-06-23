@@ -20,6 +20,35 @@ const BlogPage = React.lazy(() => import("./pages/Blog"));
 const AdminPage = React.lazy(() => import("./pages/Admin"));
 const TermsOfUsePage = React.lazy(() => import("./pages/TermsOfUse"));
 
+class AppErrorBoundary extends React.Component<
+  { children: React.ReactNode; resetKey: string },
+  { error: Error | null }
+> {
+  state = { error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  componentDidUpdate(previousProps: { resetKey: string }) {
+    if (previousProps.resetKey !== this.props.resetKey && this.state.error) {
+      this.setState({ error: null });
+    }
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <main className="admin-page admin-loading">
+          Nao foi possivel carregar esta tela. Atualize a pagina e tente novamente.
+        </main>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 function useClientRoute() {
   const [pathname, setPathname] = React.useState(window.location.pathname);
 
@@ -160,9 +189,11 @@ function Root() {
   return (
     <>
       <DeferredAnimations />
-      <React.Suspense fallback={null}>
-        <App pathname={pathname} />
-      </React.Suspense>
+      <AppErrorBoundary resetKey={pathname}>
+        <React.Suspense fallback={<main className="admin-page admin-loading">Carregando...</main>}>
+          <App pathname={pathname} />
+        </React.Suspense>
+      </AppErrorBoundary>
     </>
   );
 }

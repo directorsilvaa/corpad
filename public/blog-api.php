@@ -250,8 +250,17 @@ if ($action === 'upload') {
     send_json(['error' => 'Nao foi possivel processar a imagem.'], 400);
   }
 
+  if (!is_writable($uploadDir)) {
+    send_json(['error' => 'A pasta de uploads nao permite gravacao no servidor.'], 500);
+  }
+
   $fileName = bin2hex(random_bytes(12)) . '.' . $extension;
-  file_put_contents($uploadDir . '/' . $fileName, $binary, LOCK_EX);
+  $written = file_put_contents($uploadDir . '/' . $fileName, $binary, LOCK_EX);
+
+  if ($written === false) {
+    send_json(['error' => 'Nao foi possivel salvar a imagem no servidor.'], 500);
+  }
+
   send_json(['url' => '/uploads/blog/' . $fileName]);
 }
 

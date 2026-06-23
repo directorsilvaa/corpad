@@ -97,6 +97,23 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (requestUrl.pathname === "/blog" || requestUrl.pathname === "/blog/") {
+    try {
+      const html = injectBlogIndexPage(fs.readFileSync(indexPath, "utf8"), await listBlogPostsForHead());
+
+      response.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
+      });
+      response.end(html);
+    } catch (error) {
+      console.error("Failed to render blog index", error);
+      response.setHeader("Cache-Control", "no-store");
+      sendFile(response, indexPath, "no-store");
+    }
+    return;
+  }
+
   if (requestUrl.pathname.startsWith("/blog/")) {
     try {
       const slug = requestUrl.pathname.replace(/^\/blog\/|\/+$/g, "");
@@ -110,23 +127,6 @@ const server = http.createServer(async (request, response) => {
       response.end(html);
     } catch (error) {
       console.error("Failed to render blog article head", error);
-      response.setHeader("Cache-Control", "no-store");
-      sendFile(response, indexPath, "no-store");
-    }
-    return;
-  }
-
-  if (requestUrl.pathname === "/blog") {
-    try {
-      const html = injectBlogIndexPage(fs.readFileSync(indexPath, "utf8"), await listBlogPostsForHead());
-
-      response.writeHead(200, {
-        "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
-      });
-      response.end(html);
-    } catch (error) {
-      console.error("Failed to render blog index", error);
       response.setHeader("Cache-Control", "no-store");
       sendFile(response, indexPath, "no-store");
     }

@@ -322,6 +322,18 @@ function syncPostTitleFromArticleHtml(post: BlogPostInput, content: string) {
 
 function getPreviewVisibilityFixStyle() {
   return `<style id="admin-preview-visibility-fix">
+      html,
+      body {
+        background: #ffffff !important;
+        color: #17213a !important;
+      }
+
+      body {
+        opacity: 1 !important;
+        visibility: visible !important;
+        filter: none !important;
+      }
+
       .fade,
       .fade-in,
       .ca-fade,
