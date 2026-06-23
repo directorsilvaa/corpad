@@ -498,8 +498,8 @@ function formatDate(value: string | null | undefined) {
   );
 }
 
-function getAdminPostPreviewUrl(post: BlogPost) {
-  return `/blog-post.php?slug=${encodeURIComponent(post.slug)}&preview=1`;
+function getAdminPostUrl(post: BlogPost) {
+  return `/blog/${encodeURIComponent(post.slug)}/`;
 }
 
 function toDatetimeLocalValue(value: string | null | undefined) {
@@ -554,6 +554,7 @@ export default function AdminPage() {
   const [uploadingNewAuthorPhoto, setUploadingNewAuthorPhoto] = useState(false);
   const [uploadingAuthorPhotoId, setUploadingAuthorPhotoId] = useState<string | null>(null);
   const [savingPost, setSavingPost] = useState(false);
+  const [busyPostId, setBusyPostId] = useState<string | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [sourceEditorOpen, setSourceEditorOpen] = useState(false);
   const [editorTab, setEditorTab] = useState<EditorTab>("content");
@@ -708,45 +709,69 @@ export default function AdminPage() {
   }
 
   async function handleDelete(id: string) {
-    await deleteBlogPost(id);
-    if (editingId === id) {
-      setEditingId(undefined);
-      setForm(emptyPost);
-      setEditorOpen(false);
-      setEditorTab("content");
+    if (busyPostId) return;
+
+    setMessage("");
+    setBusyPostId(id);
+
+    try {
+      await deleteBlogPost(id);
+      if (editingId === id) {
+        setEditingId(undefined);
+        setForm(emptyPost);
+        setEditorOpen(false);
+        setEditorTab("content");
+      }
+      await refreshPosts();
+      setMessage("Artigo excluido com sucesso.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Nao foi possivel excluir o artigo.");
+    } finally {
+      setBusyPostId(null);
     }
-    await refreshPosts();
   }
 
   async function togglePostVisibility(post: BlogPost) {
+    if (busyPostId) return;
+
     const nextStatus: BlogPostStatus = post.status === "published" ? "draft" : "published";
 
-    await saveBlogPost(
-      {
-        title: post.title,
-        subtitle: post.subtitle,
-        slug: post.slug,
-        category: post.category,
-        excerpt: post.excerpt,
-        coverImage: post.coverImage,
-        imageAlt: post.imageAlt,
-        content: post.content,
-        authorName: post.authorName,
-        authorPhoto: post.authorPhoto,
-        authorRole: post.authorRole,
-        authorBio: post.authorBio,
-        metaTitle: post.metaTitle,
-        metaDescription: post.metaDescription,
-        keyword: post.keyword,
-        ctaLabel: post.ctaLabel,
-        ctaUrl: post.ctaUrl,
-        ctaText: post.ctaText,
-        status: nextStatus,
-        publishedAt: post.publishedAt,
-      },
-      post.id,
-    );
-    await refreshPosts();
+    setMessage("");
+    setBusyPostId(post.id);
+
+    try {
+      await saveBlogPost(
+        {
+          title: post.title,
+          subtitle: post.subtitle,
+          slug: post.slug,
+          category: post.category,
+          excerpt: post.excerpt,
+          coverImage: post.coverImage,
+          imageAlt: post.imageAlt,
+          content: post.content,
+          authorName: post.authorName,
+          authorPhoto: post.authorPhoto,
+          authorRole: post.authorRole,
+          authorBio: post.authorBio,
+          metaTitle: post.metaTitle,
+          metaDescription: post.metaDescription,
+          keyword: post.keyword,
+          ctaLabel: post.ctaLabel,
+          ctaUrl: post.ctaUrl,
+          ctaText: post.ctaText,
+          status: nextStatus,
+          publishedAt: post.publishedAt,
+        },
+        post.id,
+      );
+      await refreshPosts();
+      setMessage(nextStatus === "published" ? "Artigo publicado com sucesso." : "Artigo despublicado com sucesso.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Nao foi possivel alterar o status do artigo.");
+    } finally {
+      setBusyPostId(null);
+    }
   }
 
   async function handleLogout() {
@@ -1179,14 +1204,18 @@ export default function AdminPage() {
                     <small>{formatDate(post.publishedAt)}</small>
                   </div>
                   <div className="admin-post-actions">
-                    <a href={getAdminPostPreviewUrl(post)} target="_blank" rel="noreferrer">
+                    <a href={getAdminPostUrl(post)} target="_blank" rel="noreferrer" aria-label={`Ver artigo ${post.title} no blog`}>
                       <Eye size={16} /> Ver
                     </a>
-                    <button type="button" onClick={() => editPost(post)}>
+                    <button type="button" onClick={() => editPost(post)} disabled={busyPostId === post.id}>
                       <Edit3 size={16} /> Editar
                     </button>
-                    <button type="button" onClick={() => togglePostVisibility(post)}>
-                      {post.status === "published" ? (
+                    <button type="button" onClick={() => togglePostVisibility(post)} disabled={busyPostId === post.id}>
+                      {busyPostId === post.id ? (
+                        <>
+                          <Bell size={16} /> Aguarde
+                        </>
+                      ) : post.status === "published" ? (
                         <>
                           <EyeOff size={16} /> Despublicar
                         </>
@@ -1196,7 +1225,7 @@ export default function AdminPage() {
                         </>
                       )}
                     </button>
-                    <button type="button" onClick={() => handleDelete(post.id)}>
+                    <button type="button" onClick={() => handleDelete(post.id)} disabled={busyPostId === post.id}>
                       <Trash2 size={16} /> Excluir
                     </button>
                   </div>
