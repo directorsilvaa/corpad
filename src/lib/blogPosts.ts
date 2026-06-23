@@ -65,6 +65,13 @@ const localSettingsKey = "corpad_blog_settings";
 const localAnalyticsKey = "corpad_blog_analytics";
 const cpanelBlogApi = "/blog-api.php";
 
+class BlogApiUnavailableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "BlogApiUnavailableError";
+  }
+}
+
 export type BlogSettings = {
   title: string;
   description: string;
@@ -218,11 +225,31 @@ async function cpanelBlogRequest<T>(action: string, options: { method?: "GET" | 
   try {
     data = responseText ? JSON.parse(responseText) as Record<string, unknown> : {};
   } catch {
-    if (!response.ok) {
-      throw new Error("O servidor nao conseguiu processar a imagem. Tente uma foto menor ou verifique o limite de upload do PHP.");
+    const contentType = response.headers.get("content-type") || "";
+    const responseHint = responseText
+      .replace(/\s+/g, " ")
+      .slice(0, 140)
+      .trim();
+
+    if (contentType.includes("text/html") || /^<!doctype html|^<html/i.test(responseText.trim())) {
+      throw new BlogApiUnavailableError(
+        "A API PHP do blog nao respondeu em JSON. Verifique se /blog-api.php esta executando PHP no servidor.",
+      );
     }
 
-    throw new Error("O servidor retornou uma resposta invalida.");
+    if (!response.ok) {
+      throw new Error(
+        responseHint
+          ? `O servidor retornou uma resposta invalida: ${responseHint}`
+          : "O servidor nao conseguiu processar a imagem. Tente uma foto menor ou verifique o limite de upload do PHP.",
+      );
+    }
+
+    throw new Error(
+      responseHint
+        ? `O servidor retornou uma resposta invalida: ${responseHint}`
+        : "O servidor retornou uma resposta invalida.",
+    );
   }
 
   if (!response.ok) {
@@ -234,6 +261,10 @@ async function cpanelBlogRequest<T>(action: string, options: { method?: "GET" | 
 
 function canUseCpanelBlogApi() {
   return typeof window !== "undefined" && window.location.protocol !== "file:";
+}
+
+function isBlogApiUnavailable(error: unknown) {
+  return error instanceof BlogApiUnavailableError;
 }
 
 function readLocalPosts(): BlogPost[] {
@@ -422,8 +453,14 @@ export async function saveBlogPost(input: BlogPostInput, id?: string) {
   }
 
   if (canUseCpanelBlogApi()) {
-    await cpanelBlogRequest("save", { method: "POST", body: { post: normalizedInput, id } });
-    return;
+    try {
+      await cpanelBlogRequest("save", { method: "POST", body: { post: normalizedInput, id } });
+      return;
+    } catch (error) {
+      if (!isBlogApiUnavailable(error)) {
+        throw error;
+      }
+    }
   }
 
   const posts = readLocalPosts();
@@ -449,8 +486,14 @@ export async function deleteBlogPost(id: string) {
   }
 
   if (canUseCpanelBlogApi()) {
-    await cpanelBlogRequest("delete", { method: "POST", body: { id } });
-    return;
+    try {
+      await cpanelBlogRequest("delete", { method: "POST", body: { id } });
+      return;
+    } catch (error) {
+      if (!isBlogApiUnavailable(error)) {
+        throw error;
+      }
+    }
   }
 
   writeLocalPosts(readLocalPosts().filter((post) => post.id !== id));
@@ -484,8 +527,17 @@ export async function uploadBlogImage(file: File, options: BlogImageUploadOption
 
   if (canUseCpanelBlogApi()) {
     const dataUrl = await fileToDataUrl(uploadFile);
-    const data = await cpanelBlogRequest<{ url: string }>("upload", { method: "POST", body: { dataUrl } });
-    return data.url;
+
+    try {
+      const data = await cpanelBlogRequest<{ url: string }>("upload", { method: "POST", body: { dataUrl } });
+      return data.url;
+    } catch (error) {
+      if (!isBlogApiUnavailable(error)) {
+        throw error;
+      }
+
+      return dataUrl;
+    }
   }
 
   return fileToDataUrl(uploadFile);

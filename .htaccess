@@ -9,6 +9,10 @@ DirectoryIndex dist/index.html
 
   RewriteRule ^dist/ - [L]
 
+  RewriteRule ^blog-api\.php$ dist/blog-api.php [L,QSA]
+  RewriteRule ^blog-post\.php$ dist/blog-post.php [L,QSA]
+  RewriteRule ^blog-index\.php$ dist/blog-index.php [L,QSA]
+  RewriteRule ^sitemap\.php$ dist/sitemap.php [L,QSA]
   RewriteRule ^sitemap\.xml$ dist/sitemap.php [L]
   RewriteRule ^blog/?$ dist/blog-index.php [L]
   RewriteRule ^blog/([^/]+)/?$ dist/blog-post.php?slug=$1 [L,QSA]
