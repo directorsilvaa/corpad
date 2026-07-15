@@ -21,6 +21,44 @@
     
     <link rel="icon" type="image/png" href="/logo-icon.png?v=20260618" />
     
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18316758864"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'AW-18316758864');
+    </script>
+    <!-- Event snippet for Contato conversion page -->
+    <script>
+      function gtag_report_conversion(url) {
+        var callback = function () {
+          if (typeof(url) != 'undefined') {
+            window.location = url;
+          }
+        };
+        gtag('event', 'conversion', {
+            'send_to': 'AW-18316758864/TcyVCPjko9AcENCejp5E',
+            'value': 1.0,
+            'currency': 'BRL',
+            'event_callback': callback
+        });
+        return false;
+      }
+
+      document.addEventListener('click', function(event) {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+          return;
+        }
+        var link = event.target && event.target.closest ? event.target.closest('a') : null;
+        if (!link || !link.href || !/(^|\.)wa\.me$|(^|\.)api\.whatsapp\.com$|(^|\.)web\.whatsapp\.com$/.test(new URL(link.href, window.location.href).hostname)) {
+          return;
+        }
+        event.preventDefault();
+        gtag_report_conversion(link.href);
+      }, true);
+    </script>
     <script>
       window.__PAGE_DATA__ = {
         type: "blog",
