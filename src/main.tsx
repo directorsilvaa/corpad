@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import Home from "./pages/Home";
 import "./globals.css";
+import { registerGoogleAdsWhatsappConversions } from "./lib/googleAds";
 
 if (window.location.hostname === "www.corpad.com.br") {
   window.location.replace(
@@ -185,6 +186,8 @@ function App({ pathname }: { pathname: string }) {
 
 function Root() {
   const pathname = useClientRoute();
+
+  React.useEffect(() => registerGoogleAdsWhatsappConversions(), []);
 
   return (
     <>
